@@ -45,3 +45,4 @@
 theme = "nightfox"
 font-family = "JetBrainsMono Nerd Font"
 keybind = alt+enter=toggle_fullscreen
+title = "Ghostty"
