@@ -256,6 +256,7 @@ return {
             },
           },
         },
+        dockerls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -286,6 +287,7 @@ return {
         'tailwindcss-language-server',
         'html-lsp',
         'tailwindcss',
+        'dockerfile-language-server',
         'prettier',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
