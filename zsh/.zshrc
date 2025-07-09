@@ -1,3 +1,5 @@
+typeset -U path
+
 # Update Hostname
 export HOSTNAME=$(cat /etc/hostname)
 
@@ -14,8 +16,8 @@ HISTFILE=~/dotfiles/zsh/.zsh_history
 
 # Created by Zap installer
 [ -f "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh" ] && source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
+
 plug "zsh-users/zsh-autosuggestions"
-plug "zap-zsh/supercharge"
 plug "zap-zsh/zap-prompt"
 plug "zsh-users/zsh-syntax-highlighting"
 plug "wintermi/zsh-starship"
@@ -27,9 +29,6 @@ compinit -C
 # Aliases
 alias pacman="sudo pacman"
 alias ls="ls --color=auto"
-
-# PATH Update
-export PATH="$PATH:/home/miguel/.local/bin"
 
 # Update Manpage viewer
 export MANPAGER='nvim +Man!'

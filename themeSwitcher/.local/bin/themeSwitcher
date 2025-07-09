@@ -1,0 +1,26 @@
+#!/bin/bash
+
+THEME_DIR="/home/$USER/.local/share/themeSwitcher/themes"
+DOTFILES_DIR="/home/$USER/.dotfiles"
+
+THEME_NAMES=("Tokyo Night" "Catppuccin" "Nord" "Everforest" "Gruvbox" "Kanagawa" "Rose Pine" "Night Fox")
+THEME=$(gum choose "${THEME_NAMES[@]}" --header "Choose your theme" --height 10 | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
+
+if [ -n "$THEME" ]; then
+  source $THEME_DIR/$THEME/ghostty.sh
+
+  source $THEME_DIR/$THEME/tmux.sh
+
+  # switch nvim's theme
+  cp $THEME_DIR/$THEME/neovim.lua $DOTFILES_DIR/nvim/.config/nvim/lua/custom/plugins/theme.lua
+
+  if [ -f "$THEME_DIR/$THEME/btop.theme" ]; then
+    cp $THEME_DIR/$THEME/btop.theme $DOTFILES_DIR/btop/.config/btop/themes/$THEME.theme
+    sed -i "s/color_theme = \".*\"/color_theme = \"$THEME\"/g" ~/.config/btop/btop.conf
+  else
+    sed -i "s/color_theme = \".*\"/color_theme = \"Default\"/g" ~/.config/btop/btop.conf
+  fi
+
+  source $THEME_DIR/$THEME/gnome.sh
+fi
+
