@@ -1,0 +1,10 @@
+ERROR_STATUS="#f85552"
+SUCCESS_STATUS="#a7c080"
+REPLACE_MODE="#3d484d"
+VISUAL_MODE="#7fbbb3"
+BG="#2d353b"
+DIR_FG="#e67e80"
+GIT_FG="#d3c6aa"
+TIME_FG="#dbbc7f"
+
+source $THEME_DIR/set-starship-theme.sh
