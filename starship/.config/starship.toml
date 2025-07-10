@@ -10,17 +10,17 @@ $directory $git_branch$git_status $character"""
 
 right_format = "$time"
 
-palette = "night-fox"
+palette = "catppuccin"
 
-[palettes.night-fox]
-error_status = "#c94f6d"
-success_status = "#81b29a"
-replace_mode = "#9d79d6"
-visual_mode = "#dbc074"
-bg = "#192330"
-dir_fg = "#719cd6"
-git_fg = "#81b29a"
-time_fg = "#dbc074"
+[palettes.catppuccin]
+error_status = "#e78284"
+success_status = "#a6d189"
+replace_mode = "#81c8be"
+visual_mode = "#737994"
+bg = "#24273a"
+dir_fg = "#8caaee"
+git_fg = "#ca9ee6"
+time_fg = "#e5c890"
 
 [directory]
 style = "fg:dir_fg bg:bg"

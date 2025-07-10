@@ -1,7 +1,5 @@
  # Reload Neovim (if running)
-if pgrep -f "nvim.*--listen" > /dev/null; then
-	nvim --server /tmp/nvim-server --remote-send '<Cmd>lua vim.cmd.colorscheme("$NVIM_THEME")<CR>'
-fi
+ # No need to do anything, watcher is already in service there
 
 # Reload Tmux (if running)
 if pgrep tmux > /dev/null; then
