@@ -1,6 +1,8 @@
 #!/bin/bash
 
-THEME_DIR="/home/$USER/.local/share/themeSwitcher/themes"
+DATA_DIR="/home/$USER/.local/share/themeSwitcher"
+SCRIPT_DIR="$DATA_DIR/scripts"
+THEME_DIR="$DATA_DIR/themes"
 DOTFILES_DIR="/home/$USER/.dotfiles"
 
 THEME_NAMES=("Tokyo Night" "Catppuccin" "Nord" "Everforest" "Gruvbox" "Kanagawa" "Rose Pine" "Night Fox")
@@ -9,12 +11,17 @@ THEME=$(gum choose "${THEME_NAMES[@]}" --header "Choose your theme" --height 10 
 if [ -n "$THEME" ]; then
 
 	source $THEME_DIR/$THEME/ghostty.sh
+	source $SCRIPT_DIR/set-ghostty-theme.sh
 
 	source $THEME_DIR/$THEME/tmux.sh
+	source $SCRIPT_DIR/set-tmux-theme.sh
 
 	source $THEME_DIR/$THEME/starship.sh
+	source $SCRIPT_DIR/set-starship-theme.sh
 
-	cp $THEME_DIR/$THEME/neovim.lua $DOTFILES_DIR/nvim/.config/nvim/lua/custom/plugins/theme.lua
+	source $THEME_DIR/$THEME/neovim.sh
+	source $SCRIPT_DIR/set-nvim-theme.sh
+	# cp $THEME_DIR/$THEME/neovim.lua $DOTFILES_DIR/nvim/.config/nvim/lua/custom/plugins/theme.lua
 
 	if [ -f "$THEME_DIR/$THEME/btop.theme" ]; then
 		cp $THEME_DIR/$THEME/btop.theme $DOTFILES_DIR/btop/.config/btop/themes/$THEME.theme
@@ -24,5 +31,8 @@ if [ -n "$THEME" ]; then
 	fi
 
 	source $THEME_DIR/$THEME/gnome.sh
+	source $SCRIPT_DIR/set-gnome-theme.sh
+
+	source $SCRIPT_DIR/reloadApplications.sh
 fi
 

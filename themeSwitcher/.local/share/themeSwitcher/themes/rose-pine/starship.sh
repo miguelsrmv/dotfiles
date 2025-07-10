@@ -6,5 +6,3 @@ BG="#faf4ed"
 DIR_FG="#403d52"
 GIT_FG="#31748f"
 TIME_FG="#c4a7e7"
-
-source $THEME_DIR/set-starship-theme.sh

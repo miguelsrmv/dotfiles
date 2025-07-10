@@ -1,0 +1,1 @@
+NVIM_THEME="nord"
