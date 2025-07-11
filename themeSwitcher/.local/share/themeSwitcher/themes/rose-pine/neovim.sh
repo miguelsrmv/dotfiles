@@ -1,1 +1,1 @@
-NVIM_THEME="rose-pine-dawn"
+NVIM_THEME="rose-pine"
