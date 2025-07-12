@@ -1,37 +1,124 @@
 #!/bin/bash
 
-DATA_DIR="/home/$USER/.local/share/themeSwitcher"
-SCRIPT_DIR="$DATA_DIR/scripts"
-THEME_DIR="$DATA_DIR/themes"
-DOTFILES_DIR="/home/$USER/.dotfiles"
+# Exit on errors, undefined variables, and pipeline failures
+set -euo pipefail
 
-THEME_NAMES=("Tokyo Night" "Catppuccin" "Night Fox" "Gruvbox" "Kanagawa" "Everforest" "OneDarkPro" "Rose Pine" "Nord" )
-THEME=$(gum choose "${THEME_NAMES[@]}" --header "Choose your theme" --height 10 | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
+##########################################
+# Functions for applying theme to each app
+##########################################
 
-if [ -n "$THEME" ]; then
+# Applies the Ghostty theme by editing its config file
+apply_ghostty_theme() {
+	source "$THEME_DIR/$THEME/ghostty.sh"
+	local config="$XDG_CONFIG_HOME/ghostty/config"
 
-	source $THEME_DIR/$THEME/ghostty.sh
-	source $SCRIPT_DIR/set-ghostty-theme.sh
+	# Ensure the config file exists
+	[ -f "$config" ] || touch "$config"
 
-	source $THEME_DIR/$THEME/tmux.sh
-	source $SCRIPT_DIR/set-tmux-theme.sh
-
-	source $THEME_DIR/$THEME/starship.sh
-	source $SCRIPT_DIR/set-starship-theme.sh
-
-	source $THEME_DIR/$THEME/neovim.sh
-	source $SCRIPT_DIR/set-nvim-theme.sh
-
-	if [ -f "$THEME_DIR/$THEME/btop.theme" ]; then
-		cp $THEME_DIR/$THEME/btop.theme $DOTFILES_DIR/btop/.config/btop/themes/$THEME.theme
-		sed -i "s/color_theme = \".*\"/color_theme = \"$THEME\"/g" ~/.config/btop/btop.conf
+	# Check if a theme line already exists and replace it, otherwise append it
+	if grep -q '^theme = ' "$config"; then
+		sed -i 's/^theme = ".*"$/theme = "'"$GHOSTTY_THEME"'"/' "$config"
 	else
-		sed -i "s/color_theme = \".*\"/color_theme = \"Default\"/g" ~/.config/btop/btop.conf
+		echo 'theme = "'"$GHOSTTY_THEME"'"' >> "$config"
+	fi
+}
+
+# Copies the Tmux theme file to the expected location
+apply_tmux_theme() {
+	local src="$THEME_DIR/$THEME/tmux.theme"
+	local dest="$XDG_CONFIG_HOME/tmux/themes/theme.colors"
+
+	if [ -f "$src" ]; then
+		cp "$src" "$dest"
+	fi
+}
+
+# Sources and applies the Starship prompt theme
+apply_starship_theme() {
+	# Source theme-specific Starship variables if present
+	[ -f "$THEME_DIR/$THEME/starship.sh" ] && source "$THEME_DIR/$THEME/starship.sh"
+
+	# Run global script to apply the Starship theme
+	source "$SCRIPT_DIR/set-starship-theme.sh"
+}
+
+# Sets the Neovim theme name in your Lua config
+apply_nvim_theme() {
+	source "$THEME_DIR/$THEME/neovim.sh"
+	local file="$XDG_CONFIG_HOME/nvim/lua/custom/theme_state.lua"
+
+	# Ensure the config file exists
+	[ -f "$file" ] || return
+
+	sed -i "s/theme = '.*'/theme = '${NVIM_THEME}'/" "$file"
+}
+
+# Applies BTOP (system monitor) theme
+apply_btop_theme() {
+	local btop_conf="$HOME/.config/btop/btop.conf"
+	local btop_theme_file="$THEME_DIR/$THEME/btop.theme"
+	local btop_theme_dest="$DOTFILES_DIR/btop/.config/btop/themes/$THEME.theme"
+
+	# Ensure btop config exists
+	[ -f "$btop_conf" ] || return
+
+	# Copy theme file if it exists, else fallback to "Default"
+	if [ -f "$btop_theme_file" ]; then
+		mkdir -p "$(dirname "$btop_theme_dest")"
+		cp "$btop_theme_file" "$btop_theme_dest"
+		sed -i "s/color_theme = \".*\"/color_theme = \"$THEME\"/" "$btop_conf"
+	else
+		sed -i "s/color_theme = \".*\"/color_theme = \"Default\"/" "$btop_conf"
+	fi
+}
+
+# Applies GNOME theme using theme script
+apply_gnome_theme() {
+	# Source theme-specific GNOME setup if present
+	[ -f "$THEME_DIR/$THEME/gnome.sh" ] && source "$THEME_DIR/$THEME/gnome.sh"
+
+	# Source general GNOME theme setter
+	[ -f "$SCRIPT_DIR/set-gnome-theme.sh" ] && source "$SCRIPT_DIR/set-gnome-theme.sh"
+}
+
+# Reloads all apps that use the theme
+reload_all() {
+	[ -f "$SCRIPT_DIR/reloadApplications.sh" ] && source "$SCRIPT_DIR/reloadApplications.sh"
+}
+
+#################
+# Main Entry Point
+#################
+
+main() {
+	# Setup directory paths
+	DATA_DIR="$HOME/.local/share/themeSwitcher"
+	SCRIPT_DIR="$DATA_DIR/scripts"
+	THEME_DIR="$DATA_DIR/themes"
+	DOTFILES_DIR="$HOME/.dotfiles"
+
+	# Collect all subdirectories in THEME_DIR as valid themes, converts from kebab case to prper display
+	mapfile -t THEME_NAMES < <(find "$THEME_DIR" -maxdepth 1 -mindepth 1 -type d -printf "%f\n" | sed 's/-/ /g' | sed 's/\b\(.\)/\u\1/g' | sort)
+
+	# Bail out early if no themes are found
+	if [ "${#THEME_NAMES[@]}" -eq 0 ]; then
+		echo "No themes found in $THEME_DIR"
+		exit 1
 	fi
 
-	source $THEME_DIR/$THEME/gnome.sh
-	source $SCRIPT_DIR/set-gnome-theme.sh
+	# Ask user to select theme and reverse transform to kebab case
+	THEME=$(gum choose "${THEME_NAMES[@]}" --header "Choose your theme" --height 10 | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
 
-	source $SCRIPT_DIR/reloadApplications.sh
-fi
+	# Apply selected theme
+	if [ -n "${THEME:-}" ]; then
+		apply_ghostty_theme
+		apply_tmux_theme
+		apply_starship_theme
+		apply_nvim_theme
+		apply_btop_theme
+		apply_gnome_theme
+		reload_all
+	fi
+}
 
+main "$@"

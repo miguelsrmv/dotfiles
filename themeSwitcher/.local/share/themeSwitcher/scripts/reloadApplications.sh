@@ -3,7 +3,7 @@
 
 # Reload Tmux (if running)
 if pgrep tmux > /dev/null; then
-    tmux source-file ~/.tmux.conf
+	tmux source-file $XDG_CONFIG_HOME/tmux/tmux.conf
 fi
 
 # Reload Ghostty (if running; uses alt + r keybind set on Ghostty's config)

@@ -1,0 +1,4 @@
+set -g @background "#191724"
+set -g @normal_text "#c4a7e7"
+set -g @highlighted_text "#31748f"
+set -g @secondary_highlight "#ebbcba"
