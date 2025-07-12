@@ -1,0 +1,1 @@
+GHOSTTY_THEME=OneHalfDark

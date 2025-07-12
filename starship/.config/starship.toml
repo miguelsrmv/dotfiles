@@ -10,17 +10,17 @@ $directory $git_branch$git_status $character"""
 
 right_format = "$time"
 
-palette = "gruvbox"
+palette = "onedarkpro"
 
-[palettes.gruvbox]
-error_status = "#cc241d"
-success_status = "#98971a"
-replace_mode = "#3d4070"
-visual_mode = "#701c45"
-bg = "#282828"
-dir_fg = "#d78821"
-git_fg = "#458588"
-time_fg = "#a89984"
+[palettes.onedarkpro]
+error_status = "#e06c75"
+success_status = "#3f534f"
+replace_mode = "#7ec7d1"
+visual_mode = "#abb2bf"
+bg = "#282c34"
+dir_fg = "#61afef"
+git_fg = "#98c379"
+time_fg = "#edd2a1"
 
 [directory]
 style = "fg:dir_fg bg:bg"
