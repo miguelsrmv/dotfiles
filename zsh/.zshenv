@@ -24,4 +24,4 @@ export MANPAGER="nvim +Man!"
 export PAGER="less"
 
 # ─── PATH ───────────────────────────────────────────────────────────
-export PATH="$XDG_DATA_HOME/npm/bin:$PATH"
+export PATH="$PATH:$HOME/.local/bin:$XDG_DATA_HOME/npm/bin"
