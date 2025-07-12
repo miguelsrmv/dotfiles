@@ -23,3 +23,10 @@
 
 2025/07/12 (11:08:27) | ===> btop++ v.1.4.0
 2025/07/12 (11:08:27) | WARNING: Intel GPU: Failed to initialize PMU
+
+2025/07/12 (11:15:07) | ===> btop++ v.1.4.0
+2025/07/12 (11:15:07) | WARNING: Intel GPU: Failed to initialize PMU
+2025/07/12 (11:15:13) | WARNING: Failed to join _runner thread on exit!
+
+2025/07/12 (11:15:15) | ===> btop++ v.1.4.0
+2025/07/12 (11:15:15) | WARNING: Intel GPU: Failed to initialize PMU
