@@ -12,6 +12,7 @@ return {
   { 'rebelot/kanagawa.nvim', event = 'VeryLazy' },
   { 'rose-pine/neovim', name = 'rose-pine', event = 'VeryLazy' },
   { 'olimorris/onedarkpro.nvim', evnet = 'VeryLazy' },
+  { 'mofiqul/dracula.nvim', event = 'VeryLazy' },
 }
 
 -- vim: ts=2 sts=2 sw=2 et
