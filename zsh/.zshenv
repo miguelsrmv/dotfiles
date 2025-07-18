@@ -24,4 +24,5 @@ export MANPAGER="nvim +Man!"
 export PAGER="less"
 
 # ─── PATH ───────────────────────────────────────────────────────────
-export PATH="$PATH:$HOME/.local/bin:$XDG_DATA_HOME/npm/bin"
+export PATH="$PATH:$HOME/.local/bin:$XDG_DATA_HOME/npm/bin:$HOME/.cargo/bin"
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
