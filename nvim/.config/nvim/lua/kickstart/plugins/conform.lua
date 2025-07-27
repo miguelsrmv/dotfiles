@@ -43,6 +43,7 @@ return {
       css = { 'prettier' },
       scss = { 'prettier' },
       yaml = { 'prettier ' },
+      python = { 'black' },
     },
     formatters = {
       ['clang-format'] = {

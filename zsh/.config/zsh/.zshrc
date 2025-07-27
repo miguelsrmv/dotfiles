@@ -26,5 +26,8 @@ bindkey "^[[F" end-of-line          # End key
 bindkey "^[[2~" overwrite-mode      # Insert key
 bindkey "^[[3~" delete-char         # Delete key
 
+# Aliases
+alias commit-help='echo -e "feat: new feature\nfix: bug fix\ndocs: documentation\nstyle: formatting\nrefactor: code restructure\ntest: add tests\nchore: maintenance\nperf: performance\nci: CI changes\nbuild: build system\nrevert: revert commit"'
+
 # Start starship prompt
 eval "$(starship init zsh)"
