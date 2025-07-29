@@ -8,7 +8,7 @@ export XDG_STATE_HOME="$HOME/.local/state"
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export HISTSIZE=1000
 export SAVEHIST=1000
-export HISTFILE=$XDG_CONFIG_HOME/zsh/.zsh_history
+export HISTFILE="$XDG_CONFIG_HOME/zsh/.zsh_history"
 
 # ─── Dotfiles config ────────────────────────────────────────────────
 export DOTFILESDIR="$HOME/.dotfiles"
