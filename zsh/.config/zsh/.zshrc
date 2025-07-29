@@ -27,7 +27,11 @@ bindkey "^[[2~" overwrite-mode      # Insert key
 bindkey "^[[3~" delete-char         # Delete key
 
 # Aliases
-alias commit-help='echo -e "feat: new feature\nfix: bug fix\ndocs: documentation\nstyle: formatting\nrefactor: code restructure\ntest: add tests\nchore: maintenance\nperf: performance\nci: CI changes\nbuild: build system\nrevert: revert commit"'
+ alias cs="find \"\$OBSIDIAN_VAULT/Coding/CheatSheets\" -type f -name '*.md' \
+  | fzf --preview 'bat --style=numbers --color=always --paging=never {}' \
+  | xargs bat --style=numbers --color=always --paging=always"
 
 # Start starship prompt
 eval "$(starship init zsh)"
+
+. "$HOME/.local/share/../bin/env"

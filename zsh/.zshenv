@@ -23,6 +23,9 @@ export GIT_EDITOR="nvim"
 export MANPAGER="nvim +Man!"
 export PAGER="less"
 
+# ─── Obsidian Vault ─────────────────────────────────────────────────
+export OBSIDIAN_VAULT="$HOME/Obsidian/MainVault"
+
 # ─── PATH ───────────────────────────────────────────────────────────
 export PATH="$PATH:$HOME/.local/bin:$XDG_DATA_HOME/npm/bin:$HOME/.cargo/bin"
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
