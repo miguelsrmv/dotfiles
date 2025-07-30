@@ -1,11 +1,14 @@
 # Eliminates PATH duplicate entries
 typeset -U path
 
+# Ensures .local/bin is part of PATH
+. "$HOME/.local//bin/env"
+
 # Setup history
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=1000
 SAVEHIST=1000
-HISTFILE=~/dotfiles/zsh/.zsh_history
+HISTFILE="$ZDOTDIR/.zsh_history"
 
 # Created by Zap installer
 [ -f "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh" ] && source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
@@ -31,7 +34,8 @@ bindkey "^[[3~" delete-char         # Delete key
   | fzf --preview 'bat --style=numbers --color=always --paging=never {}' \
   | xargs bat --style=numbers --color=always --paging=always"
 
+# Hook direnv
+eval "$(direnv hook zsh)"
+ 
 # Start starship prompt
 eval "$(starship init zsh)"
-
-. "$HOME/.local/share/../bin/env"
