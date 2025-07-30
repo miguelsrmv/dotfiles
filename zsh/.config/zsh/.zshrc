@@ -34,8 +34,8 @@ bindkey "^[[3~" delete-char         # Delete key
   | fzf --preview 'bat --style=numbers --color=always --paging=never {}' \
   | xargs bat --style=numbers --color=always --paging=always"
 
-# Hook direnv
-eval "$(direnv hook zsh)"
- 
 # Start starship prompt
 eval "$(starship init zsh)"
+
+# Hook direnv
+eval "$(direnv hook zsh)"
