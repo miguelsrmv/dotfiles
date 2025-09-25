@@ -1,1 +1,1 @@
-GHOSTTY_THEME=catppuccin-macchiato
+GHOSTTY_THEME="Catppuccin Macchiato"

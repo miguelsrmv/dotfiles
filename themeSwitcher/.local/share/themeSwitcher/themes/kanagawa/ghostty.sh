@@ -1,1 +1,1 @@
-GHOSTTY_THEME=kanagawabones
+GHOSTTY_THEME=Kanagawabones

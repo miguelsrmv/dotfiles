@@ -1,4 +1,4 @@
-GHOSTTY_THEME=dracula_mofiqul
+GHOSTTY_THEME=Dracula
 GHOSTTY_THEME_DIR=$DOTFILES_DIR/ghostty/.config/ghostty/themes
 
 mkdir -p $GHOSTTY_THEME_DIR

@@ -1,1 +1,1 @@
-GHOSTTY_THEME=GruvboxDark
+GHOSTTY_THEME="Gruvbox Dark"

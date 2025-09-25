@@ -1,1 +1,1 @@
-GHOSTTY_THEME=nightfox
+GHOSTTY_THEME=Nightfox

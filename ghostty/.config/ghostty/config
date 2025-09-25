@@ -42,7 +42,7 @@
 # # Just for example:
 # resize-overlay-duration = 4s 200ms
 
-theme = "OneHalfDark"
+theme = "Catppuccin Machiatto"
 font-family = "JetBrainsMono Nerd Font"
 keybind = alt+enter=toggle_fullscreen
 keybind = alt+r=reload_config

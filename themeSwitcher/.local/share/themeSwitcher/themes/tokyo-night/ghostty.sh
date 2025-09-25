@@ -1,1 +1,1 @@
-GHOSTTY_THEME=tokyonight
+GHOSTTY_THEME=TokyoNight

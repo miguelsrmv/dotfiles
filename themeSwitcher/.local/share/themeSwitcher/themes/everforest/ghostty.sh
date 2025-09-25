@@ -1,4 +1,4 @@
-GHOSTTY_THEME=everforest
+GHOSTTY_THEME=Everforest
 GHOSTTY_THEME_DIR=$DOTFILES_DIR/ghostty/.config/ghostty/themes
 
 mkdir -p $GHOSTTY_THEME_DIR

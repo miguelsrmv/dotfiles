@@ -29,3 +29,6 @@ export OBSIDIAN_VAULT="$HOME/Obsidian/MainVault"
 # ─── PATH ───────────────────────────────────────────────────────────
 export PATH="$PATH:$HOME/.local/bin:$XDG_DATA_HOME/npm/bin:$HOME/.cargo/bin"
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+
+# ─── KEYS ───────────────────────────────────────────────────────────
+export GEMINI_API_KEY="AIzaSyCKV7u34fraE8WDN4tO2Exyr_85fLCtg20"

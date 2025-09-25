@@ -1,1 +1,1 @@
-GHOSTTY_THEME=OneHalfDark
+GHOSTTY_THEME="One Half Dark"

@@ -36,6 +36,3 @@ bindkey "^[[3~" delete-char         # Delete key
 
 # Start starship prompt
 eval "$(starship init zsh)"
-
-# Hook direnv
-eval "$(direnv hook zsh)"

@@ -51,59 +51,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- [[Custom Commands]]
--- Keybinds to make navigating between buffers and tabs easier
-vim.keymap.set('n', ']b', ':bnext<CR>', { silent = true }) -- Next buffer
-vim.keymap.set('n', '[b', ':bprevious<CR>', { silent = true }) -- Previous buffer
-vim.keymap.set('n', ']B', ':blast<CR>', { silent = true }) -- Last buffer
-vim.keymap.set('n', '[B', ':bfirst<CR>', { silent = true }) -- First buffer
-
-vim.keymap.set('n', ']t', ':tabnext<CR>', { silent = true }) -- Next tab
-vim.keymap.set('n', '[t', ':tabprevious<CR>', { silent = true }) -- Previous tab
-vim.keymap.set('n', ']T', ':tablast<CR>', { silent = true }) -- Last tab
-vim.keymap.set('n', '[T', ':tabfirst<CR>', { silent = true }) -- First tab
-
--- Direct tab access with :T{number}
-vim.cmd 'command! -nargs=1 T tabnext <args>'
-vim.cmd 'command! -nargs=1 B buffernext <args>'
-
 -- Split windows horizontally or vertically
 vim.keymap.set('n', '<leader>wh', ':split<CR>', { desc = 'Split window horizontally' })
 vim.keymap.set('n', '<leader>wv', ':vsplit<CR>', { desc = 'Split window vertically' })
-
--- AI-powered Keymaps
-vim.keymap.set('n', '<leader>apc', function()
-  vim.cmd ':Git add .'
-  vim.cmd ':Git commit --verbose'
-  vim.cmd ":AvanteAsk 'Generate a concise commit message following Conventional Commits format (type(scope): description). Analyze the changes to identify the primary purpose (feat, fix, docs, style, refactor, perf, test, chore). Include relevant ticket numbers if pattern [ABC-123] is found in branch name. Keep the first line under 72 characters.'"
-end, { desc = 'avante: generate commit message' })
-
-vim.keymap.set('n', '<leader>apd', function()
-  vim.cmd ":AvanteAsk 'Add comprehensive Doxygen documentation to this file. Include: @brief descriptions, @param details with types and purpose, @return values, @throws exceptions, @note for important considerations, and @example where helpful. Maintain existing documentation style if present. Focus on public APIs first.'"
-end, { desc = 'avante: generate complete documentation' })
-
-vim.keymap.set({ 'v', 'x' }, '<leader>apd', function()
-  vim.cmd ":AvanteAsk 'Add comprehensive Doxygen documentation to this code. Include: @brief descriptions, @param details with types and purpose, @return values, @throws exceptions, @note for important considerations, and @example where helpful. Maintain existing documentation style if present. Focus on public APIs first.'"
-end, { desc = 'avante: generate complete documentation' })
-
-vim.keymap.set({ 'v', 'x' }, '<leader>apo', function()
-  vim.cmd ":AvanteAsk 'Optimize this code for: 1) Performance - reduce time/space complexity, 2) Readability - improve naming and structure, 3) Maintainability - reduce duplications and follow best practices. Explain key optimizations and preserve original functionality.'"
-end, { desc = 'avante: optimize selected code' })
-
-vim.keymap.set({ 'v', 'x' }, '<leader>apt', function()
-  vim.cmd ":AvanteAsk 'Create comprehensive unit tests for this code. Include: 1) Happy path tests, 2) Edge cases and error conditions, 3) Boundary values, 4) Appropriate mocks/stubs where needed. Use testing framework patterns appropriate for the language. Organize tests logically with descriptive names.'"
-end, { desc = 'avante: create thorough unit tests' })
-
-vim.keymap.set({ 'v', 'x' }, '<leader>apr', function()
-  vim.cmd ":AvanteAsk 'Review this code for: 1) Potential bugs/errors, 2) Security vulnerabilities, 3) Performance issues, 4) Maintainability concerns, 5) Adherence to language best practices, 6) Edge cases not handled. Prioritize critical issues first and suggest specific improvements.'"
-end, { desc = 'avante: perform detailed code review' })
-
-vim.keymap.set({ 'v', 'x' }, '<leader>apx', function()
-  vim.cmd ":AvanteAsk 'Explain this code in detail: 1) Overall purpose, 2) How it works step-by-step, 3) Key algorithms or patterns used, 4) Potential edge cases or limitations, 5) Performance characteristics. Adjust explanation depth based on complexity. Include relevant programming concepts where helpful.'"
-end, { desc = 'avante: explain code comprehensively' })
-
-vim.keymap.set({ 'v', 'x' }, '<leader>apb', function()
-  vim.cmd ":AvanteAsk 'Debug this code. Identify potential issues, suggest fixes, and explain the root causes of any bugs. Consider edge cases and runtime errors.'"
-end, { desc = 'avante: debug code' })
 
 -- vim: ts=2 sts=2 sw=2 et
