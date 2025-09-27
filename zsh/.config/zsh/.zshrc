@@ -1,9 +1,6 @@
 # Eliminates PATH duplicate entries
 typeset -U path
 
-# Ensures .local/bin is part of PATH
-. "$HOME/.local//bin/env"
-
 # Setup history
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=1000

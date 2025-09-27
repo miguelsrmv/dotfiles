@@ -7,30 +7,31 @@ set -euo pipefail
 # Functions for applying theme to each app
 ##########################################
 
-# Applies the Ghostty theme by editing its config file
+# Applies the Ghostty theme by symlitting theme
 apply_ghostty_theme() {
-	source "$THEME_DIR/$THEME/ghostty.sh"
-	local config="$XDG_CONFIG_HOME/ghostty/config"
+	local config_file="$XDG_CONFIG_HOME/ghostty/config"
 
 	# Ensure the config file exists
-	[ -f "$config" ] || touch "$config"
+	[ -f "$config_file" ] || touch "$config_file"
 
-	# Check if a theme line already exists and replace it, otherwise append it
-	if grep -q '^theme = ' "$config"; then
-		sed -i 's/^theme = ".*"$/theme = "'"$GHOSTTY_THEME"'"/' "$config"
-	else
-		echo 'theme = "'"$GHOSTTY_THEME"'"' >> "$config"
-	fi
+	# Ensure it includes the theme directive (append only if missing)
+	grep -qxF 'config-file = ?"~/.config/ghostty/ghostty.theme"' "$config_file" \
+	|| echo 'config-file = ?"~/.config/ghostty/ghostty.theme"' >> "$config_file"
+
+	# Symlink config to current theme
+	ln -sf "$THEME_DIR/$THEME/ghostty.theme" "$XDG_CONFIG_HOME/ghostty/ghostty.theme"
 }
 
-# Copies the Tmux theme file to the expected location
+# Symlinks the Tmux theme file to the expected location
 apply_tmux_theme() {
 	local src="$THEME_DIR/$THEME/tmux.theme"
 	local dest="$XDG_CONFIG_HOME/tmux/themes/theme.colors"
 
+	# Symlinks tmux theme and colors
 	if [ -f "$src" ]; then
-		cp "$src" "$dest"
-	fi
+        ln -sf "$src" "$dest"
+    fi
+
 }
 
 # Sources and applies the Starship prompt theme
@@ -50,26 +51,23 @@ apply_nvim_theme() {
 	# Ensure the config file exists
 	[ -f "$file" ] || return
 
+	# Changes nvim theme name
 	sed -i "s/theme = '.*'/theme = '${NVIM_THEME}'/" "$file"
 }
 
-# Applies BTOP (system monitor) theme
 apply_btop_theme() {
-	local btop_conf="$HOME/.config/btop/btop.conf"
-	local btop_theme_file="$THEME_DIR/$THEME/btop.theme"
-	local btop_theme_dest="$DOTFILES_DIR/btop/.config/btop/themes/$THEME.theme"
+    local btop_conf="$HOME/.config/btop/btop.conf"
+    local btop_theme_file="$THEME_DIR/$THEME/btop.theme"
+    local btop_theme_dest="$DOTFILES_DIR/btop/.config/btop/themes"
 
-	# Ensure btop config exists
-	[ -f "$btop_conf" ] || return
+    # Ensure btop config exists
+    [ -f "$btop_conf" ] || return
 
-	# Copy theme file if it exists, else fallback to "Default"
-	if [ -f "$btop_theme_file" ]; then
-		mkdir -p "$(dirname "$btop_theme_dest")"
-		cp "$btop_theme_file" "$btop_theme_dest"
-		sed -i "s/color_theme = \".*\"/color_theme = \"$THEME\"/" "$btop_conf"
-	else
-		sed -i "s/color_theme = \".*\"/color_theme = \"Default\"/" "$btop_conf"
-	fi
+	# Symlinks btop theme
+    if [ -f "$btop_theme_file" ]; then
+        mkdir -p "$(dirname "$btop_theme_dest")"
+        ln -sf "$btop_theme_file" "$btop_theme_dest/current.theme"
+    fi
 }
 
 # Applies GNOME theme using theme script
@@ -81,9 +79,15 @@ apply_gnome_theme() {
 	[ -f "$SCRIPT_DIR/set-gnome-theme.sh" ] && source "$SCRIPT_DIR/set-gnome-theme.sh"
 }
 
-# Reloads all apps that use the theme
 reload_all() {
-	[ -f "$SCRIPT_DIR/reloadApplications.sh" ] && source "$SCRIPT_DIR/reloadApplications.sh"
+	# Reload ghostty config
+	pkill -SIGUSR2 ghostty
+
+	# Reload btop config
+	pkill -SIGUSR2 btop 2>/dev/null || true
+
+	# Reloads tmux
+	tmux source-file $XDG_CONFIG_HOME/tmux/tmux.conf
 }
 
 #################

@@ -1,2 +1,2 @@
 THEME_COLOR="#61AFEF"
-THEME_BACKGROUND="onedarkpro/background.png"
+THEME_BACKGROUND="one-dark-pro/background.png"

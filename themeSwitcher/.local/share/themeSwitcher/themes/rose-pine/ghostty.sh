@@ -1,1 +1,0 @@
-GHOSTTY_THEME="Rose Pine"

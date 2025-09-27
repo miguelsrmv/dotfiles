@@ -1,4 +1,1 @@
-set -g @background "#24273a"
-set -g @normal_text "#c6d0f5"
-set -g @highlighted_text "#8caaee"
-set -g @secondary_highlight "#f2d5cf"
+/home/miguel/.local/share/themeSwitcher/themes/nord/tmux.theme
