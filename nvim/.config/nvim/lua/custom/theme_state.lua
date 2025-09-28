@@ -1,1 +1,1 @@
-/home/miguel/.local/share/themeSwitcher/themes/everforest/neovim.lua
+/home/miguel/.local/share/themeSwitcher/themes/nightfox/neovim.lua
