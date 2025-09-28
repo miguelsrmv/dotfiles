@@ -1,0 +1,44 @@
+#!/bin/bash
+set -euo pipefail
+
+DATA_DIR="$HOME/.local/share/themeSwitcher"
+CURRENT_THEME="$(cat "$DATA_DIR/current_theme.txt")"
+SCRIPT_DIR="$DATA_DIR/scripts"
+THEME_DIR="$DATA_DIR/themes/$CURRENT_THEME"
+BACKGROUND_DIR="$THEME_DIR/backgrounds"
+
+# Sorted list of backgrounds
+mapfile -t BG_FILES < <(find "$BACKGROUND_DIR" -maxdepth 1 -type f -printf "%f\n" | sort -V)
+NUM_BACKGROUNDS=${#BG_FILES[@]}
+
+# Resolve current background
+CURRENT_BG=$(basename "$(readlink -f "$THEME_DIR/background.png" || echo "")")
+CURRENT_INDEX=0
+
+for i in "${!BG_FILES[@]}"; do
+    if [[ "${BG_FILES[i]}" == "$CURRENT_BG" ]]; then
+        CURRENT_INDEX=$i
+        break
+    fi
+done
+
+# Next background
+NEXT_INDEX=$(( (CURRENT_INDEX + 1) % NUM_BACKGROUNDS ))
+NEXT_BG="${BG_FILES[NEXT_INDEX]}"
+
+# Update symlink
+ln -sf "$BACKGROUND_DIR/$NEXT_BG" "$THEME_DIR/background.png"
+
+# Get desktop environment
+source "$SCRIPT_DIR/get_desktop_environment.sh"
+
+# Change background
+if [ "$DESKTOP_ENVIRONMENT" = "GNOME" ]; then
+    if [ -f "$THEME_DIR/background.png" ]; then
+        gsettings set org.gnome.desktop.background picture-uri "file://$THEME_DIR/background.png"
+        gsettings set org.gnome.desktop.background picture-uri-dark "file://$THEME_DIR/background.png"
+        gsettings set org.gnome.desktop.background picture-options 'zoom'
+    fi
+elif [ "$DESKTOP_ENVIRONMENT" = "Hyprland" ]; then
+	source "$SCRIPT_DIR/apply_hyprland_theme.sh"
+fi

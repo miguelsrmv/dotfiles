@@ -1,0 +1,63 @@
+# [metadata]
+# name = "miguel's config"
+# author = "miguel"
+# origin_url = "https://github.com/EdenEast/nightfox.nvim"
+
+"$schema" = "https://starship.rs/config-schema.json"
+
+format = """
+$directory $git_branch$git_status $character"""
+
+right_format = "$time"
+
+palette = "nord"
+
+[palettes.nord]
+error_status = "#ECEFF4"
+success_status = "#8FBCBB"
+replace_mode = "#88C0D0"
+visual_mode = "#4C566A"
+bg = "#2E3440"
+dir_fg = "#5E81AC"
+git_fg = "#8FBCBB"
+time_fg = "#D8DEE9"
+
+[directory]
+style = "fg:dir_fg bg:bg"
+format = "[$path]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+"Projects" = " "
+
+[git_branch]
+symbol = ""
+style = "bg:bg"
+format = 'at [[$symbol $branch](fg:git_fg bg:bg)]($style)'
+
+[git_status]
+style = "bg:bg"
+format = '[[( $all_status$ahead_behind)](fg:git_fg bg:bg)]($style)'
+
+[character]
+disabled = false
+success_symbol = '[>](bold fg:success_status)'
+error_symbol = '[>](bold fg:error_status)'
+vimcmd_symbol = '[<](bold fg:success_status)'
+vimcmd_replace_one_symbol = '[<](bold fg:replace_mode)'
+vimcmd_replace_symbol = '[<](bold fg:replace_mode)'
+vimcmd_visual_symbol = '[<](bold fg:visual_mode)'
+
+[fill]
+symbol = ""
+
+[time]
+disabled = false
+style = "fg:time_fg bg:bg"
+format = "[$time]($style)"
+time_format = "%H:%M"

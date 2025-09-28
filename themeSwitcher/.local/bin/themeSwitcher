@@ -3,126 +3,48 @@
 # Exit on errors, undefined variables, and pipeline failures
 set -euo pipefail
 
-##########################################
-# Functions for applying theme to each app
-##########################################
+# Setup directory paths
+DATA_DIR="$HOME/.local/share/themeSwitcher"
+SCRIPT_DIR="$DATA_DIR/scripts"
+THEME_DIR="$DATA_DIR/themes"
+DOTFILES_DIR="$HOME/.dotfiles"
 
-# Applies the Ghostty theme by symlitting theme
-apply_ghostty_theme() {
-	local config_file="$XDG_CONFIG_HOME/ghostty/config"
+# Get theme list
+source "$SCRIPT_DIR/get_theme_list.sh"
 
-	# Ensure the config file exists
-	[ -f "$config_file" ] || touch "$config_file"
+# Get desktop environment
+source "$SCRIPT_DIR/get_desktop_environment.sh"
 
-	# Ensure it includes the theme directive (append only if missing)
-	grep -qxF 'config-file = ?"~/.config/ghostty/ghostty.theme"' "$config_file" \
-	|| echo 'config-file = ?"~/.config/ghostty/ghostty.theme"' >> "$config_file"
+# Get calling app
+source "$SCRIPT_DIR/get_caller.sh"
 
-	# Symlink config to current theme
-	ln -sf "$THEME_DIR/$THEME/ghostty.theme" "$XDG_CONFIG_HOME/ghostty/ghostty.theme"
-}
+# Only run interactive selection if called from a terminal
+if [ "$CALLER" = "Terminal" ]; then
+	# Ask user to select theme and convert to kebab case
+    THEME=$(printf "%s\n" "${THEME_NAMES[@]}" \
+      | fzf \
+			--prompt="Choose your theme: " \
+			--reverse \
+      | tr '[:upper:]' '[:lower:]' \
+      | sed 's/ /-/g')
+else
+	echo "Non-interactive launcher detected: skipping theme selection."
+fi
 
-# Symlinks the Tmux theme file to the expected location
-apply_tmux_theme() {
-	local src="$THEME_DIR/$THEME/tmux.theme"
-	local dest="$XDG_CONFIG_HOME/tmux/themes/theme.colors"
-
-	# Symlinks tmux theme and colors
-	if [ -f "$src" ]; then
-        ln -sf "$src" "$dest"
-    fi
-
-}
-
-# Sources and applies the Starship prompt theme
-apply_starship_theme() {
-	# Source theme-specific Starship variables if present
-	[ -f "$THEME_DIR/$THEME/starship.sh" ] && source "$THEME_DIR/$THEME/starship.sh"
-
-	# Run global script to apply the Starship theme
-	source "$SCRIPT_DIR/set-starship-theme.sh"
-}
-
-# Sets the Neovim theme name in your Lua config
-apply_nvim_theme() {
-	source "$THEME_DIR/$THEME/neovim.sh"
-	local file="$XDG_CONFIG_HOME/nvim/lua/custom/theme_state.lua"
-
-	# Ensure the config file exists
-	[ -f "$file" ] || return
-
-	# Changes nvim theme name
-	sed -i "s/theme = '.*'/theme = '${NVIM_THEME}'/" "$file"
-}
-
-apply_btop_theme() {
-    local btop_conf="$HOME/.config/btop/btop.conf"
-    local btop_theme_file="$THEME_DIR/$THEME/btop.theme"
-    local btop_theme_dest="$DOTFILES_DIR/btop/.config/btop/themes"
-
-    # Ensure btop config exists
-    [ -f "$btop_conf" ] || return
-
-	# Symlinks btop theme
-    if [ -f "$btop_theme_file" ]; then
-        mkdir -p "$(dirname "$btop_theme_dest")"
-        ln -sf "$btop_theme_file" "$btop_theme_dest/current.theme"
-    fi
-}
-
-# Applies GNOME theme using theme script
-apply_gnome_theme() {
-	# Source theme-specific GNOME setup if present
-	[ -f "$THEME_DIR/$THEME/gnome.sh" ] && source "$THEME_DIR/$THEME/gnome.sh"
-
-	# Source general GNOME theme setter
-	[ -f "$SCRIPT_DIR/set-gnome-theme.sh" ] && source "$SCRIPT_DIR/set-gnome-theme.sh"
-}
-
-reload_all() {
-	# Reload ghostty config
-	pkill -SIGUSR2 ghostty
-
-	# Reload btop config
-	pkill -SIGUSR2 btop 2>/dev/null || true
-
-	# Reloads tmux
-	tmux source-file $XDG_CONFIG_HOME/tmux/tmux.conf
-}
-
-#################
-# Main Entry Point
-#################
-
-main() {
-	# Setup directory paths
-	DATA_DIR="$HOME/.local/share/themeSwitcher"
-	SCRIPT_DIR="$DATA_DIR/scripts"
-	THEME_DIR="$DATA_DIR/themes"
-	DOTFILES_DIR="$HOME/.dotfiles"
-
-	# Collect all subdirectories in THEME_DIR as valid themes, converts from kebab case to prper display
-	mapfile -t THEME_NAMES < <(find "$THEME_DIR" -maxdepth 1 -mindepth 1 -type d -printf "%f\n" | sed 's/-/ /g' | sed 's/\b\(.\)/\u\1/g' | sort)
-
-	# Bail out early if no themes are found
-	if [ "${#THEME_NAMES[@]}" -eq 0 ]; then
-		echo "No themes found in $THEME_DIR"
-		exit 1
+# Apply selected theme
+if [ -n "${THEME:-}" ]; then
+	source "$SCRIPT_DIR/apply_ghostty_theme.sh"
+	source "$SCRIPT_DIR/apply_tmux_theme.sh"
+	source "$SCRIPT_DIR/apply_starship_theme.sh"
+	source "$SCRIPT_DIR/apply_nvim_theme.sh"
+	source "$SCRIPT_DIR/apply_btop_theme.sh"
+	
+	if [ "$DESKTOP_ENVIRONMENT" == "GNOME" ]; then
+		source "$SCRIPT_DIR/apply_gnome_theme.sh"
+	elif [ "$DESKTOP_ENVIRONMENT" == "Hyprland" ]; then
+		source "$SCRIPT_DIR/apply_hyprland_theme.sh"
 	fi
+fi
 
-	# Ask user to select theme and reverse transform to kebab case
-	THEME=$(gum choose "${THEME_NAMES[@]}" --header "Choose your theme" --height 10 | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
-
-	# Apply selected theme
-	if [ -n "${THEME:-}" ]; then
-		apply_ghostty_theme
-		apply_tmux_theme
-		apply_starship_theme
-		apply_nvim_theme
-		apply_btop_theme
-		apply_gnome_theme
-		reload_all
-	fi
-}
-
-main "$@"
+# Write current theme name for bg switching
+echo "$THEME" > "$DATA_DIR/current_theme.txt"

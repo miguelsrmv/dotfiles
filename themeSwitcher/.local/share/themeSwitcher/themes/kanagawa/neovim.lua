@@ -1,7 +1,5 @@
+-- This file ONLY returns a table with the theme name.
+-- It is a passive data file. It does not run any commands.
 return {
-	"rebelot/kanagawa.nvim",
-	priority = 1000,
-	config = function()
-		vim.cmd.colorscheme("kanagawa")
-	end,
+  theme = 'kanagawa',
 }

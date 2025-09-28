@@ -1,2 +1,2 @@
 THEME_COLOR="bark"
-THEME_BACKGROUND="everforest/background.jpg"
+THEME_BACKGROUND="everforest/background.png"

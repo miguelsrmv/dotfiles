@@ -1,1 +1,0 @@
-NVIM_THEME="onedark"
