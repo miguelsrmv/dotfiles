@@ -55,4 +55,16 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.keymap.set('n', '<leader>wh', ':split<CR>', { desc = 'Split window horizontally' })
 vim.keymap.set('n', '<leader>wv', ':vsplit<CR>', { desc = 'Split window vertically' })
 
+-- Molten autocommands
+vim.keymap.set('n', '<leader>mi', ':MoltenInit<CR>', { silent = true, desc = 'Initialize the Molten plugin' })
+vim.keymap.set('n', '<leader>mdi', ':MoltenDeinit<CR>', { silent = true, desc = 'Deinitialize the Molten plugin' })
+vim.keymap.set('n', '<leader>me', ':MoltenEvaluateOperator<CR>', { silent = true, desc = 'Evaluate Operator' })
+vim.keymap.set('n', '<leader>ml', ':MoltenEvaluateLine<CR>', { silent = true, desc = 'Evaluate line' })
+vim.keymap.set('n', '<leader>mr', ':MoltenReevaluateCell<CR>', { silent = true, desc = 'Re-evaluate cell' })
+vim.keymap.set('v', '<leader>me', ':<C-u>MoltenEvaluateVisual<CR>gv', { silent = true, desc = 'Evaluate Visual selection' })
+vim.keymap.set('n', '<leader>md', ':MoltenDelete<CR>', { silent = true, desc = 'Molten delete cell' })
+vim.keymap.set('n', '<leader>mh', ':MoltenHideOutput<CR>', { silent = true, desc = 'Hide output' })
+vim.keymap.set('n', '<leader>ms', ':MoltenShowOutput<CR>', { silent = true, desc = 'Show output' })
+vim.keymap.set('n', '<leader>meo', ':noautocmd MoltenEnterOutput<CR>', { silent = true, desc = 'Show/enter output' })
+
 -- vim: ts=2 sts=2 sw=2 et

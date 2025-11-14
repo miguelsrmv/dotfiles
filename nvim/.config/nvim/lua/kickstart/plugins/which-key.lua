@@ -73,6 +73,7 @@ return {
         { '<leader>h', group = '[H]arpoon ', mode = 'n' },
         { '<leader>c', group = '[C]oPilot', mode = { 'n', 'v', 'x' } },
         { '<leader>C', group = '[C]odesnap', mode = 'x' },
+        { '<leader>m', group = '[M]olten', mode = { 'n', 'v', 'x' } },
       },
     },
   },
