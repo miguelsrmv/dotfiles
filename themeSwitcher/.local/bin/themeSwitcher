@@ -7,7 +7,7 @@ set -euo pipefail
 DATA_DIR="$HOME/.local/share/themeSwitcher"
 SCRIPT_DIR="$DATA_DIR/scripts"
 THEME_DIR="$DATA_DIR/themes"
-DOTFILES_DIR="$HOME/.dotfiles"
+DOTFILES_DIR="$HOME/dotfiles"
 
 # Get theme list
 source "$SCRIPT_DIR/get_theme_list.sh"

@@ -26,6 +26,9 @@ export PAGER="less"
 # ─── Obsidian Vault ─────────────────────────────────────────────────
 export OBSIDIAN_VAULT="$HOME/Obsidian/MainVault"
 
+# ─── Vim ────────────────────────────────────────────────────────────
+export VIMINFOFILE="$XDG_STATE_HOME/vim/viminfo"
+
 # ─── PATH ───────────────────────────────────────────────────────────
 export PATH="$PATH:$HOME/.local/bin:$XDG_DATA_HOME/npm/bin:$HOME/.cargo/bin"
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
