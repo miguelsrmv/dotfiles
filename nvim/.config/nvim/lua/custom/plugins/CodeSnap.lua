@@ -1,14 +1,19 @@
 return {
   'mistricky/codesnap.nvim',
-  build = 'make build_generator',
+  tag = 'v2.0.0',
   keys = {
-    { '<leader>Cc', '<Esc><cmd>CodeSnap<cr>', mode = 'x', desc = 'Save selected code snapshot into clipboard' },
-    { '<leader>Cs', '<Esc><cmd>CodeSnapSave<cr>', mode = 'x', desc = 'Save selected code snapshot in ~/Pictures/CodeSnap' },
+    { '<leader>Cc', '<cmd>CodeSnap<cr>', mode = 'x', desc = 'Save to clipboard' },
+    { '<leader>Cs', '<cmd>CodeSnapSave<cr>', mode = 'x', desc = 'Save to directory' },
   },
   opts = {
     save_path = '~/Pictures/CodeSnap',
-    has_breadcrumbs = true,
-    bg_theme = 'bamboo',
+
+    snapshot_config = {
+      theme = 'bamboo',
+      breadcrumbs = {
+        enable = true,
+      },
+    },
   },
 }
 

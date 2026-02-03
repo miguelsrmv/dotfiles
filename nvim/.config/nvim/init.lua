@@ -105,6 +105,7 @@ require 'lazy-bootstrap'
 -- [[ Configure and install plugins ]]
 require 'lazy-plugins'
 
+-- [[ Allow for custom theme switcher]]
 require 'custom/theme_switcher'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
