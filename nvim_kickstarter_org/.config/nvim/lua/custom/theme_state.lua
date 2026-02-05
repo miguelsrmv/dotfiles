@@ -1,0 +1,1 @@
+/home/miguel/.local/share/themeSwitcher/themes/tokyo-night/neovim.lua

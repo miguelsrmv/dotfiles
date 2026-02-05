@@ -33,3 +33,15 @@ bindkey "^[[3~" delete-char         # Delete key
 
 # Start starship prompt
 eval "$(starship init zsh)"
+
+# Stub function to activate conda
+conda() {
+    # Remove stub so it doesn’t call itself again
+    unset -f conda
+
+    # Load conda hook
+    eval "$(/home/miguel/anaconda3/bin/conda shell.zsh hook)"
+
+    # Call the real conda function with the original arguments
+    conda "$@"
+}
