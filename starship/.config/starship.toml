@@ -6,7 +6,7 @@
 "$schema" = "https://starship.rs/config-schema.json"
 
 format = """
-$directory $git_branch$git_status $character"""
+$directory $python $git_branch$git_status $character"""
 
 right_format = "$time"
 
@@ -43,6 +43,14 @@ format = 'at [[$symbol $branch](fg:git_fg bg:bg)]($style)'
 [git_status]
 style = "bg:bg"
 format = '[[( $all_status$ahead_behind)](fg:git_fg bg:bg)]($style)'
+
+[python]
+disabled = false
+format = "🐍 [$symbol$virtualenv]($style) "
+style = "bold green"
+detect_files = []
+detect_extensions = []
+detect_folders = [".venv"]
 
 [character]
 disabled = false
