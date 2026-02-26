@@ -46,7 +46,7 @@ format = '[[( $all_status$ahead_behind)](fg:git_fg bg:bg)]($style)'
 
 [python]
 disabled = false
-symbol = "🐍"
+symbol = ""
 format = "[$symbol( \\($virtualenv\\))]($style)"
 style = "bold green"
 

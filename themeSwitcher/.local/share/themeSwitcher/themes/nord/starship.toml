@@ -64,6 +64,6 @@ time_format = "%H:%M"
 
 [python]
 disabled = false
-symbol = "🐍"
+symbol = ""
 format = "[$symbol( \\($virtualenv\\))]($style)"
 style = "bold green"
