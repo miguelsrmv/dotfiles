@@ -11,7 +11,7 @@ export SAVEHIST=1000
 export HISTFILE="$XDG_CONFIG_HOME/zsh/.zsh_history"
 
 # ─── Dotfiles config ────────────────────────────────────────────────
-export DOTFILESDIR="$HOME/.dotfiles"
+export DOTFILESDIR="$HOME/dotfiles"
 
 # ─── Hostname ───────────────────────────────────────────────────────
 export HOSTNAME=$(cat /etc/hostname)

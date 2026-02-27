@@ -1,12 +1,17 @@
 # [metadata]
-# name = "miguel's config"
+# name = "Miguel's config"
 # author = "miguel"
-# origin_url = "https://github.com/EdenEast/nightfox.nvim"
 
 "$schema" = "https://starship.rs/config-schema.json"
 
 format = """
-$directory $python$git_branch$git_status $character"""
+$directory \
+$git_branch$git_status\
+$nodejs$python\
+$docker_context$kubernetes\
+$cmd_duration\
+$character
+"""
 
 right_format = "$time"
 
@@ -42,7 +47,7 @@ format = 'at [[$symbol $branch](fg:git_fg bg:bg)]($style)'
 
 [git_status]
 style = "bg:bg"
-format = '[[( $all_status$ahead_behind)](fg:git_fg bg:bg)]($style)'
+format = '[[( $all_status$ahead_behind)](fg:git_fg bg:bg)]($style) '
 
 [character]
 disabled = false
@@ -63,7 +68,16 @@ format = "[$time]($style)"
 time_format = "%H:%M"
 
 [python]
-disabled = false
-symbol = ""
-format = "[$symbol( \\($virtualenv\\))]($style)"
-style = "bold green"
+symbol = "  "
+format = "[$symbol($virtualenv )]($style)"
+style = "fg:success_status"
+
+[nodejs]
+symbol = "  "
+format = "[$symbol($version )]($style)"
+style = "fg:success_status"
+
+[docker_context]
+symbol = "  "
+format = "[$symbol$context ]($style)"
+style = "fg:git_fg"
