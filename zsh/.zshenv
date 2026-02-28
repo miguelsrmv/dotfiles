@@ -6,12 +6,15 @@ export XDG_STATE_HOME="$HOME/.local/state"
 
 # ─── Zsh config ─────────────────────────────────────────────────────
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export HISTFILE="$XDG_CONFIG_HOME/zsh/.zsh_history"
 export HISTSIZE=1000
 export SAVEHIST=1000
-export HISTFILE="$XDG_CONFIG_HOME/zsh/.zsh_history"
 
 # ─── Dotfiles config ────────────────────────────────────────────────
 export DOTFILESDIR="$HOME/dotfiles"
+
+# ─── Starship config ────────────────────────────────────────────────
+export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 
 # ─── Hostname ───────────────────────────────────────────────────────
 export HOSTNAME=$(cat /etc/hostname)
