@@ -8,5 +8,7 @@ if [ -f "$src" ]; then
 	ln -sf "$src" "$dest"
 fi
 
-# Reloads tmux
-tmux source-file $XDG_CONFIG_HOME/tmux/tmux.conf
+# Reload tmux only if a tmux server is running
+if tmux info &>/dev/null; then
+    tmux source-file "$XDG_CONFIG_HOME/tmux/tmux.conf"
+fi

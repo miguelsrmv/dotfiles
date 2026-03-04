@@ -1,1 +1,1 @@
-/home/miguel/.local/share/themeSwitcher/themes/catppuccin/neovim.lua
+/home/miguel/.local/share/themeSwitcher/themes/tokyo-night/neovim.lua

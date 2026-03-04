@@ -39,9 +39,9 @@ if [ -n "${THEME:-}" ]; then
 	source "$SCRIPT_DIR/apply_nvim_theme.sh"
 	source "$SCRIPT_DIR/apply_btop_theme.sh"
 	
-	if [ "$DESKTOP_SESSION" == "gnome" ]; then
+	if [ "$XDG_CURRENT_DESKTOP" == "GNOME" ]; then
 		source "$SCRIPT_DIR/apply_gnome_theme.sh"
-	elif [ "$DESKTOP_SESSION" == "Hyprland" ]; then
+	elif [ "$XDG_CURRENT_DESKTOP" == "Hyprland" ]; then
 		source "$SCRIPT_DIR/apply_hyprland_theme.sh"
 	fi
 fi
