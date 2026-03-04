@@ -39,6 +39,7 @@ unfocused-split-fill = #44464f
 
 # Tab configuration
 gtk-titlebar = true
+title = "Ghostty"
 
 # Shell integration
 shell-integration = detect
@@ -50,4 +51,6 @@ gtk-single-instance = true
 
 # Dank color generation
 theme = dankcolors
+
+# Themeswitcher theme
 config-file = ?"~/.config/ghostty/ghostty.theme"
