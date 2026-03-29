@@ -18,32 +18,39 @@ source "$SCRIPT_DIR/get_desktop_environment.sh"
 # Get calling app
 source "$SCRIPT_DIR/get_caller.sh"
 
+# Accept theme as argument (e.g. when called from DMS)
+if [ $# -gt 0 ]; then
+    THEME=$(echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
+    if ! printf "%s\n" "${THEME_NAMES[@]}" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g' | grep -qx "$THEME"; then
+        echo "Error: '$THEME' is not a valid theme." >&2
+        exit 1
+    fi
+
 # Only run interactive selection if called from a terminal
-if [ "$CALLER" = "Terminal" ]; then
-	# Ask user to select theme and convert to kebab case
+elif [ "$CALLER" = "Terminal" ]; then
     THEME=$(printf "%s\n" "${THEME_NAMES[@]}" \
       | fzf \
-			--prompt="Choose your theme: " \
-			--reverse \
+        --prompt="Choose your theme: " \
+        --reverse \
       | tr '[:upper:]' '[:lower:]' \
       | sed 's/ /-/g')
 else
-	echo "Non-interactive launcher detected: skipping theme selection."
+    echo "Non-interactive launcher detected: skipping theme selection."
 fi
 
 # Apply selected theme
 if [ -n "${THEME:-}" ]; then
-	source "$SCRIPT_DIR/apply_ghostty_theme.sh"
-	source "$SCRIPT_DIR/apply_tmux_theme.sh"
-	source "$SCRIPT_DIR/apply_starship_theme.sh"
-	source "$SCRIPT_DIR/apply_nvim_theme.sh"
-	source "$SCRIPT_DIR/apply_btop_theme.sh"
-	
-	if [ "$XDG_CURRENT_DESKTOP" == "GNOME" ]; then
-		source "$SCRIPT_DIR/apply_gnome_theme.sh"
-	elif [ "$XDG_CURRENT_DESKTOP" == "Hyprland" ]; then
-		source "$SCRIPT_DIR/apply_hyprland_theme.sh"
-	fi
+    source "$SCRIPT_DIR/apply_ghostty_theme.sh"
+    source "$SCRIPT_DIR/apply_tmux_theme.sh"
+    source "$SCRIPT_DIR/apply_starship_theme.sh"
+    source "$SCRIPT_DIR/apply_nvim_theme.sh"
+    source "$SCRIPT_DIR/apply_btop_theme.sh"
+
+    if [ "$XDG_CURRENT_DESKTOP" == "GNOME" ]; then
+        source "$SCRIPT_DIR/apply_gnome_theme.sh"
+    elif [ "$XDG_CURRENT_DESKTOP" == "Hyprland" ]; then
+        source "$SCRIPT_DIR/apply_hyprland_theme.sh"
+    fi
 fi
 
 # Write current theme name for bg switching
