@@ -75,4 +75,9 @@ vim.opt.termguicolors = true
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- Folding
+vim.o.foldmethod = 'expr'
+vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.o.foldlevel = 99 -- open all folds by default
+
 -- vim: ts=2 sts=2 sw=2 et

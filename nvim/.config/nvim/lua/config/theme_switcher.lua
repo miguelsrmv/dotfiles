@@ -2,14 +2,14 @@
 
 -- 1. Define the path to the file your shell script modifies.
 --    Using vim.fn.expand to handle '~' correctly.
-local theme_state_file = vim.fn.expand '~/.config/nvim/lua/custom/theme_state.lua'
+local theme_state_file = vim.fn.expand '~/.config/nvim/lua/theme/theme.lua'
 
 -- 2. Create the function that will apply the theme.
 --
 
 local function apply_theme()
-  package.loaded['custom.theme_state'] = nil
-  local ok, state = pcall(require, 'custom.theme_state')
+  package.loaded['theme.theme'] = nil
+  local ok, state = pcall(require, 'theme.theme')
   if not ok then
     vim.notify('Error loading theme state: ' .. tostring(state), vim.log.levels.ERROR)
     return
