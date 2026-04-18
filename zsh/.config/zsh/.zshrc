@@ -45,3 +45,43 @@ conda() {
     # Call the real conda function with the original arguments
     conda "$@"
 }
+
+# Create a Tmux Dev Layout with nvim, opencode, and a terminal
+devup() {
+  [[ -z $TMUX ]] && { echo "You must be inside tmux to use devup."; return 1; }
+ 
+  local current_dir="${PWD}"
+  local editor_pane oc_pane tries pane_content
+ 
+  editor_pane="$TMUX_PANE"
+ 
+  tmux rename-window -t "$editor_pane" "dev"
+ 
+  # Split full width — bottom 15% is the plain terminal (C)
+  tmux split-window -v -p 15 -t "$editor_pane" -c "$current_dir"
+ 
+  # Split the top pane — opencode on the right 30% (A | B)
+  oc_pane=$(tmux split-window -h -p 30 -t "$editor_pane" -c "$current_dir" -P -F '#{pane_id}')
+ 
+  # Launch opencode first
+  tmux send-keys -t "$oc_pane" "opencode" C-m
+ 
+  # Wait until opencode's TUI is fully rendered before launching nvim,
+  # to prevent its startup OSC sequences from corrupting nvim's terminal state
+  tries=0
+  while (( tries < 30 )); do
+    sleep 0.5
+    pane_content=$(tmux capture-pane -t "$oc_pane" -p)
+    if echo "$pane_content" | grep -q "Ask anything"; then
+      break
+    fi
+    (( tries++ ))
+  done
+ 
+  # Launch nvim in the left pane
+  tmux send-keys -t "$editor_pane" "$EDITOR" C-m
+ 
+  # Focus nvim
+  tmux select-pane -t "$editor_pane"
+}
+
