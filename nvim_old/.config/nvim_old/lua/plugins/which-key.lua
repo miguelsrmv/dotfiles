@@ -27,21 +27,16 @@ return {
 
       -- Document existing key chains
       spec = {
-        { '<leader>a', group = '[A]vante', mode = { 'n', 'v', 'x' } },
-        { '<leader>ap', group = 'prompts', mode = { 'n', 'v', 'x' } },
-        { '<leader>D', group = '[D]ebug', mode = 'n' },
-        { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
+        { '<leader>d', group = '[D]ebug', mode = 'n' },
         { '<leader>w', group = '[W]orkspace', mode = 'n' },
         { '<leader>t', group = '[T]oggle', mode = 'n' },
         { '<leader>T', group = '[T]rouble', mode = 'n' },
         { '<leader>g', group = '[G]it', mode = { 'n', 'v' } },
         { '<leader>u', group = '[U]I Settings', mode = 'n' },
         { '<leader>H', group = '[H]unks', mode = { 'n', 'v' } },
-        { '<leader>4', group = '[4]2 header', mode = 'n' },
         { '<leader>h', group = '[H]arpoon ', mode = 'n' },
-        { '<leader>c', group = '[C]oPilot', mode = { 'n', 'v', 'x' } },
         { '<leader>C', group = '[C]odesnap', mode = 'x' },
-        { '<leader>m', group = '[M]olten', mode = { 'n', 'v', 'x' } },
+        { '<leader>s', group = '[S]earch', icon = { icon = '', color = 'green' } },
       },
     },
   },

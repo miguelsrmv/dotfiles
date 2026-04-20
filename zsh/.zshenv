@@ -33,7 +33,7 @@ export OBSIDIAN_VAULT="$HOME/Obsidian/MainVault"
 export VIMINFOFILE="$XDG_STATE_HOME/vim/viminfo"
 
 # ─── PATH ───────────────────────────────────────────────────────────
-export PATH="$PATH:$HOME/.local/bin:$XDG_DATA_HOME/npm/bin:$HOME/anaconda3/bin:$HOME/.opencode/bin"
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin/:$HOME/.local/bin:$XDG_DATA_HOME/npm/bin:$HOME/anaconda3/bin:$HOME/.opencode/bin:$HOME/.cargo/bin"
 
 # Cargo
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
