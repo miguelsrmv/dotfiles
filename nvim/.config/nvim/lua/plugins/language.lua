@@ -106,6 +106,7 @@ lint.linters_by_ft = {
 }
 
 local lint_enabled = false -- linting state flag
+local lint_ns = vim.api.nvim_create_namespace("nvim-lint") -- gets namespace for linting diagnostics
 local group = vim.api.nvim_create_augroup("nvim-lint", { clear = true })
 
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
@@ -117,7 +118,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 	end,
 })
 
-vim.keymap.set("n", "<leader>l", function() -- toggles linting
+vim.keymap.set("n", "<leader>tl", function() -- toggles linting
 	lint_enabled = not lint_enabled
 
 	if lint_enabled then
@@ -125,6 +126,6 @@ vim.keymap.set("n", "<leader>l", function() -- toggles linting
 		lint.try_lint()
 	else
 		vim.notify("Linting disabled")
-		vim.diagnostic.reset(nil, 0)
+		vim.diagnostic.reset(lint_ns, 0) -- clear linting diagnostics
 	end
 end, { desc = "Toggle linting" })

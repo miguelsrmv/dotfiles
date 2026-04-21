@@ -152,6 +152,7 @@ require("which-key").setup({
 		{ "<leader>h", group = "[h]unks", icon = { icon = "", color = "orange" }, mode = { "n", "v" } },
 		{ "<leader>l", group = "[L]int", icon = { icon = "󰁨", color = "yellow" }, mode = "n" },
 		{ "<leader>s", group = "[s]earch", icon = { icon = "󰺯", color = "green" } },
+		{ "<leader>t", group = "[t]oggle", icon = { icon = "󰺯", color = "green" } },
 		{ "<leader>w", group = "[w]orkspace", icon = { icon = "󰒓", color = "blue" }, mode = "n" },
 		{ "<leader>x", group = "Diagnostics", icon = { icon = "󰒡", color = "red" }, mode = "n" },
 	},
