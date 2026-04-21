@@ -38,6 +38,9 @@ else
     echo "Non-interactive launcher detected: skipping theme selection."
 fi
 
+# Write current theme name for bg switching
+echo "$THEME" > "$DATA_DIR/current_theme.txt"
+
 # Apply selected theme
 if [ -n "${THEME:-}" ]; then
     source "$SCRIPT_DIR/apply_ghostty_theme.sh"
@@ -53,5 +56,3 @@ if [ -n "${THEME:-}" ]; then
     fi
 fi
 
-# Write current theme name for bg switching
-echo "$THEME" > "$DATA_DIR/current_theme.txt"

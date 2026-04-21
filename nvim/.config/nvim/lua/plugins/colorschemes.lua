@@ -16,4 +16,35 @@ vim.pack.add({
 	"https://github.com/loctvl842/monokai-pro.nvim",
 })
 
-vim.cmd.colorscheme("tokyonight-night") -- Sets colorscheme
+-- Loads correct colorscheme
+local theme_file = vim.fn.expand("~/.local/share/themeSwitcher/current_theme.txt")
+local map = {
+	["catppuccin"] = "catppuccin-macchiato",
+	["catppuccin-latte"] = "catppuccin-latte",
+	["dracula"] = "dracula",
+	["everforest"] = "everforest",
+	["gruvbox"] = "gruvbox",
+	["kanagawa"] = "kanagawa",
+	["nightfox"] = "nightfox",
+	["nord"] = "nord",
+	["one-dark-pro"] = "onedark",
+	["ristretto"] = "monokai-pro-ristretto",
+	["rose-pine"] = "rose-pine",
+	["tokyo-night"] = "tokyonight-night",
+}
+
+local function read_theme()
+	local f = io.open(theme_file, "r")
+	if not f then
+		return nil
+	end
+
+	local theme = f:read("*l")
+	f:close()
+
+	return vim.trim(theme or "")
+end
+
+local theme = read_theme()
+local colorscheme = map[theme]
+vim.cmd("colorscheme " .. colorscheme)
