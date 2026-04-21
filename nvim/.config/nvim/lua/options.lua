@@ -45,7 +45,9 @@ vim.opt.textwidth = 80 -- Hard-wrap lines at 80 characters when inserting text
 vim.opt.list = true -- Enable rendering of invisible characters
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" } -- Tabs as », trailing spaces as ·, non-breaking spaces as ␣
 
--- Undo
+-- Undo and backups
+vim.opt.backup = false
+vim.opt.swapfile = false
 vim.opt.undofile = true -- Persist undo history across sessions (undo even after closing a file)
 vim.opt.undolevels = 10000 -- Maximum number of undo steps to keep
 
