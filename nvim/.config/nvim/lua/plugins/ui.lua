@@ -168,6 +168,20 @@ vim.pack.add({
 
 require("todo-comments").setup()
 
+-- stylua: ignore start
+local todo_maps = {
+	---@diagnostic disable-next-line: undefined-field
+  { "<leader>st", function() Snacks.picker.todo_comments() end,                                          "Todo" },
+	---@diagnostic disable-next-line: undefined-field
+  { "<leader>sT", function() Snacks.picker.todo_comments({ keywords = { "TODO", "FIX", "FIXME" } }) end, "Todo/Fix/Fixme",
+  },
+}
+-- stylua: ignore end
+
+for _, map in ipairs(todo_maps) do
+	vim.keymap.set("n", map[1], map[2], { desc = map[3] })
+end
+
 -- INFO: Diagnostics
 vim.pack.add({ "https://github.com/folke/trouble.nvim" }) -- provide diagnostics in quickfix list
 

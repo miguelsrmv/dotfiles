@@ -1,5 +1,4 @@
 -- INFO: Colorschemes
--- TODO: Check if all work or if setup is needed!
 vim.pack.add({
 	"https://github.com/EdenEast/nightfox.nvim",
 	"https://github.com/folke/tokyonight.nvim",

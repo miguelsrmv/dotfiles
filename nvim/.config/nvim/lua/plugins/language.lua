@@ -42,7 +42,7 @@ local lsp_servers = {
 					version = "LuaJIT", -- tells lua_ls we're using Neovim's Lua runtime (LuaJIT)
 				},
 				diagnostics = {
-					globals = { "vim" }, -- prevents "vim is undefined" warnings for Neovim API
+					globals = { "vim" }, -- prevents "undefined" warnings for Neovim API
 				},
 				workspace = {
 					library = vim.api.nvim_get_runtime_file("lua", true), -- exposes Neovim runtime Lua files to the LSP
