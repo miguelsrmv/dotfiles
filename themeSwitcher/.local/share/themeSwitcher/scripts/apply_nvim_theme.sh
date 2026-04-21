@@ -1,6 +1,4 @@
 #!/bin/bash
-
-NVIM_SOCK="/tmp/nvim.sock"
 THEME=$(cat "$HOME/.local/share/themeSwitcher/current_theme.txt")
 
 case "$THEME" in
@@ -45,4 +43,8 @@ case "$THEME" in
     ;;
 esac
 
-nvim --server "$NVIM_SOCK" --remote-send ":colorscheme $NVIM_THEME<CR>"
+# Find all running nvim sockets and send the theme change to each
+for sock in /tmp/nvim-*.sock; do
+  [ -S "$sock" ] || continue  # skip if not a valid socket
+  nvim --server "$sock" --remote-expr "execute('colorscheme $NVIM_THEME')" 2>/dev/null || true
+done

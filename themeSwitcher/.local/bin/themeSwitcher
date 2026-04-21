@@ -38,7 +38,7 @@ else
     echo "Non-interactive launcher detected: skipping theme selection."
 fi
 
-# Write current theme name for bg switching
+# Write current theme name for statefullness
 echo "$THEME" > "$DATA_DIR/current_theme.txt"
 
 # Apply selected theme
