@@ -25,6 +25,7 @@ require("mini.statusline").setup() -- Provides easy statusline
 -- INFO: Snacks
 vim.pack.add({ "https://github.com/folke/snacks.nvim" }) -- Set of utilities
 
+-- stylua: ignore start
 require("snacks").setup({
 	bigfile = { enabled = true }, -- Disables heavy features for large files to keep Neovim fast
 	indent = { enabled = true }, -- Shows indent guides
@@ -44,12 +45,7 @@ require("snacks").setup({
 				{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
 				{ icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.picker.grep()" },
 				{ icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
-				{
-					icon = " ",
-					key = "c",
-					desc = "Config",
-					action = ":lua Snacks.picker.files({ cwd = vim.fn.stdpath('config') })",
-				},
+				{ icon = " ", key = "c", desc = "Config", action = ":lua Snacks.picker.files({ cwd = vim.fn.stdpath('config') })", },
 				{ icon = "󰚰 ", key = "u", desc = "Update Plugins", action = ":lua vim.pack.update()" },
 				{ icon = "󰏗 ", key = "m", desc = "Mason", action = ":Mason" },
 				{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
@@ -67,7 +63,6 @@ require("snacks").setup({
 	},
 })
 
--- stylua: ignore start
 local snacks_maps = {
   -- Top Pickers & Explorer
   { "n",          "<leader><space>", function() Snacks.picker.smart() end,                                   "Smart Find Files" },
@@ -153,8 +148,8 @@ require("which-key").setup({
 		{ "<leader>l", group = "[L]int", icon = { icon = "󰁨", color = "yellow" }, mode = "n" },
 		{ "<leader>s", group = "[s]earch", icon = { icon = "󰺯", color = "green" } },
 		{ "<leader>t", group = "[t]oggle", icon = { icon = "󰺯", color = "green" } },
+		{ "<leader>T", group = "[T]rouble", icon = { icon = "󰒡", color = "red" }, mode = "n" },
 		{ "<leader>w", group = "[w]orkspace", icon = { icon = "󰒓", color = "blue" }, mode = "n" },
-		{ "<leader>x", group = "Diagnostics", icon = { icon = "󰒡", color = "red" }, mode = "n" },
 	},
 	win = {
 		height = { min = 3, max = 5 },
@@ -182,18 +177,18 @@ for _, map in ipairs(todo_maps) do
 	vim.keymap.set("n", map[1], map[2], { desc = map[3] })
 end
 
--- INFO: Diagnostics
+-- INFO: Trouble
 vim.pack.add({ "https://github.com/folke/trouble.nvim" }) -- provide diagnostics in quickfix list
 
 require("trouble").setup()
 
 local trouble_maps = {
-	{ "<leader>xx", "diagnostics toggle", "Diagnostics (Trouble)" },
-	{ "<leader>xX", "diagnostics toggle filter.buf=0", "Buffer Diagnostics (Trouble)" },
-	{ "<leader>cs", "symbols toggle focus=false", "Symbols (Trouble)" },
-	{ "<leader>cl", "lsp toggle focus=false win.position=right", "LSP Definitions / references / ..." },
-	{ "<leader>xL", "loclist toggle", "Location List (Trouble)" },
-	{ "<leader>xQ", "qflist toggle", "Quickfix List (Trouble)" },
+	{ "<leader>Tx", "diagnostics toggle", "Diagnostics (Trouble)" },
+	{ "<leader>TX", "diagnostics toggle filter.buf=0", "Buffer Diagnostics (Trouble)" },
+	{ "<leader>Ts", "symbols toggle focus=false", "Symbols (Trouble)" },
+	{ "<leader>Tl", "lsp toggle focus=false win.position=right", "LSP Definitions / references / ..." },
+	{ "<leader>TL", "loclist toggle", "Location List (Trouble)" },
+	{ "<leader>TQ", "qflist toggle", "Quickfix List (Trouble)" },
 }
 
 for _, map in ipairs(trouble_maps) do
