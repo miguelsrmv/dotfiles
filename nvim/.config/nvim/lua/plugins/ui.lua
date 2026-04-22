@@ -115,7 +115,7 @@ local snacks_maps = {
   { "n",          "<leader>sq",      function() Snacks.picker.qflist() end,                                  "Quickfix List" },
   { "n",          "<leader>sR",      function() Snacks.picker.resume() end,                                  "Resume" },
   { "n",          "<leader>su",      function() Snacks.picker.undo() end,                                    "Undo History" },
-  { "n",          "<leader>C",       function() Snacks.picker.colorschemes() end,                            "Colorschemes" },
+  { "n",          "<leader>uc",       function() Snacks.picker.colorschemes() end,                            "Colorschemes" },
   -- LSP
   { "n",          "gd",              function() Snacks.picker.lsp_definitions() end,                         "Goto Definition" },
   { "n",          "gD",              function() Snacks.picker.lsp_declarations() end,                        "Goto Declaration" },
@@ -138,8 +138,6 @@ vim.pack.add({ "https://github.com/folke/which-key.nvim" }, { confirm = false })
 
 require("which-key").setup({
 	spec = {
-		{ "<leader>c", group = "[c]ode symbols", icon = { icon = "󰘦", color = "blue" }, mode = "n" },
-		{ "<leader>C", group = "[C]olorscheme", icon = { icon = "", color = "yellow" }, mode = "n" },
 		{ "<leader>d", group = "[d]ebug", icon = { icon = "", color = "red" }, mode = "n" },
 		{ "<leader>f", group = "[f]ind", icon = { icon = "󰍉", color = "green" } },
 		{ "<leader>F", group = "[F]ormat", icon = { icon = "󰉼", color = "cyan" }, mode = "n" },
@@ -149,6 +147,7 @@ require("which-key").setup({
 		{ "<leader>s", group = "[s]earch", icon = { icon = "󰺯", color = "green" } },
 		{ "<leader>t", group = "[t]oggle", icon = { icon = "󰺯", color = "green" } },
 		{ "<leader>T", group = "[T]rouble", icon = { icon = "󰒡", color = "red" }, mode = "n" },
+		{ "<leader>u", group = "[u]I", icon = { icon = "", color = "yellow" }, mode = "n" },
 		{ "<leader>w", group = "[w]orkspace", icon = { icon = "󰒓", color = "blue" }, mode = "n" },
 	},
 	win = {

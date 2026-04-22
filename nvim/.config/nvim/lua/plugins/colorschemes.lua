@@ -21,7 +21,7 @@ local theme_file = "/home/miguel/.local/share/themeSwitcher/current_theme.txt"
 local function read_theme()
 	local f = io.open(theme_file, "r")
 	if not f then
-		return "default"
+		return nil
 	end
 
 	local theme = f:read("*l")
@@ -48,6 +48,6 @@ local map = {
 	["tokyo-night"] = "tokyonight-night",
 }
 
-local colorscheme = map[theme]
+local colorscheme = map[theme] or "default"
 
 vim.cmd("colorscheme " .. colorscheme)
