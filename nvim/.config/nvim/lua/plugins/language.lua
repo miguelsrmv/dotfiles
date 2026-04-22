@@ -8,17 +8,18 @@ require("lazydev").setup({
 })
 
 -- INFO: Treesitter
-vim.pack.add({
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" }, -- syntax highlighting and parsing
+vim.pack.add({ -- syntax highlighting and parsing
+	{
+		src = "https://github.com/nvim-treesitter/nvim-treesitter",
+		build = function()
+			require("nvim-treesitter.install").update({ with_sync = true }) -- So it runs :TSUpdate when I update the plugin
+		end,
+	},
 })
-
-require("nvim-treesitter.install").update({ "all" }) -- equivalent to :TSUpdate
 
 require("nvim-treesitter.config").setup({
 	install_dir = vim.fn.stdpath("data") .. "/site",
 	sync_install = false, -- async install to avoid blocking startup
-	modules = {},
-	ignore_install = {},
 	ensure_installed = {
 		"lua",
 		"c",
@@ -33,7 +34,7 @@ require("nvim-treesitter.config").setup({
 	highlight = { enable = true },
 })
 
--- INFO: LSP
+-- INFO: LSP and respective tooling
 local lsp_servers = {
 	lua_ls = {
 		settings = {
@@ -84,7 +85,7 @@ for server, config in pairs(lsp_servers) do
 end
 vim.lsp.enable(vim.tbl_keys(lsp_servers)) -- activate all configured servers
 
--- INFO: Nvim-lint
+-- INFO: Linting
 vim.pack.add({
 	"https://github.com/mfussenegger/nvim-lint", -- runs linters and reports results via vim.diagnostic
 	"https://github.com/rshkarin/mason-nvim-lint", -- bridge between Mason and nvim-lint (auto-installs linters)
