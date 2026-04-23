@@ -16,38 +16,13 @@ vim.pack.add({
 })
 
 -- Apply current theme
-local theme_file = "/home/miguel/.local/share/themeSwitcher/current_theme.txt"
-
-local function read_theme()
-	local f = io.open(theme_file, "r")
-	if not f then
-		return nil
-	end
-
-	local theme = f:read("*l")
+local xdg_data = os.getenv("XDG_DATA_HOME") or (os.getenv("HOME") .. "/.local/share")
+local f = io.open(xdg_data .. "/themeSwitcher/current_theme", "r")
+if f then
+	local theme_id = f:read("*l"):gsub("%s+", "")
 	f:close()
-
-	return vim.trim(theme or "")
+	local ok, err = pcall(vim.cmd, "colorscheme " .. theme_id)
+	if not ok then
+		vim.notify("themeSwitcher: colorscheme '" .. theme_id .. "' not found", vim.log.levels.WARN)
+	end
 end
-
-local theme = read_theme()
-
-local map = {
-	["catppuccin"] = "catppuccin-macchiato",
-	["catppuccin-latte"] = "catppuccin-latte",
-	["dracula"] = "dracula",
-	["default"] = "default",
-	["everforest"] = "everforest",
-	["gruvbox"] = "gruvbox",
-	["kanagawa"] = "kanagawa",
-	["nightfox"] = "nightfox",
-	["nord"] = "nord",
-	["one-dark-pro"] = "onedark",
-	["ristretto"] = "monokai-pro-ristretto",
-	["rose-pine"] = "rose-pine",
-	["tokyo-night"] = "tokyonight-night",
-}
-
-local colorscheme = map[theme] or "default"
-
-vim.cmd("colorscheme " .. colorscheme)

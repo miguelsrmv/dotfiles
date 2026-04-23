@@ -1,58 +1,453 @@
-#!/bin/bash
+#!/usr/bin/env python3
 
-# Exit on errors, undefined variables, and pipeline failures
-set -euo pipefail
+import argparse
+import os
+import subprocess
+import sys
+import tomllib
+from pathlib import Path
 
-# Setup directory paths
-DATA_DIR="$HOME/.local/share/themeSwitcher"
-SCRIPT_DIR="$DATA_DIR/scripts"
-export THEME_DIR="$DATA_DIR/themes"
-export DOTFILES_DIR="$HOME/dotfiles"
+# ── Version ───────────────────────────────────────────────────────────────────
 
-# Get theme list
-source "$SCRIPT_DIR/get_theme_list.sh"
+VERSION = "1.0.0"
 
-# Get desktop environment
-source "$SCRIPT_DIR/get_desktop_environment.sh"
+# ── Paths ─────────────────────────────────────────────────────────────────────
 
-# Get calling app
-source "$SCRIPT_DIR/get_caller.sh"
+_xdg_data_home: Path = Path(
+    os.environ.get("XDG_DATA_HOME", Path.home() / ".local/share")
+)
+_xdg_config_home: Path = Path(
+    os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")
+)
 
-# Accept theme as argument (e.g. when called from DMS)
-if [ $# -gt 0 ]; then
-    THEME=$(echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
-    if ! printf "%s\n" "${THEME_NAMES[@]}" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g' | grep -qx "$THEME"; then
-        echo "Error: '$THEME' is not a valid theme." >&2
-        exit 1
-    fi
+DATA_DIR: Path = _xdg_data_home / "themeSwitcher"
+THEME_DIR: Path = DATA_DIR / "themes"
+TEMPLATE_DIR: Path = DATA_DIR / "templates"
+MANIFEST_FILE: Path = DATA_DIR / "manifest.toml"
+THEME_STATE_FILE: Path = DATA_DIR / "current_theme"
+BACKGROUND_STATE_FILE: Path = DATA_DIR / "current_bg"
+CONFIG_HOME: Path = _xdg_config_home
+DESKTOP: str = os.environ.get("XDG_CURRENT_DESKTOP", "")
 
-# Only run interactive selection if called from a terminal
-elif [ "$CALLER" = "Terminal" ]; then
-    THEME=$(printf "%s\n" "${THEME_NAMES[@]}" \
-      | fzf \
-        --prompt="Choose your theme: " \
-        --reverse \
-      | tr '[:upper:]' '[:lower:]' \
-      | sed 's/ /-/g')
-else
-    echo "Non-interactive launcher detected: skipping theme selection."
-fi
+# Canonical palette key names every theme must define
+PALETTE_KEYS: tuple[str, ...] = (
+    "base",
+    "mantle",
+    "surface",
+    "overlay",
+    "muted",
+    "text",
+    "subtext",
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "teal",
+    "sky",
+    "sapphire",
+    "blue",
+    "mauve",
+)
 
-# Write current theme name for statefullness
-echo "$THEME" > "$DATA_DIR/current_theme.txt"
+# All known app IDs, in the order they are applied
+ALL_APPS: tuple[str, ...] = (
+    "ghostty",
+    "tmux",
+    "starship",
+    "btop",
+    "nvim",
+    "gnome",
+)
 
-# Apply selected theme
-if [ -n "${THEME:-}" ]; then
-    source "$SCRIPT_DIR/apply_ghostty_theme.sh"
-    source "$SCRIPT_DIR/apply_tmux_theme.sh"
-    source "$SCRIPT_DIR/apply_starship_theme.sh"
-    source "$SCRIPT_DIR/apply_nvim_theme.sh"
-    source "$SCRIPT_DIR/apply_btop_theme.sh"
 
-    if [ "$XDG_CURRENT_DESKTOP" == "GNOME" ]; then
-        source "$SCRIPT_DIR/apply_gnome_theme.sh"
-    elif [ "$XDG_CURRENT_DESKTOP" == "Hyprland" ]; then
-        source "$SCRIPT_DIR/apply_hyprland_theme.sh"
-    fi
-fi
+# ── Types ─────────────────────────────────────────────────────────────────────
 
+Manifest = dict[str, dict]
+ThemeConfig = dict[str, object]
+ColorMap = dict[str, str]
+
+
+# ── Manifest loading & app config ─────────────────────────────────────────────
+
+
+def load_manifest() -> Manifest:
+    with open(MANIFEST_FILE, "rb") as f:
+        return tomllib.load(f)
+
+
+def enabled_apps(manifest: Manifest) -> frozenset[str]:
+    """Return the set of enabled app IDs from the [apps] section.
+    If the section is absent, all known apps are enabled by default.
+    """
+    apps_cfg: dict[str, bool] = manifest.get("apps", {})  # type: ignore[assignment]
+    if not apps_cfg:
+        return frozenset(ALL_APPS)
+    return frozenset(app for app, on in apps_cfg.items() if on)
+
+
+# ── Palette resolution ────────────────────────────────────────────────────────
+
+
+def resolve_colors(cfg: ThemeConfig) -> ColorMap:
+    """Resolve [colors] palette key references to hex values.
+    A color value is one of:
+      - a palette key name  (e.g. "blue")  -> replaced with its hex
+      - an empty string                    -> kept as-is (btop gradient gaps)
+      - a raw hex string starting with '#' -> kept as-is (escape hatch)
+    """
+    palette: ColorMap = cfg.get("palette", {})  # type: ignore[assignment]
+    raw: ColorMap = cfg.get("colors", {})  # type: ignore[assignment]
+    resolved: ColorMap = {}
+    for key, value in raw.items():
+        if not value:
+            resolved[key] = ""
+        elif value in palette:
+            resolved[key] = palette[value]
+        else:
+            resolved[key] = value
+    return resolved
+
+
+def validate_palette(theme_id: str, cfg: ThemeConfig) -> list[str]:
+    """Return error strings for any missing required palette keys."""
+    palette: ColorMap = cfg.get("palette", {})  # type: ignore[assignment]
+    return [
+        f"[{theme_id}] missing palette key: '{k}'"
+        for k in PALETTE_KEYS
+        if k not in palette
+    ]
+
+
+# ── Rendering & file helpers ──────────────────────────────────────────────────
+
+
+def render_template(template_name: str, variables: ColorMap) -> str:
+    src: str = (TEMPLATE_DIR / template_name).read_text()
+    return src.format_map(variables)
+
+
+def write_config(content: str, dest: Path) -> None:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(content)
+
+
+def symlink(src: Path, dest: Path) -> None:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.unlink(missing_ok=True)
+    dest.symlink_to(src)
+
+
+def gsettings(schema: str, key: str, value: str) -> None:
+    subprocess.run(["gsettings", "set", schema, key, value], check=True)
+
+
+def signal_process(name: str, sig: str = "SIGUSR2") -> None:
+    subprocess.run(["pkill", f"-{sig}", name], capture_output=True)
+
+
+def is_interactive() -> bool:
+    return sys.stdout.isatty()
+
+
+def current_theme_id() -> str:
+    if not THEME_STATE_FILE.exists():
+        sys.exit("No current theme set. Run themeSwitcher to pick one.")
+    return THEME_STATE_FILE.read_text().strip()
+
+
+# ── Apply functions ───────────────────────────────────────────────────────────
+
+
+def apply_ghostty(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    ghostty_name: str = cfg["ghostty"]  # type: ignore[assignment]
+    content: str = render_template("ghostty.theme", {"ghostty": ghostty_name})
+    write_config(content, CONFIG_HOME / "ghostty/ghostty.theme")
+    main_cfg: Path = CONFIG_HOME / "ghostty/config"
+    main_cfg.touch()
+    directive = 'config-file = ?"~/.config/ghostty/ghostty.theme"'
+    if directive not in main_cfg.read_text():
+        with open(main_cfg, "a") as f:
+            f.write(f"\n{directive}\n")
+    signal_process("ghostty")
+
+
+def apply_tmux(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    content: str = render_template("tmux.theme", resolved)
+    write_config(content, CONFIG_HOME / "tmux/themes/theme.colors")
+    result = subprocess.run(["tmux", "info"], capture_output=True)
+    if result.returncode == 0:
+        subprocess.run(["tmux", "source-file", str(CONFIG_HOME / "tmux/tmux.conf")])
+
+
+def apply_starship(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    variables: ColorMap = {"theme_id": theme_id, **resolved}
+    content: str = render_template("starship.toml", variables)
+    write_config(content, CONFIG_HOME / "starship/starship.toml")
+
+
+def apply_btop(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    content: str = render_template("btop.theme", resolved)
+    write_config(content, CONFIG_HOME / "btop/themes/current.theme")
+    signal_process("btop")
+
+
+def apply_nvim(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    # theme_id is already the nvim colorscheme name
+    for sock in Path("/tmp").glob("nvim-*.sock"):
+        if sock.is_socket():
+            subprocess.run(
+                [
+                    "nvim",
+                    "--server",
+                    str(sock),
+                    "--remote-expr",
+                    f"execute('colorscheme {theme_id}')",
+                ],
+                capture_output=True,
+            )
+
+
+def apply_gnome(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    g: dict[str, str] = cfg["gnome"]  # type: ignore[assignment]
+
+    # Always update current_bg to the first wallpaper of the new theme
+    bg_dir: Path = DATA_DIR / "backgrounds" / theme_id
+    bg_files: list[Path] = sorted(bg_dir.iterdir()) if bg_dir.is_dir() else []
+    if bg_files:
+        BACKGROUND_STATE_FILE.unlink(missing_ok=True)
+        BACKGROUND_STATE_FILE.symlink_to(bg_files[0])
+
+    bg: str = f"file://{BACKGROUND_STATE_FILE}"
+    gsettings("org.gnome.desktop.interface", "color-scheme", "prefer-dark")
+    gsettings("org.gnome.desktop.interface", "gtk-theme", g["gtk_theme"])
+    gsettings("org.gnome.desktop.interface", "icon-theme", g["icon_theme"])
+    gsettings("org.gnome.desktop.interface", "cursor-theme", "Adwaita")
+    # non-fatal: requires the User Themes extension to be installed
+    subprocess.run(
+        [
+            "gsettings",
+            "set",
+            "org.gnome.shell.extensions.user-theme",
+            "name",
+            g["shell_theme"],
+        ],
+        capture_output=True,
+    )
+    # non-fatal: accent-color only supported on GNOME 47+
+    subprocess.run(
+        [
+            "gsettings",
+            "set",
+            "org.gnome.desktop.interface",
+            "accent-color",
+            g["accent_color"],
+        ],
+        capture_output=True,
+    )
+    gsettings("org.gnome.desktop.background", "picture-uri", bg)
+    gsettings("org.gnome.desktop.background", "picture-uri-dark", bg)
+    gsettings("org.gnome.desktop.background", "picture-options", "zoom")
+
+
+# Registry: maps app ID -> apply function
+# Adding a new app means: write an apply_* function above, add it here.
+APP_REGISTRY: dict[str, object] = {
+    "ghostty": apply_ghostty,
+    "tmux": apply_tmux,
+    "starship": apply_starship,
+    "btop": apply_btop,
+    "nvim": apply_nvim,
+    "gnome": apply_gnome,
+}
+
+
+# ── Background cycling ────────────────────────────────────────────────────────
+
+
+def apply_background(theme_id: str) -> None:
+    bg_dir: Path = DATA_DIR / "backgrounds" / theme_id
+    if not bg_dir.is_dir():
+        sys.exit(f"No backgrounds directory found for theme '{theme_id}'.")
+
+    bg_files: list[Path] = sorted(bg_dir.iterdir())
+    if not bg_files:
+        sys.exit(f"No background images found in {bg_dir}.")
+
+    current_name: str = (
+        BACKGROUND_STATE_FILE.resolve().name
+        if BACKGROUND_STATE_FILE.is_symlink()
+        else ""
+    )
+
+    current_index: int = next(
+        (i for i, f in enumerate(bg_files) if f.name == current_name), 0
+    )
+    next_bg: Path = bg_files[(current_index + 1) % len(bg_files)]
+
+    BACKGROUND_STATE_FILE.unlink(missing_ok=True)
+    BACKGROUND_STATE_FILE.symlink_to(next_bg)
+
+    bg_uri: str = f"file://{BACKGROUND_STATE_FILE}"
+    if DESKTOP == "GNOME":
+        gsettings("org.gnome.desktop.background", "picture-uri", bg_uri)
+        gsettings("org.gnome.desktop.background", "picture-uri-dark", bg_uri)
+        gsettings("org.gnome.desktop.background", "picture-options", "zoom")
+
+    print(f"  background -> {next_bg.name}")
+
+
+# ── Theme application ─────────────────────────────────────────────────────────
+
+
+def apply_theme(theme_id: str, manifest: Manifest) -> None:
+    if theme_id not in manifest:
+        valid: str = ", ".join(sorted(k for k in manifest if k != "apps"))
+        sys.exit(f"Unknown theme '{theme_id}'. Valid themes: {valid}")
+
+    cfg: ThemeConfig = manifest[theme_id]
+    resolved: ColorMap = resolve_colors(cfg)
+    apps: frozenset[str] = enabled_apps(manifest)
+
+    for app_id in ALL_APPS:
+        if app_id not in apps:
+            continue
+        fn = APP_REGISTRY.get(app_id)
+        if fn:
+            fn(theme_id, cfg, resolved)  # type: ignore[call-arg]
+
+    THEME_STATE_FILE.write_text(theme_id)
+    print(f"  {cfg['display_name']}")
+
+
+# ── CLI commands ──────────────────────────────────────────────────────────────
+
+
+def cmd_list(manifest: Manifest) -> None:
+    current: str = (
+        THEME_STATE_FILE.read_text().strip() if THEME_STATE_FILE.exists() else ""
+    )
+    for theme_id in sorted(k for k in manifest if k != "apps"):
+        marker: str = " <" if theme_id == current else ""
+        display: str = manifest[theme_id]["display_name"]  # type: ignore[index]
+        print(f"  {display:<24} ({theme_id}){marker}")
+
+
+def cmd_apps(manifest: Manifest) -> None:
+    """Print which apps are enabled and which are disabled."""
+    apps: frozenset[str] = enabled_apps(manifest)
+    for app_id in ALL_APPS:
+        status = "on " if app_id in apps else "off"
+        print(f"  [{status}]  {app_id}")
+
+
+def cmd_check(manifest: Manifest) -> None:
+    errors: list[str] = []
+    for theme_id, cfg in manifest.items():
+        if theme_id == "apps":
+            continue
+        errors.extend(validate_palette(theme_id, cfg))
+        palette: ColorMap = cfg.get("palette", {})  # type: ignore[assignment]
+        raw: ColorMap = cfg.get("colors", {})  # type: ignore[assignment]
+        for k, v in raw.items():
+            if v and v not in palette and not v.startswith("#"):
+                errors.append(
+                    f"[{theme_id}] colors.{k} = '{v}' is not a palette key or hex value"
+                )
+    if errors:
+        for e in errors:
+            print(f"  x {e}", file=sys.stderr)
+        sys.exit(1)
+    print(f"  {len(manifest) - (1 if 'apps' in manifest else 0)} themes validated.")
+
+
+# ── Entry point ───────────────────────────────────────────────────────────────
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="themeSwitcher",
+        description="Switch desktop themes across GNOME, terminal, and editor.",
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {VERSION}",
+    )
+    parser.add_argument(
+        "--list",
+        action="store_true",
+        help="List all available themes.",
+    )
+    parser.add_argument(
+        "--apps",
+        action="store_true",
+        help="Show which apps are enabled in manifest.toml.",
+    )
+    parser.add_argument(
+        "--bg",
+        action="store_true",
+        help="Cycle to the next background for the current theme.",
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Validate the manifest without applying anything.",
+    )
+    parser.add_argument(
+        "theme",
+        nargs="?",
+        help="Theme ID to apply (e.g. catppuccin). Omit for interactive fzf picker.",
+    )
+    return parser
+
+
+def main() -> None:
+    parser = build_parser()
+    args = parser.parse_args()
+    manifest: Manifest = load_manifest()
+
+    if args.list:
+        cmd_list(manifest)
+        return
+
+    if args.apps:
+        cmd_apps(manifest)
+        return
+
+    if args.bg:
+        apply_background(current_theme_id())
+        return
+
+    if args.check:
+        cmd_check(manifest)
+        return
+
+    if args.theme:
+        theme_id: str = args.theme.lower().replace(" ", "-")
+    elif is_interactive():
+        display_names: list[str] = [
+            manifest[t]["display_name"]  # type: ignore[index]
+            for t in sorted(k for k in manifest if k != "apps")
+        ]
+        fzf = subprocess.run(
+            ["fzf", "--prompt=Choose theme: ", "--reverse"],
+            input="\n".join(display_names),
+            capture_output=True,
+            text=True,
+        )
+        if fzf.returncode != 0 or not fzf.stdout.strip():
+            sys.exit(0)
+        chosen: str = fzf.stdout.strip()
+        theme_id = next(
+            t
+            for t in manifest
+            if t != "apps" and manifest[t]["display_name"] == chosen  # type: ignore[index]
+        )
+    else:
+        sys.exit("Non-interactive mode: pass a theme name as argument.")
+
+    apply_theme(theme_id, manifest)
+
+
+if __name__ == "__main__":
+    main()

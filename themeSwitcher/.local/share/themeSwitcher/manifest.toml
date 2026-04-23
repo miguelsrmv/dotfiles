@@ -1,0 +1,935 @@
+# ── App selector ─────────────────────────────────────────────────────────────
+# Set any app to false to skip it when switching themes.
+# Omit this section entirely to enable all apps.
+
+[apps]
+ghostty  = true
+tmux     = true
+starship = true
+btop     = true
+nvim     = true
+gnome    = true
+
+
+# ── Catppuccin Macchiato ─────────────────────────────────────────────────────
+
+[catppuccin-macchiato]
+display_name = "Catppuccin"
+ghostty      = "Catppuccin Macchiato"
+
+[catppuccin-macchiato.gnome]
+gtk_theme    = "Catppuccin-Mocha-Standard-Mauve-Dark"
+shell_theme  = "Catppuccin-Mocha-Standard-Mauve-Dark"
+icon_theme   = "Papirus-Dark"
+accent_color = "purple"
+
+[catppuccin-macchiato.palette]
+base     = "#24273a"   # background
+mantle   = "#1e2030"   # darker background
+surface  = "#51576d"   # selection / UI surface
+overlay  = "#737994"   # muted UI / dividers
+muted    = "#838ba7"   # inactive text
+text     = "#c6d0f5"   # foreground
+subtext  = "#b8c0e0"   # secondary text
+red      = "#e78284"   # error / danger
+orange   = "#ef9f76"   # warning / peach
+yellow   = "#e5c890"   # time / accent warm
+green    = "#a6d189"   # success
+teal     = "#81c8be"   # replace / cool accent
+sky      = "#99d1db"   # light blue
+sapphire = "#85c1dc"   # mid blue
+blue     = "#8caaee"   # primary accent
+mauve    = "#ca9ee6"   # secondary accent / cpu
+
+[catppuccin-macchiato.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "teal"
+secondary       = "subtext"
+title           = "text"
+hi_fg           = "blue"
+selected_bg     = "surface"
+selected_fg     = "blue"
+inactive_fg     = "muted"
+graph_text      = "subtext"
+meter_bg        = "surface"
+proc_misc       = "subtext"
+cpu_box         = "mauve"
+mem_box         = "green"
+net_box         = "red"
+proc_box        = "blue"
+div_line        = "overlay"
+temp_start      = "green"
+temp_mid        = "yellow"
+temp_end        = "red"
+cpu_start       = "teal"
+cpu_mid         = "sapphire"
+cpu_end         = "red"
+free_start      = "green"
+free_mid        = "subtext"
+free_end        = "blue"
+cached_start    = "sapphire"
+cached_mid      = "blue"
+cached_end      = "red"
+available_start = "green"
+available_mid   = "red"
+available_end   = "red"
+used_start      = "teal"
+used_mid        = "teal"
+used_end        = "sky"
+download_start  = "orange"
+download_mid    = "red"
+download_end    = "red"
+upload_start    = "green"
+upload_mid      = "teal"
+upload_end      = "sky"
+process_start   = "sapphire"
+process_mid     = "subtext"
+process_end     = "mauve"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "teal"
+visual_mode     = "overlay"
+dir_fg          = "teal"
+git_fg          = "mauve"
+time_fg         = "yellow"
+
+
+# ── Dracula ───────────────────────────────────────────────────────────────────
+
+[dracula]
+display_name = "Dracula"
+ghostty      = "dracula_mofiqul"
+
+[dracula.gnome]
+gtk_theme    = "Dracula"
+shell_theme  = "Dracula"
+icon_theme   = "Papirus-Dark"
+accent_color = "purple"
+
+[dracula.palette]
+base     = "#282a36"   # background
+mantle   = "#21222c"   # darker background
+surface  = "#44475a"   # selection / current line
+overlay  = "#6272a4"   # comment / muted UI
+muted    = "#44475a"   # inactive (same as surface)
+text     = "#f8f8f2"   # foreground
+subtext  = "#f8f8f2"   # no distinct subtext in Dracula
+red      = "#ff5555"   # error
+orange   = "#ffb86c"   # orange
+yellow   = "#f1fa8c"   # yellow
+green    = "#50fa7b"   # green
+teal     = "#8be9fd"   # cyan
+sky      = "#8be9fd"   # (same as teal)
+sapphire = "#6272a4"   # comment blue
+blue     = "#6272a4"   # mapped to comment
+mauve    = "#bd93f9"   # purple / primary accent
+
+[dracula.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "mauve"
+secondary       = "green"
+title           = "text"
+hi_fg           = "sapphire"
+selected_bg     = "mauve"
+selected_fg     = "text"
+inactive_fg     = "surface"
+graph_text      = "text"
+meter_bg        = "surface"
+proc_misc       = "mauve"
+cpu_box         = "mauve"
+mem_box         = "green"
+net_box         = "red"
+proc_box        = "teal"
+div_line        = "surface"
+temp_start      = "green"
+temp_mid        = "yellow"
+temp_end        = "red"
+cpu_start       = "teal"
+cpu_mid         = "yellow"
+cpu_end         = "red"
+free_start      = "mauve"
+free_mid        = "teal"
+free_end        = "mauve"
+cached_start    = "teal"
+cached_mid      = "sky"
+cached_end      = "mauve"
+available_start = "orange"
+available_mid   = "yellow"
+available_end   = "orange"
+used_start      = "green"
+used_mid        = "yellow"
+used_end        = "red"
+download_start  = "teal"
+download_mid    = "mauve"
+download_end    = "mauve"
+upload_start    = "green"
+upload_mid      = "yellow"
+upload_end      = "red"
+process_start   = "teal"
+process_mid     = "mauve"
+process_end     = "red"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "surface"
+visual_mode     = "mauve"
+dir_fg          = "teal"
+git_fg          = "mauve"
+time_fg         = "orange"
+
+
+# ── Everforest ────────────────────────────────────────────────────────────────
+
+[everforest]
+display_name = "Everforest"
+ghostty      = "everforest"
+
+[everforest.gnome]
+gtk_theme    = "Everforest-Dark-BL"
+shell_theme  = "Everforest-Dark-BL"
+icon_theme   = "Papirus-Dark"
+accent_color = "green"
+
+[everforest.palette]
+base     = "#2d353b"   # background
+mantle   = "#272e33"   # darker background
+surface  = "#3d484d"   # selection
+overlay  = "#475258"   # muted UI
+muted    = "#3d484d"   # inactive (same as surface)
+text     = "#d3c6aa"   # foreground
+subtext  = "#d3c6aa"   # no distinct subtext
+red      = "#f85552"   # error
+orange   = "#e69875"   # orange
+yellow   = "#dbbc7f"   # yellow
+green    = "#a7c080"   # green
+teal     = "#7fbbb3"   # teal / aqua
+sky      = "#83c092"   # lighter green / sky
+sapphire = "#7fbbb3"   # (same as teal)
+blue     = "#e67e80"   # Everforest uses red-pink as primary accent
+mauve    = "#d699b6"   # purple / pink
+
+[everforest.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "blue"
+secondary       = "orange"
+title           = "text"
+hi_fg           = "blue"
+selected_bg     = "surface"
+selected_fg     = "yellow"
+inactive_fg     = "muted"
+graph_text      = "text"
+meter_bg        = "surface"
+proc_misc       = "green"
+cpu_box         = "surface"
+mem_box         = "surface"
+net_box         = "surface"
+proc_box        = "surface"
+div_line        = "surface"
+temp_start      = "green"
+temp_mid        = "yellow"
+temp_end        = "red"
+cpu_start       = "green"
+cpu_mid         = "yellow"
+cpu_end         = "red"
+free_start      = "green"
+free_mid        = "yellow"
+free_end        = "green"
+cached_start    = "teal"
+cached_mid      = "sky"
+cached_end      = "green"
+available_start = "red"
+available_mid   = "yellow"
+available_end   = "green"
+used_start      = "green"
+used_mid        = "yellow"
+used_end        = "red"
+download_start  = "green"
+download_mid    = "sky"
+download_end    = "teal"
+upload_start    = "yellow"
+upload_mid      = "orange"
+upload_end      = "blue"
+process_start   = "green"
+process_mid     = "blue"
+process_end     = "red"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "surface"
+visual_mode     = "teal"
+dir_fg          = "blue"
+git_fg          = "text"
+time_fg         = "yellow"
+
+
+# ── Gruvbox ───────────────────────────────────────────────────────────────────
+
+[gruvbox]
+display_name = "Gruvbox"
+ghostty      = "Gruvbox Dark"
+
+[gruvbox.gnome]
+gtk_theme    = "Gruvbox-Dark-BL"
+shell_theme  = "Gruvbox-Dark-BL"
+icon_theme   = "Gruvbox-Plus-Dark"
+accent_color = "yellow"
+
+[gruvbox.palette]
+base     = "#282828"   # background hard
+mantle   = "#1d2021"   # background harder
+surface  = "#3c3836"   # background 1
+overlay  = "#504945"   # background 2
+muted    = "#282828"   # inactive (same as base)
+text     = "#ebdbb2"   # foreground
+subtext  = "#a89984"   # foreground 4 (muted text)
+red      = "#cc241d"   # red (dark)
+orange   = "#d65d0e"   # orange (dark)
+yellow   = "#d79921"   # yellow (dark)
+green    = "#98971a"   # green (dark)
+teal     = "#458588"   # aqua (dark)
+sky      = "#83a598"   # aqua (light)
+sapphire = "#83a598"   # (same as sky)
+blue     = "#458588"   # (same as teal)
+mauve    = "#b16286"   # purple
+
+[gruvbox.colors]
+background      = "base"
+foreground      = "subtext"
+highlight       = "yellow"
+secondary       = "yellow"
+title           = "text"
+hi_fg           = "yellow"
+selected_bg     = "base"
+selected_fg     = "yellow"
+inactive_fg     = "muted"
+graph_text      = "overlay"
+meter_bg        = "surface"
+proc_misc       = "green"
+cpu_box         = "subtext"
+mem_box         = "subtext"
+net_box         = "subtext"
+proc_box        = "subtext"
+div_line        = "overlay"
+temp_start      = "teal"
+temp_mid        = "mauve"
+temp_end        = "red"
+cpu_start       = "green"
+cpu_mid         = "yellow"
+cpu_end         = "red"
+free_start      = "green"
+free_mid        = ""
+free_end        = "green"
+cached_start    = "teal"
+cached_mid      = ""
+cached_end      = "sky"
+available_start = "yellow"
+available_mid   = ""
+available_end   = "yellow"
+used_start      = "teal"
+used_mid        = ""
+used_end        = "red"
+download_start  = "teal"
+download_mid    = "mauve"
+download_end    = "mauve"
+upload_start    = "mauve"
+upload_mid      = "mauve"
+upload_end      = "mauve"
+process_start   = "green"
+process_mid     = "yellow"
+process_end     = "red"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "teal"
+visual_mode     = "mauve"
+dir_fg          = "yellow"
+git_fg          = "sky"
+time_fg         = "yellow"
+
+
+# ── Kanagawa ──────────────────────────────────────────────────────────────────
+
+[kanagawa]
+display_name = "Kanagawa"
+ghostty      = "Kanagawabones"
+
+[kanagawa.gnome]
+gtk_theme    = "Kanagawa"
+shell_theme  = "Kanagawa"
+icon_theme   = "Papirus-Dark"
+accent_color = "red"
+
+[kanagawa.palette]
+base     = "#1f1f28"   # sumi ink 3 (background)
+mantle   = "#16161d"   # sumi ink 1 (darker bg)
+surface  = "#223249"   # wave blue 1 (selection)
+overlay  = "#727169"   # fuji gray (muted UI)
+muted    = "#727169"   # (same as overlay)
+text     = "#dcd7ba"   # fuji white (foreground)
+subtext  = "#c8c093"   # old white
+red      = "#e82424"   # samurai red (error)
+orange   = "#ffa066"   # surimi orange
+yellow   = "#e6c384"   # koi yellow
+green    = "#98bb6c"   # spring green
+teal     = "#7aa89f"   # wave teal
+sky      = "#7fb4ca"   # spring blue
+sapphire = "#7e9cdb"   # crystal blue
+blue     = "#7e9cdb"   # (same as sapphire)
+mauve    = "#957fbb"   # oni violet
+
+[kanagawa.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "red"
+secondary       = "yellow"
+title           = "text"
+hi_fg           = "red"
+selected_bg     = "surface"
+selected_fg     = "orange"
+inactive_fg     = "overlay"
+graph_text      = "text"
+meter_bg        = "surface"
+proc_misc       = "teal"
+cpu_box         = "overlay"
+mem_box         = "overlay"
+net_box         = "overlay"
+proc_box        = "overlay"
+div_line        = "overlay"
+temp_start      = "green"
+temp_mid        = "orange"
+temp_end        = "red"
+cpu_start       = "green"
+cpu_mid         = "orange"
+cpu_end         = "red"
+free_start      = "teal"
+free_mid        = "teal"
+free_end        = "red"
+cached_start    = "yellow"
+cached_mid      = "orange"
+cached_end      = "orange"
+available_start = "mauve"
+available_mid   = "mauve"
+available_end   = "sky"
+used_start      = "teal"
+used_mid        = "sapphire"
+used_end        = "sky"
+download_start  = "sapphire"
+download_mid    = "mauve"
+download_end    = "mauve"
+upload_start    = "orange"
+upload_mid      = "yellow"
+upload_end      = "red"
+process_start   = "green"
+process_mid     = "orange"
+process_end     = "red"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "orange"
+visual_mode     = "mauve"
+dir_fg          = "sapphire"
+git_fg          = "teal"
+time_fg         = "yellow"
+
+
+# ── Nightfox ──────────────────────────────────────────────────────────────────
+
+[nightfox]
+display_name = "Nightfox"
+ghostty      = "Nightfox"
+
+[nightfox.gnome]
+gtk_theme    = "Nordic-darker"
+shell_theme  = "Nordic-darker"
+icon_theme   = "Papirus-Dark"
+accent_color = "teal"
+
+[nightfox.palette]
+base     = "#192330"   # background
+mantle   = "#131a24"   # darker background
+surface  = "#393b44"   # selection
+overlay  = "#393b44"   # (same as surface)
+muted    = "#393b44"   # inactive
+text     = "#cdcecf"   # foreground
+subtext  = "#dfdfe0"   # bright foreground
+red      = "#c94f6d"   # red
+orange   = "#f4a261"   # orange
+yellow   = "#dbc074"   # yellow
+green    = "#81b29a"   # green
+teal     = "#63cdcf"   # teal
+sky      = "#86abdc"   # light blue
+sapphire = "#81a1c1"   # medium blue
+blue     = "#719cd6"   # primary blue
+mauve    = "#9d79d6"   # purple
+
+[nightfox.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "blue"
+secondary       = "yellow"
+title           = "green"
+hi_fg           = "sky"
+selected_bg     = "surface"
+selected_fg     = "subtext"
+inactive_fg     = "surface"
+graph_text      = "subtext"
+meter_bg        = "surface"
+proc_misc       = "sky"
+cpu_box         = "surface"
+mem_box         = "surface"
+net_box         = "surface"
+proc_box        = "surface"
+div_line        = "surface"
+temp_start      = "sapphire"
+temp_mid        = "sky"
+temp_end        = "red"
+cpu_start       = "sapphire"
+cpu_mid         = "sky"
+cpu_end         = "red"
+free_start      = "sapphire"
+free_mid        = "sky"
+free_end        = "red"
+cached_start    = "sapphire"
+cached_mid      = "sky"
+cached_end      = "red"
+available_start = "sapphire"
+available_mid   = "sky"
+available_end   = "red"
+used_start      = "sapphire"
+used_mid        = "sky"
+used_end        = "red"
+download_start  = "sapphire"
+download_mid    = "sky"
+download_end    = "red"
+upload_start    = "sapphire"
+upload_mid      = "sky"
+upload_end      = "red"
+process_start   = "sapphire"
+process_mid     = "sky"
+process_end     = "red"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "mauve"
+visual_mode     = "yellow"
+dir_fg          = "blue"
+git_fg          = "green"
+time_fg         = "yellow"
+
+
+# ── Nord ──────────────────────────────────────────────────────────────────────
+
+[nord]
+display_name = "Nord"
+ghostty      = "Nord"
+
+[nord.gnome]
+gtk_theme    = "Nordic-darker"
+shell_theme  = "Nordic-darker"
+icon_theme   = "Nordic"
+accent_color = "blue"
+
+[nord.palette]
+base     = "#2e3440"   # nord 0 (background)
+mantle   = "#242932"   # darker variant
+surface  = "#3b4252"   # nord 1
+overlay  = "#434c5e"   # nord 2
+muted    = "#4c566a"   # nord 3 (inactive)
+text     = "#d8dee9"   # nord 4 (foreground)
+subtext  = "#e5e9f0"   # nord 5
+red      = "#bf616a"   # nord 11
+orange   = "#d08770"   # nord 12
+yellow   = "#ebcb8b"   # nord 13
+green    = "#a3be8c"   # nord 14
+teal     = "#8fbcbb"   # nord 7
+sky      = "#88c0d0"   # nord 8
+sapphire = "#81a1c1"   # nord 9
+blue     = "#5e81ac"   # nord 10
+mauve    = "#b48ead"   # nord 15
+
+[nord.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "blue"
+secondary       = "teal"
+title           = "teal"
+hi_fg           = "blue"
+selected_bg     = "muted"
+selected_fg     = "subtext"
+inactive_fg     = "muted"
+graph_text      = "text"
+meter_bg        = "muted"
+proc_misc       = "blue"
+cpu_box         = "muted"
+mem_box         = "muted"
+net_box         = "muted"
+proc_box        = "muted"
+div_line        = "muted"
+temp_start      = "sapphire"
+temp_mid        = "sky"
+temp_end        = "red"
+cpu_start       = "sapphire"
+cpu_mid         = "sky"
+cpu_end         = "subtext"
+free_start      = "sapphire"
+free_mid        = "sky"
+free_end        = "red"
+cached_start    = "sapphire"
+cached_mid      = "sky"
+cached_end      = "subtext"
+available_start = "sapphire"
+available_mid   = "sky"
+available_end   = "red"
+used_start      = "sapphire"
+used_mid        = "sky"
+used_end        = "red"
+download_start  = "sapphire"
+download_mid    = "sky"
+download_end    = "red"
+upload_start    = "sapphire"
+upload_mid      = "sky"
+upload_end      = "red"
+process_start   = "sapphire"
+process_mid     = "sky"
+process_end     = "red"
+error_status    = "red"
+success_status  = "teal"
+replace_mode    = "sky"
+visual_mode     = "muted"
+dir_fg          = "blue"
+git_fg          = "teal"
+time_fg         = "yellow"
+
+
+# ── One Dark Pro ──────────────────────────────────────────────────────────────
+
+[onedark]
+display_name = "One Dark Pro"
+ghostty      = "One Half Dark"
+
+[onedark.gnome]
+gtk_theme    = "One-Dark"
+shell_theme  = "One-Dark"
+icon_theme   = "Papirus-Dark"
+accent_color = "blue"
+
+[onedark.palette]
+base     = "#282c34"   # background
+mantle   = "#21252b"   # darker background
+surface  = "#2c313c"   # selection
+overlay  = "#3e4452"   # lighter surface
+muted    = "#5c6370"   # comment / inactive
+text     = "#abb2bf"   # foreground
+subtext  = "#abb2bf"   # (same as text)
+red      = "#e06c75"   # red
+orange   = "#d19a66"   # orange
+yellow   = "#e5c07b"   # yellow
+green    = "#98c379"   # green
+teal     = "#56b6c2"   # cyan
+sky      = "#61afef"   # light blue (primary)
+sapphire = "#61afef"   # (same as sky)
+blue     = "#61afef"   # primary blue
+mauve    = "#c678dd"   # purple
+
+[onedark.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "blue"
+secondary       = "yellow"
+title           = "text"
+hi_fg           = "blue"
+selected_bg     = "surface"
+selected_fg     = "text"
+inactive_fg     = "muted"
+graph_text      = "text"
+meter_bg        = "surface"
+proc_misc       = "blue"
+cpu_box         = "muted"
+mem_box         = "muted"
+net_box         = "muted"
+proc_box        = "muted"
+div_line        = "muted"
+temp_start      = "green"
+temp_mid        = "yellow"
+temp_end        = "red"
+cpu_start       = "green"
+cpu_mid         = "yellow"
+cpu_end         = "red"
+free_start      = "green"
+free_mid        = "yellow"
+free_end        = "red"
+cached_start    = "green"
+cached_mid      = "yellow"
+cached_end      = "red"
+available_start = "green"
+available_mid   = "yellow"
+available_end   = "red"
+used_start      = "green"
+used_mid        = "yellow"
+used_end        = "red"
+download_start  = "green"
+download_mid    = "yellow"
+download_end    = "red"
+upload_start    = "green"
+upload_mid      = "yellow"
+upload_end      = "red"
+process_start   = "green"
+process_mid     = "yellow"
+process_end     = "red"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "teal"
+visual_mode     = "text"
+dir_fg          = "blue"
+git_fg          = "green"
+time_fg         = "yellow"
+
+
+# ── Monokai Pro Ristretto ─────────────────────────────────────────────────────
+
+[monokai-pro-ristretto]
+display_name = "Monokai Pro Ristretto"
+ghostty      = "Monokai Pro Ristretto"
+
+[monokai-pro-ristretto.gnome]
+gtk_theme    = "Adwaita-dark"
+shell_theme  = "Adwaita-dark"
+icon_theme   = "Papirus-Dark"
+accent_color = "orange"
+
+[monokai-pro-ristretto.palette]
+base     = "#2c2421"   # background
+mantle   = "#241c19"   # darker background
+surface  = "#3d2f2a"   # selection
+overlay  = "#5b4a45"   # UI elements
+muted    = "#72696a"   # inactive / comment
+text     = "#e6d9db"   # foreground
+subtext  = "#e6d9db"   # (same as text)
+red      = "#fd6883"   # red / primary accent
+orange   = "#f38d70"   # orange
+yellow   = "#f9cc6c"   # yellow
+green    = "#adda78"   # green
+teal     = "#85dacc"   # teal / aqua
+sky      = "#b3e8dd"   # light teal
+sapphire = "#a8a9eb"   # blue-purple
+blue     = "#a8a9eb"   # (same as sapphire)
+mauve    = "#c5c6f0"   # light purple
+
+[monokai-pro-ristretto.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "red"
+secondary       = "yellow"
+title           = "text"
+hi_fg           = "red"
+selected_bg     = "surface"
+selected_fg     = "text"
+inactive_fg     = "muted"
+graph_text      = "text"
+meter_bg        = "surface"
+proc_misc       = "green"
+cpu_box         = "overlay"
+mem_box         = "overlay"
+net_box         = "overlay"
+proc_box        = "overlay"
+div_line        = "muted"
+temp_start      = "sapphire"
+temp_mid        = "orange"
+temp_end        = "red"
+cpu_start       = "green"
+cpu_mid         = "yellow"
+cpu_end         = "red"
+free_start      = "overlay"
+free_mid        = "green"
+free_end        = "green"
+cached_start    = "overlay"
+cached_mid      = "teal"
+cached_end      = "sky"
+available_start = "overlay"
+available_mid   = "yellow"
+available_end   = "yellow"
+used_start      = "overlay"
+used_mid        = "mauve"
+used_end        = "red"
+download_start  = "surface"
+download_mid    = "sapphire"
+download_end    = "mauve"
+upload_start    = "surface"
+upload_mid      = "red"
+upload_end      = "red"
+process_start   = "green"
+process_mid     = "yellow"
+process_end     = "red"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "yellow"
+visual_mode     = "sapphire"
+dir_fg          = "orange"
+git_fg          = "muted"
+time_fg         = "text"
+
+
+# ── Rosé Pine ─────────────────────────────────────────────────────────────────
+
+[rose-pine]
+display_name = "Rosé Pine"
+ghostty      = "Rose Pine"
+
+[rose-pine.gnome]
+gtk_theme    = "Adwaita-dark"
+shell_theme  = "Adwaita-dark"
+icon_theme   = "Papirus-Dark"
+accent_color = "pink"
+
+[rose-pine.palette]
+base     = "#191724"   # base
+mantle   = "#1f1d2e"   # surface (darker)
+surface  = "#524f67"   # hl high
+overlay  = "#6e6a86"   # muted
+muted    = "#403d52"   # hl med (inactive)
+text     = "#e0def4"   # text
+subtext  = "#908caa"   # subtle
+red      = "#eb6f92"   # love (red/pink)
+orange   = "#f6c177"   # gold
+yellow   = "#f6c177"   # (same as gold)
+green    = "#31748f"   # pine
+teal     = "#9ccfd8"   # foam
+sky      = "#9ccfd8"   # (same as foam)
+sapphire = "#31748f"   # (same as pine)
+blue     = "#31748f"   # pine
+mauve    = "#c4a7e7"   # iris
+
+[rose-pine.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "mauve"
+secondary       = "teal"
+title           = "subtext"
+hi_fg           = "text"
+selected_bg     = "surface"
+selected_fg     = "orange"
+inactive_fg     = "muted"
+graph_text      = "teal"
+meter_bg        = "teal"
+proc_misc       = "mauve"
+cpu_box         = "red"
+mem_box         = "green"
+net_box         = "mauve"
+proc_box        = "red"
+div_line        = "overlay"
+temp_start      = "red"
+temp_mid        = "orange"
+temp_end        = "red"
+cpu_start       = "teal"
+cpu_mid         = "green"
+cpu_end         = "red"
+free_start      = "red"
+free_mid        = "mauve"
+free_end        = "red"
+cached_start    = "mauve"
+cached_mid      = "mauve"
+cached_end      = "mauve"
+available_start = "green"
+available_mid   = "green"
+available_end   = "green"
+used_start      = "red"
+used_mid        = "red"
+used_end        = "red"
+download_start  = "green"
+download_mid    = "teal"
+download_end    = "teal"
+upload_start    = "red"
+upload_mid      = "red"
+upload_end      = "red"
+process_start   = "green"
+process_mid     = "teal"
+process_end     = "teal"
+error_status    = "red"
+success_status  = "teal"
+replace_mode    = "overlay"
+visual_mode     = "red"
+dir_fg          = "mauve"
+git_fg          = "green"
+time_fg         = "orange"
+
+
+# ── Tokyo Night ───────────────────────────────────────────────────────────────
+
+[tokyonight-night]
+display_name = "Tokyo Night"
+ghostty      = "TokyoNight"
+
+[tokyonight-night.gnome]
+gtk_theme    = "Tokyonight-Dark-BL"
+shell_theme  = "Tokyonight-Dark-BL"
+icon_theme   = "Papirus-Dark"
+accent_color = "purple"
+
+[tokyonight-night.palette]
+base     = "#1a1b26"   # background
+mantle   = "#16161e"   # darker background
+surface  = "#414868"   # selection / dark blue
+overlay  = "#565f89"   # muted purple-grey
+muted    = "#565f89"   # (same as overlay)
+text     = "#cdc9c2"   # foreground (warm white)
+subtext  = "#cfc9c2"   # slightly brighter
+red      = "#f7768e"   # red
+orange   = "#ff9e64"   # orange
+yellow   = "#e0af68"   # yellow
+green    = "#9ece6a"   # green
+teal     = "#73daca"   # teal
+sky      = "#7dcfff"   # light blue / primary accent
+sapphire = "#2ac3de"   # cyan
+blue     = "#7aa2f7"   # blue
+mauve    = "#bb9af7"   # purple
+
+[tokyonight-night.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "sky"
+secondary       = "mauve"
+title           = "subtext"
+hi_fg           = "sky"
+selected_bg     = "surface"
+selected_fg     = "subtext"
+inactive_fg     = "muted"
+graph_text      = "subtext"
+meter_bg        = "surface"
+proc_misc       = "sky"
+cpu_box         = "muted"
+mem_box         = "muted"
+net_box         = "muted"
+proc_box        = "muted"
+div_line        = "muted"
+temp_start      = "green"
+temp_mid        = "yellow"
+temp_end        = "red"
+cpu_start       = "green"
+cpu_mid         = "yellow"
+cpu_end         = "red"
+free_start      = "green"
+free_mid        = "yellow"
+free_end        = "red"
+cached_start    = "green"
+cached_mid      = "yellow"
+cached_end      = "red"
+available_start = "green"
+available_mid   = "yellow"
+available_end   = "red"
+used_start      = "green"
+used_mid        = "yellow"
+used_end        = "red"
+download_start  = "green"
+download_mid    = "yellow"
+download_end    = "red"
+upload_start    = "green"
+upload_mid      = "yellow"
+upload_end      = "red"
+process_start   = "green"
+process_mid     = "yellow"
+process_end     = "red"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "yellow"
+visual_mode     = "muted"
+dir_fg          = "sky"
+git_fg          = "teal"
+time_fg         = "subtext"
