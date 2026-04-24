@@ -49,8 +49,5 @@ keybind = shift+enter=text:\n
 # Rando stuff
 gtk-single-instance = true
 
-# Dank color generation
-theme = dankcolors
-
 # Themeswitcher theme
 config-file = ?"~/.config/ghostty/ghostty.theme"
