@@ -53,6 +53,11 @@ ColorMap    = dict[str, str]
 # ── Manifest loading & app config ─────────────────────────────────────────────
 
 def load_manifest() -> Manifest:
+    """Load and return the full manifest from manifest.toml.
+
+    The manifest contains one section per theme plus an optional [apps]
+    section. Raises FileNotFoundError if the manifest does not exist.
+    """
     with open(MANIFEST_FILE, "rb") as f:
         return tomllib.load(f)
 
@@ -102,34 +107,57 @@ def validate_palette(theme_id: str, cfg: ThemeConfig) -> list[str]:
 # ── Rendering & file helpers ──────────────────────────────────────────────────
 
 def render_template(template_name: str, variables: ColorMap) -> str:
+    """Render a template file using {key} substitution.
+
+    Reads the named template from TEMPLATE_DIR and substitutes all
+    {key} placeholders with values from the variables dict.
+    """
     src: str = (TEMPLATE_DIR / template_name).read_text()
     return src.format_map(variables)
 
 
 def write_config(content: str, dest: Path) -> None:
+    """Write content to dest, creating parent directories as needed."""
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(content)
 
 
 def symlink(src: Path, dest: Path) -> None:
+    """Create a symlink at dest pointing to src.
+
+    Creates parent directories as needed and replaces any existing
+    symlink or file at dest.
+    """
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.unlink(missing_ok=True)
     dest.symlink_to(src)
 
 
 def gsettings(schema: str, key: str, value: str) -> None:
+    """Set a gsettings key. Raises CalledProcessError on failure."""
     subprocess.run(["gsettings", "set", schema, key, value], check=True)
 
 
 def signal_process(name: str, sig: str = "SIGUSR2") -> None:
+    """Send a signal to a running process by name.
+
+    Uses pkill to find and signal the process. Silently does nothing
+    if no matching process is found.
+    """
     subprocess.run(["pkill", f"-{sig}", name], capture_output=True)
 
 
 def is_interactive() -> bool:
+    """Return True if stdout is connected to a terminal (TTY)."""
     return sys.stdout.isatty()
 
 
 def current_theme_id() -> str:
+    """Read and return the current theme ID from the state file.
+
+    Exits with an error message if the state file does not exist,
+    meaning no theme has been applied yet.
+    """
     if not STATE_FILE.exists():
         sys.exit("No current theme set. Run themeSwitcher to pick one.")
     return STATE_FILE.read_text().strip()
@@ -138,6 +166,13 @@ def current_theme_id() -> str:
 # ── Apply functions ───────────────────────────────────────────────────────────
 
 def apply_ghostty(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    """Apply theme to Ghostty terminal.
+
+    Renders the ghostty.theme template and writes it to
+    ~/.config/ghostty/ghostty.theme. Ensures the main Ghostty config
+    includes the generated theme file via a config-file directive.
+    Signals the running Ghostty instance to reload via SIGUSR2.
+    """
     ghostty_name: str = cfg["ghostty"]  # type: ignore[assignment]
     content: str = render_template("ghostty.theme", {"ghostty": ghostty_name})
     write_config(content, CONFIG_HOME / "ghostty/ghostty.theme")
@@ -151,6 +186,12 @@ def apply_ghostty(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
 
 
 def apply_tmux(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    """Apply theme to tmux.
+
+    Renders the tmux.theme template with resolved colours and writes it
+    to ~/.config/tmux/themes/theme.colors. If a tmux session is active,
+    reloads the main tmux config to apply the new colours immediately.
+    """
     content: str = render_template("tmux.theme", resolved)
     write_config(content, CONFIG_HOME / "tmux/themes/theme.colors")
     result = subprocess.run(["tmux", "info"], capture_output=True)
@@ -159,12 +200,24 @@ def apply_tmux(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
 
 
 def apply_starship(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    """Apply theme to the Starship prompt.
+
+    Renders the starship.toml template with resolved colours and the
+    theme_id (used as the palette name) and writes it to
+    ~/.config/starship/starship.toml. Takes effect in new shell sessions.
+    """
     variables: ColorMap = {"theme_id": theme_id, **resolved}
     content: str = render_template("starship.toml", variables)
     write_config(content, CONFIG_HOME / "starship/starship.toml")
 
 
 def apply_btop(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    """Apply theme to btop system monitor.
+
+    Renders the btop.theme template with resolved colours and writes it
+    to ~/.config/btop/themes/current.theme. Signals the running btop
+    instance to reload via SIGUSR2.
+    """
     content: str = render_template("btop.theme", resolved)
     write_config(content, CONFIG_HOME / "btop/themes/current.theme")
     signal_process("btop")
@@ -206,6 +259,13 @@ def apply_nvim(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
 
 
 def apply_gnome(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    """Apply theme to the GNOME desktop environment via gsettings.
+
+    Sets GTK theme, icon theme, shell theme, colour scheme, accent colour,
+    and wallpaper. Always updates current_bg to the first wallpaper of the
+    new theme. Shell theme and accent colour calls are non-fatal — they
+    require the User Themes extension and GNOME 47+ respectively.
+    """
     g: dict[str, str] = cfg["gnome"]  # type: ignore[assignment]
 
     # Always update current_bg to the first wallpaper of the new theme
@@ -254,6 +314,14 @@ APP_REGISTRY: dict[str, object] = {
 # ── Background cycling ────────────────────────────────────────────────────────
 
 def apply_background(theme_id: str) -> None:
+    """Cycle to the next wallpaper for the given theme.
+
+    Reads the current wallpaper from the current_bg symlink, finds its
+    position in the alphabetically sorted backgrounds directory, and
+    advances to the next image (wrapping around at the end). Updates
+    the current_bg symlink and applies the new wallpaper via gsettings
+    on GNOME.
+    """
     bg_dir: Path = DATA_DIR / "backgrounds" / theme_id
     if not bg_dir.is_dir():
         sys.exit(f"No backgrounds directory found for theme '{theme_id}'.")
@@ -285,6 +353,12 @@ def apply_background(theme_id: str) -> None:
 # ── Theme application ─────────────────────────────────────────────────────────
 
 def apply_theme(theme_id: str, manifest: Manifest) -> None:
+    """Apply a theme by ID across all enabled apps.
+
+    Writes the state file before the apply loop so that Neovim's
+    colorschemes.lua re-source reads the correct theme ID. Then calls
+    each enabled app's apply function in the order defined by ALL_APPS.
+    """
     if theme_id not in manifest:
         valid: str = ", ".join(sorted(
             k for k in manifest if k != "apps"
@@ -312,6 +386,7 @@ def apply_theme(theme_id: str, manifest: Manifest) -> None:
 # ── CLI commands ──────────────────────────────────────────────────────────────
 
 def cmd_list(manifest: Manifest) -> None:
+    """Print all available themes, marking the currently active one."""
     current: str = STATE_FILE.read_text().strip() if STATE_FILE.exists() else ""
     for theme_id in sorted(k for k in manifest if k != "apps"):
         marker:  str = " <" if theme_id == current else ""
@@ -328,6 +403,13 @@ def cmd_apps(manifest: Manifest) -> None:
 
 
 def cmd_check(manifest: Manifest) -> None:
+    """Validate all themes in the manifest without applying anything.
+
+    Checks that every theme defines all required palette keys and that
+    every value in [theme.colors] is either a valid palette key name,
+    an empty string, or a raw hex value. Exits with code 1 if errors
+    are found.
+    """
     errors: list[str] = []
     for theme_id, cfg in manifest.items():
         if theme_id == "apps":
@@ -350,6 +432,7 @@ def cmd_check(manifest: Manifest) -> None:
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build and return the argument parser."""
     parser = argparse.ArgumentParser(
         prog="themeSwitcher",
         description="Switch desktop themes across GNOME, terminal, and editor.",
@@ -381,6 +464,12 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
+    """Parse arguments, load the manifest, and dispatch to the appropriate command.
+
+    With no arguments and a TTY, launches an interactive fzf picker.
+    With a theme argument, applies that theme directly. Flags --list,
+    --apps, --bg, and --check each run their respective command and exit.
+    """
     parser              = build_parser()
     args                = parser.parse_args()
     manifest: Manifest  = load_manifest()
