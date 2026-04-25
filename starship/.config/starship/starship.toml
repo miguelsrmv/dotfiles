@@ -15,17 +15,17 @@ $character
 
 right_format = "$time"
 
-palette = "monokai"
+palette = "catppuccin-macchiato"
 
-[palettes.monokai]
-error_status   = "#f92672"
-success_status = "#a6e22e"
-replace_mode   = "#66d9ef"
-visual_mode    = "#75715e"
-bg             = "#2d2a2e"
-dir_fg         = "#a6e22e"
-git_fg         = "#66d9ef"
-time_fg        = "#e6db74"
+[palettes.catppuccin-macchiato]
+error_status   = "#e78284"
+success_status = "#a6d189"
+replace_mode   = "#81c8be"
+visual_mode    = "#737994"
+bg             = "#24273a"
+dir_fg         = "#81c8be"
+git_fg         = "#ca9ee6"
+time_fg        = "#e5c890"
 
 [directory]
 style            = "fg:dir_fg bg:bg"

@@ -49,7 +49,7 @@ white                 = true
 # ── Catppuccin Macchiato ─────────────────────────────────────────────────────
 
 [catppuccin-macchiato]
-display_name = "Catppuccin"
+display_name = "Catppuccin Macchiato"
 ghostty      = "Catppuccin Macchiato"
 
 [catppuccin-macchiato.gnome]

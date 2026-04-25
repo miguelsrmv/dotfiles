@@ -1,6 +1,14 @@
 # Contributing
 
-Thanks for your interest. Contributions are welcome and actively wanted — new themes, new terminal support, new desktop environments, and bug fixes are all fair game. This document explains how to contribute each type.
+Thanks for your interest. Contributions are welcome and actively wanted — the more the merrier. In particular:
+
+- **New themes** — from the Omarchy ecosystem, popular community themes, or anything you use daily
+- **New terminal support** — Kitty, Alacritty, WezTerm, Foot, and others
+- **New app support** — app launchers (Rofi, Walker, Fuzzel), notification daemons (Dunst, Mako), bars (Waybar, Polybar), and anything else that takes colour config
+- **New desktop environments** — Hyprland, Niri, KDE, XFCE, Sway
+- **Bug fixes and improvements** — to existing themes, colour mappings, or the switcher itself
+
+This document explains how to contribute each type.
 
 ---
 
@@ -27,7 +35,7 @@ Keep this in mind when adding files:
 
 The following themes are good candidates for adding — they have established palettes, nvim plugins, and would complement the existing collection well. PRs for any of these are welcome:
 
-**From the Omarchy ecosystem** ([github.com/topics/omarchy-theme](https://github.com/topics/omarchy-theme)) — Omarchy ships several `bjarneo/*` themes that already have coordinated nvim plugins and terminal palettes. The ones not yet in this repo:
+**From the Omarchy ecosystem** ([github.com/topics/omarchy-theme](https://github.com/topics/omarchy-theme)) — Omarchy has a rich community of themes, each with coordinated terminal palettes, nvim plugins, and wallpapers. Any Omarchy theme is a welcome addition here. The `bjarneo/*` themes in particular have first-class nvim support via `aether.nvim`. The ones not yet in this repo:
 
 | Theme | Nvim plugin | Notes |
 |---|---|---|
@@ -83,6 +91,30 @@ Currently only **tmux** is supported. The following are good candidates:
 **GNU Screen** — `.screenrc` colour overrides. Niche but still used.
 
 To add a multiplexer, follow the same four-step pattern as any other app.
+
+---
+
+### App launchers and UI components
+
+Currently no app launchers, notification daemons, or status bars are supported. These are natural extensions and PRs are very welcome:
+
+**Rofi** — writes a colour theme to `~/.config/rofi/colors.rasi` and imports it from the main config. Template-based.
+
+**Walker** — writes a CSS colour override to `~/.config/walker/style.css` or equivalent. Template-based.
+
+**Fuzzel** — writes an INI colour config at `~/.config/fuzzel/fuzzel.ini`. Template-based.
+
+**Wofi** — writes a CSS file. Template-based.
+
+**Dunst** — writes colour overrides to `~/.config/dunst/dunstrc`. Supports live reload via `dunstctl reload`. Template-based.
+
+**Mako** — writes a colour config to `~/.config/mako/config`. Supports live reload via `makoctl reload`. Template-based.
+
+**Waybar** — writes a CSS colour override file. More structural than pure colour — a per-theme file approach may work better than a template.
+
+**Polybar** — writes colour variables to an include file. Template-based.
+
+To add any of these, follow the same four-step pattern in [Adding support for a new app](#adding-support-for-a-new-app).
 
 ---
 
@@ -307,11 +339,3 @@ Add your app to the "What it changes" table and the per-component dependencies l
 - If you change `PALETTE_KEYS` (add or rename a key), update all theme palettes in `manifest.toml` accordingly.
 - `current_theme` and `current_bg` are runtime state — do not remove them from `.gitignore`.
 - The state file (`current_theme`) is written **before** the apply loop so that Neovim's `colorschemes.lua` re-source reads the correct theme ID.
-
----
-
-## What is not in scope
-
-- **Vim (not Neovim)** — the socket-based live reload relies on Neovim's `--server` flag. Classic Vim has no equivalent.
-- **GUI theme pickers** — this is a CLI tool and will stay one.
-- **Wayland compositors as a bundled default** — Hyprland, Niri, Sway etc. are welcome as contributed integrations but won't be added to `ALL_APPS` by default since this is a GNOME-first tool.

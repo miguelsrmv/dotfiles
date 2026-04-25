@@ -12,7 +12,10 @@ Themes are defined in a single TOML manifest with a 16-colour palette per theme.
 
 | ID | Name |
 |---|---|
+| `ayu-mirage` | Ayu Mirage |
+| `catppuccin-frappe` | Catppuccin Frappe |
 | `catppuccin-macchiato` | Catppuccin Macchiato |
+| `catppuccin-mocha` | Catppuccin Mocha |
 | `dracula` | Dracula |
 | `ethereal` | Ethereal |
 | `everforest` | Everforest |
@@ -22,15 +25,19 @@ Themes are defined in a single TOML manifest with a 16-colour palette per theme.
 | `lumon` | Lumon |
 | `matte-black` | Matte Black |
 | `miasma` | Miasma |
+| `monokai` | Monokai Pro |
 | `monokai-pro-ristretto` | Monokai Pro Ristretto |
 | `nightfox` | Nightfox |
 | `nord` | Nord |
 | `onedark` | One Dark Pro |
 | `osaka-jade` | Osaka Jade |
+| `poimandres` | Poimandres |
 | `retro-82` | Retro 82 |
 | `rose-pine` | Rosé Pine |
+| `solarized-dark` | Solarized Dark |
 | `tokyonight-night` | Tokyo Night |
 | `vantablack` | Vantablack |
+| `vesper` | Vesper |
 
 ### Light themes
 
@@ -141,7 +148,7 @@ In your `ghostty` Stow package, add symlinks from `~/.config/ghostty/themes/` to
 ```bash
 mkdir -p ~/dotfiles/ghostty/.config/ghostty/themes
 cd ~/dotfiles/ghostty/.config/ghostty/themes
-for theme in Ethereal Hackerman Lumon Miasma "Osaka Jade" "Retro 82" Vantablack White; do
+for theme in Dracula Ethereal "Everforest Dark" "Flexoki light" Hackerman Lumon Miasma "Osaka Jade" "Retro 82" Vantablack White; do
     ln -s ~/.local/share/themeSwitcher/ghostty_themes/"$theme" "$theme"
 done
 ```
@@ -180,7 +187,7 @@ themeSwitcher uses two strategies for Neovim depending on the theme:
 
 - **Dedicated plugin themes** — themes with a matching Neovim colorscheme plugin (catppuccin, dracula, nord, etc.) apply directly via `colorscheme <name>`
 - **Terminal-palette themes** — themes without a matching plugin (hackerman, lumon, miasma, osaka-jade, ethereal, retro-82, vantablack, white) use `pixel.nvim` to inherit the terminal's ANSI palette, or `aether.nvim` configured with the theme's exact hex values
-- **Name-mismatch themes** — themes where the ID doesn't match the nvim plugin name (matte-black → matteblack, monokai-pro-ristretto → monokai-pro, onedark → onedark) are handled via an override table
+- **Name-mismatch themes** — themes where the ID doesn't match the nvim plugin name (matte-black → matteblack, monokai → monokai_pro_classic, solarized-dark → solarized, ayu-mirage → ayu-mirage) are handled via an override table
 
 Add the following to your `colorschemes.lua` (or equivalent):
 
@@ -200,6 +207,10 @@ vim.pack.add({
     "https://github.com/loctvl842/monokai-pro.nvim",
     "https://github.com/kepano/flexoki-neovim",
     "https://github.com/tahayvr/matteblack.nvim",
+    "https://github.com/olivercederborg/poimandres.nvim",
+    "https://github.com/Shatur/neovim-ayu",
+    "https://github.com/datsfilipe/vesper.nvim",
+    "https://github.com/shaunsingh/solarized.nvim",
     "https://github.com/bjarneo/aether.nvim",
     "https://github.com/bjarneo/pixel.nvim",
 })
@@ -254,8 +265,11 @@ if f then
     -- Themes where the nvim colorscheme name differs from the theme ID
     local nvim_overrides = {
         ["monokai-pro-ristretto"] = "monokai-pro",
+        ["monokai"]               = "monokai_pro_classic",
         ["onedark"]               = "onedark",
         ["matte-black"]           = "matteblack",
+        ["solarized-dark"]        = "solarized",
+        ["ayu-mirage"]            = "ayu-mirage",
     }
 
     vim.o.background = light_themes[theme_id] and "light" or "dark"
@@ -304,6 +318,7 @@ themeSwitcher catppuccin-macchiato   # apply by theme ID
 themeSwitcher "Catppuccin Macchiato" # apply by display name
 themeSwitcher --list                 # list all themes, marks current with <
 themeSwitcher --apps                 # show which apps are enabled
+themeSwitcher --themes               # show which themes are enabled
 themeSwitcher --bg                   # cycle wallpaper for the current theme
 themeSwitcher --check                # validate manifest without applying anything
 themeSwitcher --version
@@ -349,8 +364,11 @@ themeSwitcher/                              ← git repo root
                 │   ├── ghostty.theme
                 │   ├── starship.toml
                 │   └── tmux.theme
-                ├── ghostty_themes/         ← Ghostty palette source files
+                ├── ghostty_themes/         ← custom Ghostty palette source files
+                │   ├── Dracula
                 │   ├── Ethereal
+                │   ├── Everforest Dark
+                │   ├── Flexoki light
                 │   ├── Hackerman
                 │   ├── Lumon
                 │   ├── Miasma
@@ -359,11 +377,35 @@ themeSwitcher/                              ← git repo root
                 │   ├── Vantablack
                 │   └── White
                 ├── backgrounds/            ← wallpapers, organised by theme ID
+                │   ├── ayu-mirage/
+                │   ├── catppuccin-frappe/
+                │   ├── catppuccin-latte/
                 │   ├── catppuccin-macchiato/
-                │   │   └── 1-waves.png
-                │   └── dracula/
-                │       └── 1-bats.png
-                ├── themes/                 ← reserved for per-theme structural configs
+                │   ├── catppuccin-mocha/
+                │   ├── dracula/
+                │   ├── ethereal/
+                │   ├── everforest/
+                │   ├── flexoki-light/
+                │   ├── gruvbox/
+                │   ├── hackerman/
+                │   ├── kanagawa/
+                │   ├── lumon/
+                │   ├── matte-black/
+                │   ├── miasma/
+                │   ├── monokai/
+                │   ├── monokai-pro-ristretto/
+                │   ├── nightfox/
+                │   ├── nord/
+                │   ├── onedark/
+                │   ├── osaka-jade/
+                │   ├── poimandres/
+                │   ├── retro-82/
+                │   ├── rose-pine/
+                │   ├── solarized-dark/
+                │   ├── tokyonight-night/
+                │   ├── vantablack/
+                │   ├── vesper/
+                │   └── white/
                 ├── current_theme           ← runtime state (gitignored)
                 └── current_bg              ← symlink → current wallpaper (gitignored)
 ```
@@ -382,14 +424,17 @@ The custom Ghostty palette files live in `ghostty_themes/` inside the data direc
 
 ```
 dotfiles/ghostty/.config/ghostty/themes/
-├── Ethereal      -> ~/.local/share/themeSwitcher/ghostty_themes/Ethereal
-├── Hackerman     -> ~/.local/share/themeSwitcher/ghostty_themes/Hackerman
-├── Lumon         -> ~/.local/share/themeSwitcher/ghostty_themes/Lumon
-├── Miasma        -> ~/.local/share/themeSwitcher/ghostty_themes/Miasma
-├── Osaka Jade    -> ~/.local/share/themeSwitcher/ghostty_themes/Osaka Jade
-├── Retro 82      -> ~/.local/share/themeSwitcher/ghostty_themes/Retro 82
-├── Vantablack    -> ~/.local/share/themeSwitcher/ghostty_themes/Vantablack
-└── White         -> ~/.local/share/themeSwitcher/ghostty_themes/White
+├── Dracula          -> ~/.local/share/themeSwitcher/ghostty_themes/Dracula
+├── Ethereal         -> ~/.local/share/themeSwitcher/ghostty_themes/Ethereal
+├── Everforest Dark  -> ~/.local/share/themeSwitcher/ghostty_themes/Everforest Dark
+├── Flexoki light    -> ~/.local/share/themeSwitcher/ghostty_themes/Flexoki light
+├── Hackerman        -> ~/.local/share/themeSwitcher/ghostty_themes/Hackerman
+├── Lumon            -> ~/.local/share/themeSwitcher/ghostty_themes/Lumon
+├── Miasma           -> ~/.local/share/themeSwitcher/ghostty_themes/Miasma
+├── Osaka Jade       -> ~/.local/share/themeSwitcher/ghostty_themes/Osaka Jade
+├── Retro 82         -> ~/.local/share/themeSwitcher/ghostty_themes/Retro 82
+├── Vantablack       -> ~/.local/share/themeSwitcher/ghostty_themes/Vantablack
+└── White            -> ~/.local/share/themeSwitcher/ghostty_themes/White
 ```
 
 This keeps both Stow packages conflict-free: `ghostty` owns `~/.config/ghostty/themes/`, and `themeSwitcher` owns the data directory where the files actually live.
