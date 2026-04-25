@@ -9,27 +9,43 @@ from pathlib import Path
 
 # ── Version ───────────────────────────────────────────────────────────────────
 
-VERSION = "2.0.0"
+VERSION = "2.0.1"
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 
-_xdg_data_home  : Path = Path(os.environ.get("XDG_DATA_HOME",   Path.home() / ".local/share"))
-_xdg_config_home: Path = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+_xdg_data_home: Path = Path(
+    os.environ.get("XDG_DATA_HOME", Path.home() / ".local/share")
+)
+_xdg_config_home: Path = Path(
+    os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")
+)
 
-DATA_DIR        : Path = _xdg_data_home / "themeSwitcher"
-THEME_DIR       : Path = DATA_DIR / "themes"
-TEMPLATE_DIR    : Path = DATA_DIR / "templates"
-MANIFEST_FILE   : Path = DATA_DIR / "manifest.toml"
-STATE_FILE      : Path = DATA_DIR / "current_theme"
-CONFIG_HOME     : Path = _xdg_config_home
-DESKTOP         : str  = os.environ.get("XDG_CURRENT_DESKTOP", "")
+DATA_DIR: Path = _xdg_data_home / "themeSwitcher"
+THEME_DIR: Path = DATA_DIR / "themes"
+TEMPLATE_DIR: Path = DATA_DIR / "templates"
+MANIFEST_FILE: Path = DATA_DIR / "manifest.toml"
+STATE_FILE: Path = DATA_DIR / "current_theme"
+CONFIG_HOME: Path = _xdg_config_home
+DESKTOP: str = os.environ.get("XDG_CURRENT_DESKTOP", "")
 
 # Canonical palette key names every theme must define
 PALETTE_KEYS: tuple[str, ...] = (
-    "base", "mantle", "surface", "overlay", "muted",
-    "text", "subtext",
-    "red", "orange", "yellow", "green", "teal",
-    "sky", "sapphire", "blue", "mauve",
+    "base",
+    "mantle",
+    "surface",
+    "overlay",
+    "muted",
+    "text",
+    "subtext",
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "teal",
+    "sky",
+    "sapphire",
+    "blue",
+    "mauve",
 )
 
 # All known app IDs, in the order they are applied
@@ -45,12 +61,13 @@ ALL_APPS: tuple[str, ...] = (
 
 # ── Types ─────────────────────────────────────────────────────────────────────
 
-Manifest    = dict[str, dict]
+Manifest = dict[str, dict]
 ThemeConfig = dict[str, object]
-ColorMap    = dict[str, str]
+ColorMap = dict[str, str]
 
 
 # ── Manifest loading & app config ─────────────────────────────────────────────
+
 
 def load_manifest() -> Manifest:
     """Load and return the full manifest from manifest.toml.
@@ -74,6 +91,7 @@ def enabled_apps(manifest: Manifest) -> frozenset[str]:
 
 # ── Palette resolution ────────────────────────────────────────────────────────
 
+
 def resolve_colors(cfg: ThemeConfig) -> ColorMap:
     """Resolve [colors] palette key references to hex values.
     A color value is one of:
@@ -82,7 +100,7 @@ def resolve_colors(cfg: ThemeConfig) -> ColorMap:
       - a raw hex string starting with '#' -> kept as-is (escape hatch)
     """
     palette: ColorMap = cfg.get("palette", {})  # type: ignore[assignment]
-    raw:     ColorMap = cfg.get("colors",  {})  # type: ignore[assignment]
+    raw: ColorMap = cfg.get("colors", {})  # type: ignore[assignment]
     resolved: ColorMap = {}
     for key, value in raw.items():
         if not value:
@@ -105,6 +123,7 @@ def validate_palette(theme_id: str, cfg: ThemeConfig) -> list[str]:
 
 
 # ── Rendering & file helpers ──────────────────────────────────────────────────
+
 
 def render_template(template_name: str, variables: ColorMap) -> str:
     """Render a template file using {key} substitution.
@@ -164,6 +183,7 @@ def current_theme_id() -> str:
 
 
 # ── Apply functions ───────────────────────────────────────────────────────────
+
 
 def apply_ghostty(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
     """Apply theme to Ghostty terminal.
@@ -241,12 +261,23 @@ def apply_nvim(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
     # For themes that need plugin setup (aether, pixel), re-source the
     # colorschemes.lua file so the full initialization runs correctly —
     # a bare "colorscheme aether" without require("aether").setup() won't work.
-    terminal_palette_themes: frozenset[str] = frozenset({
-        "hackerman", "ethereal", "vantablack", "white",
-        "retro-82", "matte-black", "lumon", "miasma", "osaka-jade",
-    })
+    terminal_palette_themes: frozenset[str] = frozenset(
+        {
+            "hackerman",
+            "ethereal",
+            "vantablack",
+            "white",
+            "retro-82",
+            "matte-black",
+            "lumon",
+            "miasma",
+            "osaka-jade",
+        }
+    )
     if theme_id in terminal_palette_themes:
-        nvim_cmd: str = "execute('luafile ' .. expand('~/.config/nvim/lua/plugins/colorschemes.lua'))"
+        nvim_cmd: str = (
+            "execute('luafile ' .. expand('~/.config/nvim/lua/plugins/colorschemes.lua'))"
+        )
     else:
         nvim_cmd = f"execute('set background={background} | colorscheme {colorscheme}')"
 
@@ -278,40 +309,51 @@ def apply_gnome(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
 
     bg: str = f"file://{current_bg}"
     color_scheme: str = g.get("color_scheme", "prefer-dark")
-    gsettings("org.gnome.desktop.interface", "color-scheme",  color_scheme)
-    gsettings("org.gnome.desktop.interface", "gtk-theme",     g["gtk_theme"])
-    gsettings("org.gnome.desktop.interface", "icon-theme",    g["icon_theme"])
-    gsettings("org.gnome.desktop.interface", "cursor-theme",  "Adwaita")
+    gsettings("org.gnome.desktop.interface", "color-scheme", color_scheme)
+    gsettings("org.gnome.desktop.interface", "gtk-theme", g["gtk_theme"])
+    gsettings("org.gnome.desktop.interface", "icon-theme", g["icon_theme"])
+    gsettings("org.gnome.desktop.interface", "cursor-theme", "Adwaita")
     # non-fatal: requires the User Themes extension to be installed
     subprocess.run(
-        ["gsettings", "set", "org.gnome.shell.extensions.user-theme",
-         "name", g["shell_theme"]],
+        [
+            "gsettings",
+            "set",
+            "org.gnome.shell.extensions.user-theme",
+            "name",
+            g["shell_theme"],
+        ],
         capture_output=True,
     )
     # non-fatal: accent-color only supported on GNOME 47+
     subprocess.run(
-        ["gsettings", "set", "org.gnome.desktop.interface",
-         "accent-color", g["accent_color"]],
+        [
+            "gsettings",
+            "set",
+            "org.gnome.desktop.interface",
+            "accent-color",
+            g["accent_color"],
+        ],
         capture_output=True,
     )
-    gsettings("org.gnome.desktop.background", "picture-uri",      bg)
+    gsettings("org.gnome.desktop.background", "picture-uri", bg)
     gsettings("org.gnome.desktop.background", "picture-uri-dark", bg)
-    gsettings("org.gnome.desktop.background", "picture-options",  "zoom")
+    gsettings("org.gnome.desktop.background", "picture-options", "zoom")
 
 
 # Registry: maps app ID -> apply function
 # Adding a new app means: write an apply_* function above, add it here.
 APP_REGISTRY: dict[str, object] = {
-    "ghostty":  apply_ghostty,
-    "tmux":     apply_tmux,
+    "ghostty": apply_ghostty,
+    "tmux": apply_tmux,
     "starship": apply_starship,
-    "btop":     apply_btop,
-    "nvim":     apply_nvim,
-    "gnome":    apply_gnome,
+    "btop": apply_btop,
+    "nvim": apply_nvim,
+    "gnome": apply_gnome,
 }
 
 
 # ── Background cycling ────────────────────────────────────────────────────────
+
 
 def apply_background(theme_id: str) -> None:
     """Cycle to the next wallpaper for the given theme.
@@ -343,14 +385,15 @@ def apply_background(theme_id: str) -> None:
 
     bg_uri: str = f"file://{current_bg}"
     if DESKTOP == "GNOME":
-        gsettings("org.gnome.desktop.background", "picture-uri",      bg_uri)
+        gsettings("org.gnome.desktop.background", "picture-uri", bg_uri)
         gsettings("org.gnome.desktop.background", "picture-uri-dark", bg_uri)
-        gsettings("org.gnome.desktop.background", "picture-options",  "zoom")
+        gsettings("org.gnome.desktop.background", "picture-options", "zoom")
 
     print(f"  background -> {next_bg.name}")
 
 
 # ── Theme application ─────────────────────────────────────────────────────────
+
 
 def apply_theme(theme_id: str, manifest: Manifest) -> None:
     """Apply a theme by ID across all enabled apps.
@@ -360,14 +403,12 @@ def apply_theme(theme_id: str, manifest: Manifest) -> None:
     each enabled app's apply function in the order defined by ALL_APPS.
     """
     if theme_id not in manifest:
-        valid: str = ", ".join(sorted(
-            k for k in manifest if k != "apps"
-        ))
+        valid: str = ", ".join(sorted(k for k in manifest if k != "apps"))
         sys.exit(f"Unknown theme '{theme_id}'. Valid themes: {valid}")
 
-    cfg:      ThemeConfig      = manifest[theme_id]
-    resolved: ColorMap         = resolve_colors(cfg)
-    apps:     frozenset[str]   = enabled_apps(manifest)
+    cfg: ThemeConfig = manifest[theme_id]
+    resolved: ColorMap = resolve_colors(cfg)
+    apps: frozenset[str] = enabled_apps(manifest)
 
     # Write state before applying so nvim can read the correct theme
     # when colorschemes.lua is re-sourced via socket
@@ -385,11 +426,12 @@ def apply_theme(theme_id: str, manifest: Manifest) -> None:
 
 # ── CLI commands ──────────────────────────────────────────────────────────────
 
+
 def cmd_list(manifest: Manifest) -> None:
     """Print all available themes, marking the currently active one."""
     current: str = STATE_FILE.read_text().strip() if STATE_FILE.exists() else ""
     for theme_id in sorted(k for k in manifest if k != "apps"):
-        marker:  str = " <" if theme_id == current else ""
+        marker: str = " <" if theme_id == current else ""
         display: str = manifest[theme_id]["display_name"]  # type: ignore[index]
         print(f"  {display:<24} ({theme_id}){marker}")
 
@@ -416,7 +458,7 @@ def cmd_check(manifest: Manifest) -> None:
             continue
         errors.extend(validate_palette(theme_id, cfg))
         palette: ColorMap = cfg.get("palette", {})  # type: ignore[assignment]
-        raw:     ColorMap = cfg.get("colors",  {})  # type: ignore[assignment]
+        raw: ColorMap = cfg.get("colors", {})  # type: ignore[assignment]
         for k, v in raw.items():
             if v and v not in palette and not v.startswith("#"):
                 errors.append(
@@ -431,6 +473,7 @@ def cmd_check(manifest: Manifest) -> None:
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 
+
 def build_parser() -> argparse.ArgumentParser:
     """Build and return the argument parser."""
     parser = argparse.ArgumentParser(
@@ -438,26 +481,33 @@ def build_parser() -> argparse.ArgumentParser:
         description="Switch desktop themes across GNOME, terminal, and editor.",
     )
     parser.add_argument(
-        "--version", action="version", version=f"%(prog)s {VERSION}",
+        "--version",
+        action="version",
+        version=f"%(prog)s {VERSION}",
     )
     parser.add_argument(
-        "--list", action="store_true",
+        "--list",
+        action="store_true",
         help="List all available themes.",
     )
     parser.add_argument(
-        "--apps", action="store_true",
+        "--apps",
+        action="store_true",
         help="Show which apps are enabled in manifest.toml.",
     )
     parser.add_argument(
-        "--bg", action="store_true",
+        "--bg",
+        action="store_true",
         help="Cycle to the next background for the current theme.",
     )
     parser.add_argument(
-        "--check", action="store_true",
+        "--check",
+        action="store_true",
         help="Validate the manifest without applying anything.",
     )
     parser.add_argument(
-        "theme", nargs="?",
+        "theme",
+        nargs="?",
         help="Theme ID to apply (e.g. catppuccin). Omit for interactive fzf picker.",
     )
     return parser
@@ -470,9 +520,9 @@ def main() -> None:
     With a theme argument, applies that theme directly. Flags --list,
     --apps, --bg, and --check each run their respective command and exit.
     """
-    parser              = build_parser()
-    args                = parser.parse_args()
-    manifest: Manifest  = load_manifest()
+    parser = build_parser()
+    args = parser.parse_args()
+    manifest: Manifest = load_manifest()
 
     if args.list:
         cmd_list(manifest)
@@ -507,7 +557,8 @@ def main() -> None:
             sys.exit(0)
         chosen: str = fzf.stdout.strip()
         theme_id = next(
-            t for t in manifest
+            t
+            for t in manifest
             if t != "apps" and manifest[t]["display_name"] == chosen  # type: ignore[index]
         )
     else:

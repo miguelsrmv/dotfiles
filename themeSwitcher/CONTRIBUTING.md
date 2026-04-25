@@ -1,22 +1,104 @@
 # Contributing
 
-Thanks for your interest. Contributions are welcome — new themes, new app integrations, and bug fixes are all fair game.
+Thanks for your interest. Contributions are welcome and actively wanted — new themes, new terminal support, new desktop environments, and bug fixes are all fair game. This document explains how to contribute each type.
 
 ---
 
 ## Repository layout
 
-This repo is a [GNU Stow](https://www.gnu.org/software/stow/) package. The `themeSwitcher/` subdirectory is the Stow package, and its contents mirror `$HOME`. Running `stow themeSwitcher` from your dotfiles root creates three symlinks:
+This repo is a [GNU Stow](https://www.gnu.org/software/stow/) package. The `themeSwitcher/` subdirectory is the Stow package, and its contents mirror `$HOME`. Running `stow themeSwitcher` from your dotfiles root creates two symlinks:
 
 - `~/.local/bin/themeSwitcher` → the executable
 - `~/.local/share/themeSwitcher/` → the data directory
-- `~/.config/ghostty/themes/` → the bundled Ghostty palette source files
+
+The Ghostty theme files in `ghostty_themes/` are managed by a separate `ghostty` Stow package via symlinks into `~/.config/ghostty/themes/`.
 
 Keep this in mind when adding files:
 - The executable belongs under `themeSwitcher/.local/bin/`
 - Data files (manifest, templates, themes, backgrounds) belong under `themeSwitcher/.local/share/themeSwitcher/`
-- Ghostty palette source files belong under `themeSwitcher/.config/ghostty/themes/`
+- Ghostty palette source files belong under `themeSwitcher/.local/share/themeSwitcher/ghostty_themes/`
 - Docs (`README.md`, `CONTRIBUTING.md`) and repo config (`.gitignore`) sit at the repo root, outside the Stow package
+
+---
+
+## Wanted contributions
+
+### Themes
+
+The following themes are good candidates for adding — they have established palettes, nvim plugins, and would complement the existing collection well. PRs for any of these are welcome:
+
+**From the Omarchy ecosystem** ([github.com/topics/omarchy-theme](https://github.com/topics/omarchy-theme)) — Omarchy ships several `bjarneo/*` themes that already have coordinated nvim plugins and terminal palettes. The ones not yet in this repo:
+
+| Theme | Nvim plugin | Notes |
+|---|---|---|
+| Ash | `bjarneo/ash.nvim` | Dark minimal, grey-blue tones |
+| Aura | `bjarneo/aura.nvim` | Purple-accented dark |
+| Futurism | `bjarneo/futurism.nvim` | High contrast neon |
+| Pixel | `bjarneo/pixel.nvim` | Terminal-palette only |
+
+**Community themes with good nvim support:**
+
+| Theme | Nvim plugin | Notes |
+|---|---|---|
+| Catppuccin Moon (Rosé Pine variant) | `rose-pine/neovim` | `colorscheme rose-pine-moon` |
+| Rosé Pine Dawn | `rose-pine/neovim` | Light variant, `colorscheme rose-pine-dawn` |
+| Gruvbox Material | `sainnhe/gruvbox-material` | Softer gruvbox |
+| Nightfly | `bluz71/vim-nightfly-colors` | Dark blue, more saturated than Nightfox |
+| Mellow | `kvrohit/mellow.nvim` | Low contrast, warm earthy |
+| Decay | `decaycs/decay.nvim` | Dark green, popular in ricing community |
+| Cyberdream | `scottmckendry/cyberdream.nvim` | High contrast neon cyberpunk |
+
+**If you add a theme**, follow the steps in [Adding a new theme](#adding-a-new-theme) below.
+
+---
+
+### Terminals
+
+Currently only **Ghostty** is supported. The following terminals are widely used and a PR adding support for any of them would be very welcome:
+
+**Alacritty** — writes a TOML colour config at `~/.config/alacritty/colors.toml`. Template-based, straightforward. The theme file format uses `[colors.primary]`, `[colors.normal]`, and `[colors.bright]` sections.
+
+**Kitty** — writes a colour theme file at `~/.config/kitty/current-theme.conf` and sends `kitty @ set-colors` for live reload. Kitty's remote control requires `allow_remote_control yes` in the kitty config.
+
+**WezTerm** — writes a Lua colour override file. Live reload via `wezterm cli activate-pane` or a signal.
+
+**Foot** — writes an INI-format colour file, supports live reload via SIGHUP.
+
+To add a terminal:
+
+1. Add an `apply_<terminal>` function following the pattern in [Adding support for a new app](#adding-support-for-a-new-app)
+2. Add a `<terminal>.theme` template to `templates/` using `{color_key}` substitution
+3. Add the terminal's built-in theme name (if applicable) as a per-theme key in `manifest.toml` alongside `ghostty`
+4. Register it in `ALL_APPS` and `APP_REGISTRY`
+5. Add it to the `[apps]` section in `manifest.toml`
+
+---
+
+### Multiplexers
+
+Currently only **tmux** is supported. The following are good candidates:
+
+**Zellij** — KDL-format theme files at `~/.config/zellij/themes/`. Template-based, very similar to tmux.
+
+**GNU Screen** — `.screenrc` colour overrides. Niche but still used.
+
+To add a multiplexer, follow the same four-step pattern as any other app.
+
+---
+
+### Desktop environments
+
+Currently only **GNOME** is supported. The following DEs are well-suited for integration:
+
+**Hyprland** — sets colours via `hyprctl setprop` or by writing `~/.config/hypr/colors.conf` and sourcing it. Waybar, Mako, and Walker also need per-theme config files. A Hyprland PR should include `apply_hyprland`, `apply_waybar`, `apply_mako`, and `apply_walker` at minimum.
+
+**Niri** — similar to Hyprland. Writes to `~/.config/niri/colors.kdl` or equivalent.
+
+**KDE Plasma** — uses `plasma-apply-colorscheme` and `plasma-apply-wallpaperimage`. KDE colour schemes are `.colors` files under `~/.local/share/color-schemes/`. More complex than GNOME but well-documented.
+
+**XFCE** — `xfconf-query` for colour settings, similar in spirit to `gsettings`.
+
+DE integrations are more complex than app integrations — they typically involve multiple components (panel, notifications, app launcher, lock screen) that each need their own apply function or template. A good PR for a new DE includes at minimum the wallpaper and accent colour, with component configs as optional extras.
 
 ---
 
@@ -51,9 +133,17 @@ foreground = "text"
 
 Valid GNOME accent colours: `blue`, `teal`, `green`, `yellow`, `orange`, `red`, `pink`, `purple`, `slate`, `bark`, `sage`, `olive`, `viridian`. Note that `bark`, `sage`, `olive`, and `viridian` require GNOME 47+.
 
+Also add the theme to the `[themes]` section:
+
+```toml
+[themes]
+# … existing themes …
+mytheme = true
+```
+
 ### 2. Add a Ghostty theme file
 
-If the theme isn't built into Ghostty, create `themeSwitcher/.config/ghostty/themes/mytheme.theme`:
+If the theme isn't built into Ghostty, create `themeSwitcher/.local/share/themeSwitcher/ghostty_themes/My Theme`:
 
 ```
 background           = #1a1b26
@@ -81,6 +171,8 @@ palette = 14=#7dcfff
 palette = 15=#c0caf5
 ```
 
+The file needs to be symlinked into `~/.config/ghostty/themes/` via the `ghostty` Stow package.
+
 ### 3. Configure Neovim
 
 Choose the appropriate strategy based on whether a matching Neovim plugin exists:
@@ -92,11 +184,11 @@ Choose the appropriate strategy based on whether a matching Neovim plugin exists
 ["mytheme"] = "actual-colorscheme-name",
 ```
 
-**Terminal-palette theme** (no matching plugin — nvim should inherit Ghostty's colours) — add to `pixel_themes` in `colorschemes.lua`:
+**Terminal-palette theme** (no matching plugin — nvim should inherit the terminal's colours) — add to `pixel_themes` in `colorschemes.lua`:
 ```lua
 ["mytheme"] = true,
 ```
-`pixel.nvim` disables `termguicolors` and reads directly from the terminal's ANSI palette, so nvim matches Ghostty automatically.
+`pixel.nvim` disables `termguicolors` and reads directly from the terminal's ANSI palette, so nvim matches the terminal automatically.
 
 **Aether-based theme** (no matching plugin but you want proper syntax highlighting with the theme's exact colours) — add a palette entry to `aether_palettes` in `colorschemes.lua`:
 ```lua
@@ -108,7 +200,6 @@ Choose the appropriate strategy based on whether a matching Neovim plugin exists
     purple = "#...", magenta = "#...",
 },
 ```
-Map the 14 aether colour slots to the theme's palette values. `aether.nvim` then generates full syntax highlighting from these colours.
 
 ### 4. Add wallpapers
 
@@ -152,6 +243,7 @@ def apply_myapp(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
 
 ```python
 def apply_myapp(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    """Apply theme to myapp."""
     content: str = render_template("myapp.theme", resolved)
     write_config(content, CONFIG_HOME / "myapp/colors.conf")
     signal_process("myapp")   # if the app supports live reload via signal
@@ -161,6 +253,7 @@ def apply_myapp(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
 
 ```python
 def apply_myapp(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
+    """Apply theme to myapp via per-theme config file."""
     src: Path = THEME_DIR / theme_id / "myapp.conf"
     if src.exists():
         symlink(src, CONFIG_HOME / "myapp/myapp.conf")
@@ -219,6 +312,6 @@ Add your app to the "What it changes" table and the per-component dependencies l
 
 ## What is not in scope
 
-- **Wayland compositors** (Hyprland, Sway, etc.) — out of scope for now, but a well-structured PR with a clear `apply_hyprland` implementation would be considered.
 - **Vim (not Neovim)** — the socket-based live reload relies on Neovim's `--server` flag. Classic Vim has no equivalent.
 - **GUI theme pickers** — this is a CLI tool and will stay one.
+- **Wayland compositors as a bundled default** — Hyprland, Niri, Sway etc. are welcome as contributed integrations but won't be added to `ALL_APPS` by default since this is a GNOME-first tool.

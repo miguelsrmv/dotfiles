@@ -10,11 +10,46 @@ btop     = true
 nvim     = true
 gnome    = true
 
+# ── Theme selector ────────────────────────────────────────────────────────────
+# Set any theme to false to hide it from the picker and --list.
+# Omit this section entirely to enable all themes.
+
+[themes]
+catppuccin-macchiato  = true
+catppuccin-frappe     = true
+catppuccin-mocha      = true
+catppuccin-latte      = true
+dracula               = true
+ethereal              = true
+everforest            = true
+flexoki-light         = true
+gruvbox               = true
+hackerman             = true
+kanagawa              = true
+lumon                 = true
+matte-black           = true
+miasma                = true
+monokai-pro           = true
+monokai-pro-ristretto = true
+nightfox              = true
+nord                  = true
+onedark               = true
+osaka-jade            = true
+poimandres            = true
+retro-82              = true
+rose-pine             = true
+solarized-dark        = true
+tokyonight-night      = true
+vantablack            = true
+vesper                = true
+ayu-mirage            = true
+white                 = true
+
 
 # ── Catppuccin Macchiato ─────────────────────────────────────────────────────
 
 [catppuccin-macchiato]
-display_name = "Catppuccin Macchiato"
+display_name = "Catppuccin"
 ghostty      = "Catppuccin Macchiato"
 
 [catppuccin-macchiato.gnome]
@@ -99,7 +134,7 @@ time_fg         = "yellow"
 
 [dracula]
 display_name = "Dracula"
-ghostty      = "Dracula"
+ghostty      = "dracula_mofiqul"
 
 [dracula.gnome]
 gtk_theme    = "Dracula"
@@ -183,7 +218,7 @@ time_fg         = "orange"
 
 [everforest]
 display_name = "Everforest"
-ghostty      = "Everforest Dark"
+ghostty      = "everforest"
 
 [everforest.gnome]
 gtk_theme    = "Everforest-Dark-BL"
@@ -939,7 +974,7 @@ time_fg         = "subtext"
 
 [catppuccin-latte]
 display_name = "Catppuccin Latte"
-ghostty      = "Catppuccin Latte"
+ghostty      = "catppuccin-latte"
 
 [catppuccin-latte.gnome]
 gtk_theme    = "Catppuccin-Latte-Standard-Blue-Light"
@@ -1024,7 +1059,7 @@ time_fg         = "yellow"
 
 [ethereal]
 display_name = "Ethereal"
-ghostty      = "Ethereal"
+ghostty      = "ethereal"
 
 [ethereal.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1109,7 +1144,7 @@ time_fg         = "yellow"
 
 [flexoki-light]
 display_name = "Flexoki Light"
-ghostty      = "Flexoki Light"
+ghostty      = "flexoki-light"
 
 [flexoki-light.gnome]
 gtk_theme    = "Adwaita"
@@ -1194,7 +1229,7 @@ time_fg         = "orange"
 
 [hackerman]
 display_name = "Hackerman"
-ghostty      = "Hackerman"
+ghostty      = "hackerman"
 
 [hackerman.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1279,7 +1314,7 @@ time_fg         = "subtext"
 
 [lumon]
 display_name = "Lumon"
-ghostty      = "Lumon"
+ghostty      = "lumon"
 
 [lumon.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1364,7 +1399,8 @@ time_fg         = "subtext"
 
 [matte-black]
 display_name = "Matte Black"
-ghostty      = "Matte Black"
+ghostty      = "matte-black"
+nvim_theme   = "matteblack"
 
 [matte-black.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1449,7 +1485,7 @@ time_fg         = "muted"
 
 [miasma]
 display_name = "Miasma"
-ghostty      = "Miasma"
+ghostty      = "miasma"
 
 [miasma.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1534,7 +1570,8 @@ time_fg         = "subtext"
 
 [osaka-jade]
 display_name = "Osaka Jade"
-ghostty      = "Osaka Jade"
+ghostty      = "osaka_jade"
+nvim_theme   = "bamboo"
 
 [osaka-jade.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1619,7 +1656,7 @@ time_fg         = "yellow"
 
 [retro-82]
 display_name = "Retro 82"
-ghostty      = "Retro 82"
+ghostty      = "retro-82"
 
 [retro-82.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1704,7 +1741,7 @@ time_fg         = "subtext"
 
 [vantablack]
 display_name = "Vantablack"
-ghostty      = "Vantablack"
+ghostty      = "vantablack"
 
 [vantablack.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1789,7 +1826,7 @@ time_fg         = "muted"
 
 [white]
 display_name = "White"
-ghostty      = "White"
+ghostty      = "white"
 
 [white.gnome]
 gtk_theme    = "Adwaita"
@@ -1868,3 +1905,600 @@ visual_mode     = "surface"
 dir_fg          = "sapphire"
 git_fg          = "subtext"
 time_fg         = "overlay"
+
+
+# ── Catppuccin Frappe ─────────────────────────────────────────────────────────
+
+[catppuccin-frappe]
+display_name = "Catppuccin Frappe"
+ghostty      = "Catppuccin Frappe"
+
+[catppuccin-frappe.gnome]
+gtk_theme    = "Catppuccin-Frappe-Standard-Blue-Dark"
+shell_theme  = "Catppuccin-Frappe-Standard-Blue-Dark"
+icon_theme   = "Papirus-Dark"
+accent_color = "purple"
+color_scheme = "prefer-dark"
+
+[catppuccin-frappe.palette]
+base     = "#303446"   # frappe base
+mantle   = "#292c3c"   # frappe mantle
+surface  = "#51576d"   # frappe surface 1
+overlay  = "#737994"   # frappe overlay 0
+muted    = "#626880"   # frappe surface 2
+text     = "#c6d0f5"   # frappe text
+subtext  = "#b5bfe2"   # frappe subtext 1
+red      = "#e78284"   # frappe red
+orange   = "#ef9f76"   # frappe peach
+yellow   = "#e5c890"   # frappe yellow
+green    = "#a6d189"   # frappe green
+teal     = "#81c8be"   # frappe teal
+sky      = "#99d1db"   # frappe sky
+sapphire = "#85c1dc"   # frappe sapphire
+blue     = "#8caaee"   # frappe blue
+mauve    = "#ca9ee6"   # frappe mauve
+
+[catppuccin-frappe.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "blue"
+secondary       = "mauve"
+title           = "text"
+hi_fg           = "blue"
+selected_bg     = "surface"
+selected_fg     = "blue"
+inactive_fg     = "muted"
+graph_text      = "subtext"
+meter_bg        = "surface"
+proc_misc       = "subtext"
+cpu_box         = "mauve"
+mem_box         = "green"
+net_box         = "red"
+proc_box        = "blue"
+div_line        = "overlay"
+temp_start      = "green"
+temp_mid        = "yellow"
+temp_end        = "red"
+cpu_start       = "teal"
+cpu_mid         = "sapphire"
+cpu_end         = "red"
+free_start      = "mauve"
+free_mid        = "subtext"
+free_end        = "blue"
+cached_start    = "sapphire"
+cached_mid      = "blue"
+cached_end      = "red"
+available_start = "orange"
+available_mid   = "red"
+available_end   = "red"
+used_start      = "green"
+used_mid        = "teal"
+used_end        = "red"
+download_start  = "teal"
+download_mid    = "blue"
+download_end    = "red"
+upload_start    = "green"
+upload_mid      = "teal"
+upload_end      = "red"
+process_start   = "sapphire"
+process_mid     = "subtext"
+process_end     = "mauve"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "teal"
+visual_mode     = "overlay"
+dir_fg          = "blue"
+git_fg          = "mauve"
+time_fg         = "yellow"
+
+
+# ── Catppuccin Mocha ──────────────────────────────────────────────────────────
+
+[catppuccin-mocha]
+display_name = "Catppuccin Mocha"
+ghostty      = "Catppuccin Mocha"
+
+[catppuccin-mocha.gnome]
+gtk_theme    = "Catppuccin-Mocha-Standard-Blue-Dark"
+shell_theme  = "Catppuccin-Mocha-Standard-Blue-Dark"
+icon_theme   = "Papirus-Dark"
+accent_color = "purple"
+color_scheme = "prefer-dark"
+
+[catppuccin-mocha.palette]
+base     = "#1e1e2e"   # mocha base
+mantle   = "#181825"   # mocha mantle
+surface  = "#585b70"   # mocha surface 1
+overlay  = "#6c7086"   # mocha overlay 0
+muted    = "#45475a"   # mocha surface 0
+text     = "#cdd6f4"   # mocha text
+subtext  = "#bac2de"   # mocha subtext 1
+red      = "#f38ba8"   # mocha red
+orange   = "#fab387"   # mocha peach
+yellow   = "#f9e2af"   # mocha yellow
+green    = "#a6e3a1"   # mocha green
+teal     = "#94e2d5"   # mocha teal
+sky      = "#89dceb"   # mocha sky
+sapphire = "#74c7ec"   # mocha sapphire
+blue     = "#89b4fa"   # mocha blue
+mauve    = "#cba6f7"   # mocha mauve
+
+[catppuccin-mocha.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "blue"
+secondary       = "mauve"
+title           = "text"
+hi_fg           = "blue"
+selected_bg     = "surface"
+selected_fg     = "blue"
+inactive_fg     = "muted"
+graph_text      = "subtext"
+meter_bg        = "surface"
+proc_misc       = "subtext"
+cpu_box         = "mauve"
+mem_box         = "green"
+net_box         = "red"
+proc_box        = "blue"
+div_line        = "overlay"
+temp_start      = "green"
+temp_mid        = "yellow"
+temp_end        = "red"
+cpu_start       = "teal"
+cpu_mid         = "sapphire"
+cpu_end         = "red"
+free_start      = "mauve"
+free_mid        = "subtext"
+free_end        = "blue"
+cached_start    = "sapphire"
+cached_mid      = "blue"
+cached_end      = "red"
+available_start = "orange"
+available_mid   = "red"
+available_end   = "red"
+used_start      = "green"
+used_mid        = "teal"
+used_end        = "red"
+download_start  = "teal"
+download_mid    = "blue"
+download_end    = "red"
+upload_start    = "green"
+upload_mid      = "teal"
+upload_end      = "red"
+process_start   = "sapphire"
+process_mid     = "subtext"
+process_end     = "mauve"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "teal"
+visual_mode     = "overlay"
+dir_fg          = "blue"
+git_fg          = "mauve"
+time_fg         = "yellow"
+
+
+# ── Poimandres ────────────────────────────────────────────────────────────────
+
+[poimandres]
+display_name = "Poimandres"
+ghostty      = "Poimandres"
+
+[poimandres.gnome]
+gtk_theme    = "Adwaita-dark"
+shell_theme  = "Adwaita-dark"
+icon_theme   = "Papirus-Dark"
+accent_color = "teal"
+color_scheme = "prefer-dark"
+
+[poimandres.palette]
+base     = "#1b1e28"   # background (deep blue-grey)
+mantle   = "#151720"   # darker bg
+surface  = "#303340"   # color0 (dark selection)
+overlay  = "#555970"   # mid blue-grey
+muted    = "#767c9d"   # color8
+text     = "#e4f0fb"   # foreground (light blue-white)
+subtext  = "#a6accd"   # color7
+red      = "#d0679d"   # color1 (pink-red)
+orange   = "#fcc5e9"   # color5 (soft pink)
+yellow   = "#fffac2"   # color3 (pale yellow)
+green    = "#5de4c7"   # color2 (primary teal-green)
+teal     = "#5de4c7"   # same
+sky      = "#add7ff"   # color6/14 (light blue)
+sapphire = "#89ddff"   # color4 (bright blue)
+blue     = "#89ddff"   # same
+mauve    = "#fcc5e9"   # color13 (soft pink)
+
+[poimandres.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "green"
+secondary       = "sky"
+title           = "subtext"
+hi_fg           = "green"
+selected_bg     = "surface"
+selected_fg     = "text"
+inactive_fg     = "muted"
+graph_text      = "subtext"
+meter_bg        = "surface"
+proc_misc       = "sky"
+cpu_box         = "green"
+mem_box         = "sapphire"
+net_box         = "red"
+proc_box        = "sky"
+div_line        = "overlay"
+temp_start      = "green"
+temp_mid        = "sapphire"
+temp_end        = "red"
+cpu_start       = "green"
+cpu_mid         = "sapphire"
+cpu_end         = "red"
+free_start      = "green"
+free_mid        = "sapphire"
+free_end        = "sky"
+cached_start    = "green"
+cached_mid      = "teal"
+cached_end      = "sky"
+available_start = "green"
+available_mid   = "sapphire"
+available_end   = "red"
+used_start      = "green"
+used_mid        = "sapphire"
+used_end        = "red"
+download_start  = "green"
+download_mid    = "sapphire"
+download_end    = "sky"
+upload_start    = "teal"
+upload_mid      = "sapphire"
+upload_end      = "red"
+process_start   = "green"
+process_mid     = "sapphire"
+process_end     = "sky"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "sapphire"
+visual_mode     = "overlay"
+dir_fg          = "green"
+git_fg          = "sapphire"
+time_fg         = "muted"
+
+
+# ── Ayu Mirage ────────────────────────────────────────────────────────────────
+
+[ayu-mirage]
+display_name = "Ayu Mirage"
+ghostty      = "Ayu Mirage"
+nvim_theme   = "ayu-mirage"
+
+[ayu-mirage.gnome]
+gtk_theme    = "Adwaita-dark"
+shell_theme  = "Adwaita-dark"
+icon_theme   = "Papirus-Dark"
+accent_color = "orange"
+color_scheme = "prefer-dark"
+
+[ayu-mirage.palette]
+base     = "#212733"   # background
+mantle   = "#1a1f2b"   # darker bg
+surface  = "#3d4751"   # selection / comment bg
+overlay  = "#8a9199"   # muted UI
+muted    = "#3d4751"   # inactive
+text     = "#cccac2"   # foreground
+subtext  = "#b8b5ae"   # secondary text
+red      = "#f07171"   # error
+orange   = "#ffaa33"   # primary accent (orange)
+yellow   = "#ffcc66"   # strings / accent warm
+green    = "#d5ff80"   # success
+teal     = "#95e6cb"   # teal
+sky      = "#73d0ff"   # functions / blue
+sapphire = "#5ccfe6"   # types / cyan
+blue     = "#73d0ff"   # same as sky
+mauve    = "#d4bfff"   # keywords / purple
+
+[ayu-mirage.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "orange"
+secondary       = "teal"
+title           = "subtext"
+hi_fg           = "orange"
+selected_bg     = "surface"
+selected_fg     = "text"
+inactive_fg     = "muted"
+graph_text      = "subtext"
+meter_bg        = "surface"
+proc_misc       = "sky"
+cpu_box         = "orange"
+mem_box         = "green"
+net_box         = "red"
+proc_box        = "sky"
+div_line        = "overlay"
+temp_start      = "green"
+temp_mid        = "yellow"
+temp_end        = "red"
+cpu_start       = "green"
+cpu_mid         = "orange"
+cpu_end         = "red"
+free_start      = "teal"
+free_mid        = "sky"
+free_end        = "mauve"
+cached_start    = "teal"
+cached_mid      = "sapphire"
+cached_end      = "sky"
+available_start = "green"
+available_mid   = "yellow"
+available_end   = "orange"
+used_start      = "green"
+used_mid        = "yellow"
+used_end        = "red"
+download_start  = "teal"
+download_mid    = "sky"
+download_end    = "mauve"
+upload_start    = "green"
+upload_mid      = "orange"
+upload_end      = "red"
+process_start   = "green"
+process_mid     = "sky"
+process_end     = "mauve"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "teal"
+visual_mode     = "overlay"
+dir_fg          = "orange"
+git_fg          = "teal"
+time_fg         = "yellow"
+
+
+# ── Vesper ────────────────────────────────────────────────────────────────────
+
+[vesper]
+display_name = "Vesper"
+ghostty      = "Vesper"
+
+[vesper.gnome]
+gtk_theme    = "Adwaita-dark"
+shell_theme  = "Adwaita-dark"
+icon_theme   = "Papirus-Dark"
+accent_color = "orange"
+color_scheme = "prefer-dark"
+
+[vesper.palette]
+base     = "#101010"   # background (near black)
+mantle   = "#0a0a0a"   # darker bg
+surface  = "#2a2a2a"   # selection
+overlay  = "#505050"   # muted UI
+muted    = "#505050"   # inactive
+text     = "#ffffff"   # foreground (pure white)
+subtext  = "#a0a0a0"   # secondary
+red      = "#ff8080"   # error
+orange   = "#ffc799"   # primary accent (warm orange)
+yellow   = "#ffc799"   # same
+green    = "#99ffe4"   # strings / aqua
+teal     = "#99ffe4"   # same
+sky      = "#99ffe4"   # same
+sapphire = "#99ffe4"   # same
+blue     = "#99ffe4"   # same
+mauve    = "#ffd7d7"   # soft pink
+
+[vesper.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "orange"
+secondary       = "green"
+title           = "subtext"
+hi_fg           = "orange"
+selected_bg     = "surface"
+selected_fg     = "text"
+inactive_fg     = "muted"
+graph_text      = "subtext"
+meter_bg        = "surface"
+proc_misc       = "green"
+cpu_box         = "orange"
+mem_box         = "green"
+net_box         = "red"
+proc_box        = "teal"
+div_line        = "overlay"
+temp_start      = "green"
+temp_mid        = "orange"
+temp_end        = "red"
+cpu_start       = "green"
+cpu_mid         = "orange"
+cpu_end         = "red"
+free_start      = "green"
+free_mid        = "teal"
+free_end        = "orange"
+cached_start    = "green"
+cached_mid      = "teal"
+cached_end      = "sky"
+available_start = "green"
+available_mid   = "orange"
+available_end   = "red"
+used_start      = "green"
+used_mid        = "orange"
+used_end        = "red"
+download_start  = "green"
+download_mid    = "teal"
+download_end    = "sky"
+upload_start    = "teal"
+upload_mid      = "orange"
+upload_end      = "red"
+process_start   = "green"
+process_mid     = "orange"
+process_end     = "teal"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "teal"
+visual_mode     = "overlay"
+dir_fg          = "orange"
+git_fg          = "green"
+time_fg         = "muted"
+
+
+# ── Solarized Dark ────────────────────────────────────────────────────────────
+
+[solarized-dark]
+display_name = "Solarized Dark"
+ghostty      = "Builtin Solarized Dark"
+nvim_theme   = "solarized"
+
+[solarized-dark.gnome]
+gtk_theme    = "Adwaita-dark"
+shell_theme  = "Adwaita-dark"
+icon_theme   = "Papirus-Dark"
+accent_color = "teal"
+color_scheme = "prefer-dark"
+
+[solarized-dark.palette]
+base     = "#002b36"   # solarized base03 (background)
+mantle   = "#073642"   # solarized base02
+surface  = "#073642"   # same
+overlay  = "#586e75"   # solarized base01 (comments)
+muted    = "#657b83"   # solarized base00
+text     = "#839496"   # solarized base0 (foreground)
+subtext  = "#93a1a1"   # solarized base1
+red      = "#dc322f"   # solarized red
+orange   = "#cb4b16"   # solarized orange
+yellow   = "#b58900"   # solarized yellow
+green    = "#859900"   # solarized green
+teal     = "#2aa198"   # solarized cyan
+sky      = "#268bd2"   # solarized blue
+sapphire = "#268bd2"   # same
+blue     = "#268bd2"   # solarized blue
+mauve    = "#6c71c4"   # solarized violet
+
+[solarized-dark.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "blue"
+secondary       = "teal"
+title           = "subtext"
+hi_fg           = "blue"
+selected_bg     = "surface"
+selected_fg     = "subtext"
+inactive_fg     = "muted"
+graph_text      = "subtext"
+meter_bg        = "surface"
+proc_misc       = "teal"
+cpu_box         = "blue"
+mem_box         = "green"
+net_box         = "red"
+proc_box        = "teal"
+div_line        = "overlay"
+temp_start      = "green"
+temp_mid        = "yellow"
+temp_end        = "red"
+cpu_start       = "green"
+cpu_mid         = "teal"
+cpu_end         = "blue"
+free_start      = "teal"
+free_mid        = "blue"
+free_end        = "mauve"
+cached_start    = "green"
+cached_mid      = "teal"
+cached_end      = "blue"
+available_start = "green"
+available_mid   = "yellow"
+available_end   = "orange"
+used_start      = "green"
+used_mid        = "yellow"
+used_end        = "red"
+download_start  = "teal"
+download_mid    = "blue"
+download_end    = "mauve"
+upload_start    = "green"
+upload_mid      = "teal"
+upload_end      = "blue"
+process_start   = "green"
+process_mid     = "teal"
+process_end     = "blue"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "teal"
+visual_mode     = "overlay"
+dir_fg          = "blue"
+git_fg          = "teal"
+time_fg         = "yellow"
+
+
+# ── Monokai Pro  ─────────────────────────────────────────────────────────────────
+
+[monokai]
+display_name = "Monokai Pro"
+ghostty      = "Monokai Pro"
+
+[monokai.gnome]
+gtk_theme    = "Adwaita-dark"
+shell_theme  = "Adwaita-dark"
+icon_theme   = "Papirus-Dark"
+accent_color = "green"
+color_scheme = "prefer-dark"
+
+[monokai.palette]
+base     = "#2d2a2e"   # background
+mantle   = "#1e1f1c"   # darker bg
+surface  = "#3e3d32"   # line highlight / selection
+overlay  = "#75715e"   # comments
+muted    = "#49483e"   # darker surface
+text     = "#f8f8f2"   # foreground
+subtext  = "#f8f8f0"   # bright white
+red      = "#f92672"   # pink-red (keywords)
+orange   = "#fd971f"   # orange (function args)
+yellow   = "#e6db74"   # yellow (strings)
+green    = "#a6e22e"   # green (functions)
+teal     = "#66d9ef"   # cyan (types)
+sky      = "#66d9ef"   # same
+sapphire = "#66d9ef"   # same
+blue     = "#819aff"   # blue
+mauve    = "#ae81ff"   # purple (constants)
+
+[monokai.colors]
+background      = "base"
+foreground      = "text"
+highlight       = "green"
+secondary       = "teal"
+title           = "subtext"
+hi_fg           = "green"
+selected_bg     = "surface"
+selected_fg     = "text"
+inactive_fg     = "overlay"
+graph_text      = "text"
+meter_bg        = "surface"
+proc_misc       = "teal"
+cpu_box         = "green"
+mem_box         = "teal"
+net_box         = "red"
+proc_box        = "mauve"
+div_line        = "overlay"
+temp_start      = "green"
+temp_mid        = "yellow"
+temp_end        = "red"
+cpu_start       = "green"
+cpu_mid         = "teal"
+cpu_end         = "red"
+free_start      = "green"
+free_mid        = "teal"
+free_end        = "mauve"
+cached_start    = "teal"
+cached_mid      = "sky"
+cached_end      = "mauve"
+available_start = "green"
+available_mid   = "yellow"
+available_end   = "orange"
+used_start      = "green"
+used_mid        = "yellow"
+used_end        = "red"
+download_start  = "teal"
+download_mid    = "mauve"
+download_end    = "red"
+upload_start    = "green"
+upload_mid      = "orange"
+upload_end      = "red"
+process_start   = "green"
+process_mid     = "teal"
+process_end     = "mauve"
+error_status    = "red"
+success_status  = "green"
+replace_mode    = "teal"
+visual_mode     = "overlay"
+dir_fg          = "green"
+git_fg          = "teal"
+time_fg         = "yellow"

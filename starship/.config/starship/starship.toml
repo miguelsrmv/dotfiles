@@ -15,17 +15,17 @@ $character
 
 right_format = "$time"
 
-palette = "tokyonight-night"
+palette = "monokai"
 
-[palettes.tokyonight-night]
-error_status   = "#f7768e"
-success_status = "#9ece6a"
-replace_mode   = "#e0af68"
-visual_mode    = "#565f89"
-bg             = "#1a1b26"
-dir_fg         = "#7dcfff"
-git_fg         = "#73daca"
-time_fg        = "#cfc9c2"
+[palettes.monokai]
+error_status   = "#f92672"
+success_status = "#a6e22e"
+replace_mode   = "#66d9ef"
+visual_mode    = "#75715e"
+bg             = "#2d2a2e"
+dir_fg         = "#a6e22e"
+git_fg         = "#66d9ef"
+time_fg        = "#e6db74"
 
 [directory]
 style            = "fg:dir_fg bg:bg"

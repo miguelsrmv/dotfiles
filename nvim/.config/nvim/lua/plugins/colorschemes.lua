@@ -13,6 +13,10 @@ vim.pack.add({
 	"https://github.com/loctvl842/monokai-pro.nvim",
 	"https://github.com/kepano/flexoki-neovim",
 	"https://github.com/tahayvr/matteblack.nvim",
+	"https://github.com/olivercederborg/poimandres.nvim",
+	"https://github.com/Shatur/neovim-ayu",
+	"https://github.com/datsfilipe/vesper.nvim",
+	"https://github.com/shaunsingh/solarized.nvim",
 	"https://github.com/bjarneo/aether.nvim",
 	"https://github.com/bjarneo/pixel.nvim",
 })
@@ -91,9 +95,8 @@ if f then
 	}
 
 	local nvim_overrides = {
-		["monokai-pro-ristretto"] = "monokai-pro",
-		["onedark"] = "onedark",
 		["matte-black"] = "matteblack",
+		["solarized-dark"] = "solarized",
 	}
 
 	vim.o.background = light_themes[theme_id] and "light" or "dark"
