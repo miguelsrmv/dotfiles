@@ -134,7 +134,7 @@ time_fg         = "yellow"
 
 [dracula]
 display_name = "Dracula"
-ghostty      = "dracula_mofiqul"
+ghostty      = "Dracula"
 
 [dracula.gnome]
 gtk_theme    = "Dracula"
@@ -218,7 +218,7 @@ time_fg         = "orange"
 
 [everforest]
 display_name = "Everforest"
-ghostty      = "everforest"
+ghostty      = "Everforest Dark"
 
 [everforest.gnome]
 gtk_theme    = "Everforest-Dark-BL"
@@ -974,7 +974,7 @@ time_fg         = "subtext"
 
 [catppuccin-latte]
 display_name = "Catppuccin Latte"
-ghostty      = "catppuccin-latte"
+ghostty      = "Catppuccin Latte"
 
 [catppuccin-latte.gnome]
 gtk_theme    = "Catppuccin-Latte-Standard-Blue-Light"
@@ -1059,7 +1059,7 @@ time_fg         = "yellow"
 
 [ethereal]
 display_name = "Ethereal"
-ghostty      = "ethereal"
+ghostty      = "Ethereal"
 
 [ethereal.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1144,7 +1144,7 @@ time_fg         = "yellow"
 
 [flexoki-light]
 display_name = "Flexoki Light"
-ghostty      = "flexoki-light"
+ghostty      = "Flexoki Light"
 
 [flexoki-light.gnome]
 gtk_theme    = "Adwaita"
@@ -1229,7 +1229,7 @@ time_fg         = "orange"
 
 [hackerman]
 display_name = "Hackerman"
-ghostty      = "hackerman"
+ghostty      = "Hackerman"
 
 [hackerman.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1314,7 +1314,7 @@ time_fg         = "subtext"
 
 [lumon]
 display_name = "Lumon"
-ghostty      = "lumon"
+ghostty      = "Lumon"
 
 [lumon.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1399,8 +1399,7 @@ time_fg         = "subtext"
 
 [matte-black]
 display_name = "Matte Black"
-ghostty      = "matte-black"
-nvim_theme   = "matteblack"
+ghostty      = "Matte Black"
 
 [matte-black.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1485,7 +1484,7 @@ time_fg         = "muted"
 
 [miasma]
 display_name = "Miasma"
-ghostty      = "miasma"
+ghostty      = "Miasma"
 
 [miasma.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1570,7 +1569,7 @@ time_fg         = "subtext"
 
 [osaka-jade]
 display_name = "Osaka Jade"
-ghostty      = "osaka_jade"
+ghostty      = "Osaka Jade"
 nvim_theme   = "bamboo"
 
 [osaka-jade.gnome]
@@ -1656,7 +1655,7 @@ time_fg         = "yellow"
 
 [retro-82]
 display_name = "Retro 82"
-ghostty      = "retro-82"
+ghostty      = "Retro 82"
 
 [retro-82.gnome]
 gtk_theme    = "Adwaita-dark"
@@ -1826,7 +1825,7 @@ time_fg         = "muted"
 
 [white]
 display_name = "White"
-ghostty      = "white"
+ghostty      = "White"
 
 [white.gnome]
 gtk_theme    = "Adwaita"
@@ -2421,18 +2420,18 @@ time_fg         = "yellow"
 
 # ── Monokai Pro  ─────────────────────────────────────────────────────────────────
 
-[monokai]
+[monokai-pro]
 display_name = "Monokai Pro"
 ghostty      = "Monokai Pro"
 
-[monokai.gnome]
+[monokai-pro.gnome]
 gtk_theme    = "Adwaita-dark"
 shell_theme  = "Adwaita-dark"
 icon_theme   = "Papirus-Dark"
 accent_color = "green"
 color_scheme = "prefer-dark"
 
-[monokai.palette]
+[monokai-pro.palette]
 base     = "#2d2a2e"   # background
 mantle   = "#1e1f1c"   # darker bg
 surface  = "#3e3d32"   # line highlight / selection
@@ -2450,7 +2449,7 @@ sapphire = "#66d9ef"   # same
 blue     = "#819aff"   # blue
 mauve    = "#ae81ff"   # purple (constants)
 
-[monokai.colors]
+[monokai-pro.colors]
 background      = "base"
 foreground      = "text"
 highlight       = "green"
