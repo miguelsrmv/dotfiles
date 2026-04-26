@@ -307,7 +307,7 @@ ghostty      = "Gruvbox Dark"
 [gruvbox.gnome]
 gtk_theme    = "Gruvbox-Dark-BL"
 shell_theme  = "Gruvbox-Dark-BL"
-icon_theme   = "Gruvbox-Plus-Dark"
+icon_theme   = "Papirus-Dark"
 accent_color = "yellow"
 
 [gruvbox.palette]
@@ -559,7 +559,7 @@ ghostty      = "Nord"
 [nord.gnome]
 gtk_theme    = "Nordic-darker"
 shell_theme  = "Nordic-darker"
-icon_theme   = "Nordic"
+icon_theme   = "Papirus-Dark"
 accent_color = "blue"
 
 [nord.palette]

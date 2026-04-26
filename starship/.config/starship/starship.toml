@@ -15,17 +15,17 @@ $character
 
 right_format = "$time"
 
-palette = "tokyonight-night"
+palette = "gruvbox"
 
-[palettes.tokyonight-night]
-error_status   = "#f7768e"
-success_status = "#9ece6a"
-replace_mode   = "#e0af68"
-visual_mode    = "#565f89"
-bg             = "#1a1b26"
-dir_fg         = "#7dcfff"
-git_fg         = "#73daca"
-time_fg        = "#cfc9c2"
+[palettes.gruvbox]
+error_status   = "#cc241d"
+success_status = "#98971a"
+replace_mode   = "#458588"
+visual_mode    = "#b16286"
+bg             = "#282828"
+dir_fg         = "#d79921"
+git_fg         = "#83a598"
+time_fg        = "#d79921"
 
 [directory]
 style            = "fg:dir_fg bg:bg"
