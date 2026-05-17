@@ -56,8 +56,11 @@ vim.opt.updatetime = 250 -- Write swap file and trigger CursorHold faster (250ms
 vim.opt.timeoutlen = 300 -- Shorten wait time for a key sequence to complete (affects which-key popup)
 vim.o.ttimeoutlen = 10 -- Shorten wait time for terminal key codes (reduces ESC key delay)
 
--- Create socket for external programs (ie themeSwitcher)
+-- Create sockets for external programs (ie themeSwitcher)
 vim.fn.serverstart("/tmp/nvim-" .. vim.fn.getpid() .. ".sock")
+
+-- Start RPC server for neovim-mcp
+vim.fn.serverstart("/tmp/nvim.sock")
 
 -- Misc
 vim.opt.mouse = "a" -- Enable mouse support in all modes (clicking, scrolling, resizing splits)
