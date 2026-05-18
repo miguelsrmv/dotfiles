@@ -59,9 +59,6 @@ vim.o.ttimeoutlen = 10 -- Shorten wait time for terminal key codes (reduces ESC 
 -- Create sockets for external programs (ie themeSwitcher)
 vim.fn.serverstart("/tmp/nvim-" .. vim.fn.getpid() .. ".sock")
 
--- Start RPC server for neovim-mcp
-vim.fn.serverstart("/tmp/nvim.sock")
-
 -- Misc
 vim.opt.mouse = "a" -- Enable mouse support in all modes (clicking, scrolling, resizing splits)
 vim.opt.showmode = false -- Hide the mode indicator (-- INSERT --, etc.) since the statusline shows it

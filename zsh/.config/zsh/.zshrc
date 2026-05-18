@@ -27,9 +27,11 @@ bindkey "^[[2~" overwrite-mode      # Insert key
 bindkey "^[[3~" delete-char         # Delete key
 
 # Aliases
- alias cs="find \"\$OBSIDIAN_VAULT/Coding/CheatSheets\" -type f -name '*.md' \
+alias cs="find \"\$OBSIDIAN_VAULT/Coding/CheatSheets\" -type f -name '*.md' \
   | fzf --preview 'bat --style=numbers --color=always --paging=never {}' \
   | xargs bat --style=numbers --color=always --paging=always"
+
+alias opencode="opencode --port"
 
 # Start starship prompt
 eval "$(starship init zsh)"
@@ -64,7 +66,7 @@ devup() {
   oc_pane=$(tmux split-window -h -p 30 -t "$editor_pane" -c "$current_dir" -P -F '#{pane_id}')
  
   # Launch opencode first
-  tmux send-keys -t "$oc_pane" "opencode" C-m
+  tmux send-keys -t "$oc_pane" "opencode --port" C-m
  
   # Wait until opencode's TUI is fully rendered before launching nvim,
   # to prevent its startup OSC sequences from corrupting nvim's terminal state
@@ -84,4 +86,3 @@ devup() {
   # Focus nvim
   tmux select-pane -t "$editor_pane"
 }
-

@@ -168,6 +168,10 @@
       "rev": "f5fddfd5122fe00421e199151ae4fe8571a02898",
       "src": "https://github.com/olimorris/onedarkpro.nvim"
     },
+    "opencode.nvim": {
+      "rev": "05547308bb931dc5da80a81d282f18e581788752",
+      "src": "https://github.com/nickjvandyke/opencode.nvim"
+    },
     "pixel.nvim": {
       "rev": "fd06541f7c790e22ad18f0ee5873b246de5b4a87",
       "src": "https://github.com/bjarneo/pixel.nvim"

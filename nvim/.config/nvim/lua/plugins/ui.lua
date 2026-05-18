@@ -61,6 +61,18 @@ require("snacks").setup({
 	styles = {
 		notification = {},
 	},
+	picker = {
+    actions = {
+        opencode_send = function(...) return require("opencode").snacks_picker_send(...) end,
+    },
+    win = {
+        input = {
+            keys = {
+                ["<leader>os>"] = { "opencode_send", mode = { "n", "i" } },
+            },
+        },
+    },
+},
 })
 
 local snacks_maps = {
@@ -115,7 +127,7 @@ local snacks_maps = {
   { "n",          "<leader>sq",      function() Snacks.picker.qflist() end,                                  "Quickfix List" },
   { "n",          "<leader>sR",      function() Snacks.picker.resume() end,                                  "Resume" },
   { "n",          "<leader>su",      function() Snacks.picker.undo() end,                                    "Undo History" },
-  { "n",          "<leader>uc",       function() Snacks.picker.colorschemes() end,                            "Colorschemes" },
+  { "n",          "<leader>uc",      function() Snacks.picker.colorschemes() end,                            "Colorschemes" },
   -- LSP
   { "n",          "gd",              function() Snacks.picker.lsp_definitions() end,                         "Goto Definition" },
   { "n",          "gD",              function() Snacks.picker.lsp_declarations() end,                        "Goto Declaration" },
@@ -144,6 +156,7 @@ require("which-key").setup({
 		{ "<leader>g", group = "[g]it", icon = { icon = "󰊢", color = "orange" }, mode = { "n", "v" } },
 		{ "<leader>h", group = "[h]unks", icon = { icon = "", color = "orange" }, mode = { "n", "v" } },
 		{ "<leader>l", group = "[L]int", icon = { icon = "󰁨", color = "yellow" }, mode = "n" },
+		{ "<leader>o", group = "[o]pencode", icon = { icon = "󱙺", color = "purple" }, mode = "n" },
 		{ "<leader>s", group = "[s]earch", icon = { icon = "󰺯", color = "green" } },
 		{ "<leader>t", group = "[t]oggle", icon = { icon = "󰺯", color = "green" } },
 		{ "<leader>T", group = "[T]rouble", icon = { icon = "󰒡", color = "red" }, mode = "n" },
