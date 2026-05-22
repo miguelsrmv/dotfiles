@@ -61,18 +61,6 @@ require("snacks").setup({
 	styles = {
 		notification = {},
 	},
-	picker = {
-    actions = {
-        opencode_send = function(...) return require("opencode").snacks_picker_send(...) end,
-    },
-    win = {
-        input = {
-            keys = {
-                ["<leader>os>"] = { "opencode_send", mode = { "n", "i" } },
-            },
-        },
-    },
-},
 })
 
 local snacks_maps = {
