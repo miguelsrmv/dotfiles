@@ -15,17 +15,17 @@ $character
 
 right_format = "$time"
 
-palette = "{theme_id}"
+palette = "{{theme_id}}"
 
-[palettes.{theme_id}]
-error_status   = "{error_status}"
-success_status = "{success_status}"
-replace_mode   = "{replace_mode}"
-visual_mode    = "{visual_mode}"
-bg             = "{background}"
-dir_fg         = "{dir_fg}"
-git_fg         = "{git_fg}"
-time_fg        = "{time_fg}"
+[palettes.{{theme_id}}]
+error_status   = "{{error_status}}"
+success_status = "{{success_status}}"
+replace_mode   = "{{replace_mode}}"
+visual_mode    = "{{visual_mode}}"
+bg             = "{{background}}"
+dir_fg         = "{{dir_fg}}"
+git_fg         = "{{git_fg}}"
+time_fg        = "{{time_fg}}"
 
 [directory]
 style            = "fg:dir_fg bg:bg"

@@ -1,0 +1,87 @@
+/* themeSwitcher.rasi
+ *
+ * A multi-column grid layout for rofi dmenu, designed for theme and
+ * wallpaper pickers with thumbnails. Used automatically when
+ * themeSwitcher invokes rofi.
+ *
+ * Tested against rofi 1.7+. If your rofi is older, delete this file
+ * and themeSwitcher will fall back to rofi's default theme (still
+ * functional, just a vertical list instead of a grid).
+ */
+
+* {
+    bg:         #1e1e2e;
+    bg-alt:     #313244;
+    fg:         #cdd6f4;
+    fg-dim:     #7f849c;
+    accent:     #89b4fa;
+    border:     #45475a;
+
+    background-color: transparent;
+    text-color:       @fg;
+    font:             "Inter 11";
+}
+
+window {
+    width:         920px;
+    border:        2px;
+    border-color:  @border;
+    border-radius: 12px;
+    background-color: @bg;
+    padding:       18px;
+}
+
+mainbox {
+    spacing:  14px;
+    children: [ inputbar, listview ];
+}
+
+inputbar {
+    children:         [ prompt, entry ];
+    background-color: @bg-alt;
+    padding:          10px 14px;
+    border-radius:    8px;
+    spacing:          10px;
+}
+
+prompt {
+    text-color: @accent;
+}
+
+entry {
+    placeholder:       "Search…";
+    placeholder-color: @fg-dim;
+}
+
+listview {
+    columns:          4;
+    lines:            3;
+    spacing:          10px;
+    fixed-height:     true;
+    cycle:            true;
+    scrollbar:        false;
+}
+
+element {
+    orientation:      vertical;
+    padding:          10px;
+    border-radius:    8px;
+    spacing:          8px;
+    children:         [ element-icon, element-text ];
+}
+
+element selected {
+    background-color: @bg-alt;
+    text-color:       @accent;
+}
+
+element-icon {
+    size:             140px;
+    horizontal-align: 0.5;
+    border-radius:    6px;
+}
+
+element-text {
+    horizontal-align: 0.5;
+    vertical-align:   0.5;
+}

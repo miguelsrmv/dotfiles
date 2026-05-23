@@ -1,0 +1,53 @@
+/* Wofi theme written by themeSwitcher. */
+
+window {
+    margin: 0;
+    background-color: {{background}};
+    color: {{foreground}};
+    border: 1px solid {{overlay}};
+    border-radius: 8px;
+}
+
+#input {
+    background-color: {{surface}};
+    color: {{foreground}};
+    border: 1px solid {{overlay}};
+    border-radius: 4px;
+    padding: 8px;
+    margin: 8px;
+}
+
+#input:focus {
+    border-color: {{accent}};
+}
+
+#inner-box {
+    margin: 4px;
+    background-color: transparent;
+}
+
+#outer-box {
+    background-color: transparent;
+}
+
+#scroll {
+    margin: 0;
+}
+
+#entry {
+    padding: 8px;
+    color: {{foreground}};
+}
+
+#entry:selected {
+    background-color: {{surface}};
+    color: {{accent}};
+}
+
+#text {
+    color: {{foreground}};
+}
+
+#entry:selected #text {
+    color: {{accent}};
+}

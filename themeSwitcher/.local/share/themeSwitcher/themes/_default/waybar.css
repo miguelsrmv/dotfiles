@@ -1,0 +1,67 @@
+/* Waybar theme written by themeSwitcher.
+ * Import from your main style.css:
+ *   @import "themes/current.css";
+ */
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "Inter", "Symbols Nerd Font";
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: {{background}};
+    color: {{foreground}};
+}
+
+#workspaces button {
+    padding: 0 10px;
+    background-color: transparent;
+    color: {{foreground}};
+}
+
+#workspaces button.active {
+    color: {{accent}};
+    box-shadow: inset 0 -2px {{accent}};
+}
+
+#workspaces button:hover {
+    background-color: {{surface}};
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#network,
+#pulseaudio,
+#tray,
+#mode,
+#idle_inhibitor {
+    padding: 0 10px;
+    color: {{foreground}};
+}
+
+#battery.warning {
+    color: {{orange}};
+}
+
+#battery.critical {
+    color: {{red}};
+}
+
+#network.disconnected {
+    color: {{red}};
+}
+
+#pulseaudio.muted {
+    color: {{muted}};
+}
+
+tooltip {
+    background-color: {{mantle}};
+    color: {{foreground}};
+    border: 1px solid {{overlay}};
+}

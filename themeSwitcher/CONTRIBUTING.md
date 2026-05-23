@@ -1,341 +1,242 @@
-# Contributing
+# Contributing to themeSwitcher
 
-Thanks for your interest. Contributions are welcome and actively wanted — the more the merrier. In particular:
+themeSwitcher's architecture is designed so that the two most common
+contributions — adding a theme and adding an app — don't require
+touching Python. This document explains how.
 
-- **New themes** — from the Omarchy ecosystem, popular community themes, or anything you use daily
-- **New terminal support** — Kitty, Alacritty, WezTerm, Foot, and others
-- **New app support** — app launchers (Rofi, Walker, Fuzzel), notification daemons (Dunst, Mako), bars (Waybar, Polybar), and anything else that takes colour config
-- **New desktop environments** — Hyprland, Niri, KDE, XFCE, Sway
-- **Bug fixes and improvements** — to existing themes, colour mappings, or the switcher itself
+## Adding a theme
 
-This document explains how to contribute each type.
+1. Create a directory: `themes/<your-theme-id>/`. The ID is lowercase
+   with dashes (`tokyo-night`, `catppuccin-mocha`, not `Tokyo Night`).
+2. Add `theme.toml` with palette and metadata (see the section below).
+3. Optionally add per-app templates if your theme needs to override
+   the shared `_default/` ones (rare; see "Per-theme template overrides"
+   below).
+4. Optionally add a `backgrounds/` subdirectory with wallpaper images.
+5. Run `themeSwitcher --check`. Fix anything it complains about.
+6. Apply it (`themeSwitcher <your-theme-id>`) and eyeball the result.
+7. Open a PR with just the new directory. Reviewers can scan one folder
+   instead of grepping a monolithic file.
 
----
+### theme.toml structure
 
-## Repository layout
-
-This repo is a [GNU Stow](https://www.gnu.org/software/stow/) package. The `themeSwitcher/` subdirectory is the Stow package, and its contents mirror `$HOME`. Running `stow themeSwitcher` from your dotfiles root creates two symlinks:
-
-- `~/.local/bin/themeSwitcher` → the executable
-- `~/.local/share/themeSwitcher/` → the data directory
-
-The Ghostty theme files in `ghostty_themes/` are managed by a separate `ghostty` Stow package via symlinks into `~/.config/ghostty/themes/`.
-
-Keep this in mind when adding files:
-- The executable belongs under `themeSwitcher/.local/bin/`
-- Data files (manifest, templates, themes, backgrounds) belong under `themeSwitcher/.local/share/themeSwitcher/`
-- Ghostty palette source files belong under `themeSwitcher/.local/share/themeSwitcher/ghostty_themes/`
-- Docs (`README.md`, `CONTRIBUTING.md`) and repo config (`.gitignore`) sit at the repo root, outside the Stow package
-
----
-
-## Wanted contributions
-
-### Themes
-
-The following themes are good candidates for adding — they have established palettes, nvim plugins, and would complement the existing collection well. PRs for any of these are welcome:
-
-**From the Omarchy ecosystem** ([github.com/topics/omarchy-theme](https://github.com/topics/omarchy-theme)) — Omarchy has a rich community of themes, each with coordinated terminal palettes, nvim plugins, and wallpapers. Any Omarchy theme is a welcome addition here. The `bjarneo/*` themes in particular have first-class nvim support via `aether.nvim`. The ones not yet in this repo:
-
-| Theme | Nvim plugin | Notes |
-|---|---|---|
-| Ash | `bjarneo/ash.nvim` | Dark minimal, grey-blue tones |
-| Aura | `bjarneo/aura.nvim` | Purple-accented dark |
-| Futurism | `bjarneo/futurism.nvim` | High contrast neon |
-| Pixel | `bjarneo/pixel.nvim` | Terminal-palette only |
-
-**Community themes with good nvim support:**
-
-| Theme | Nvim plugin | Notes |
-|---|---|---|
-| Catppuccin Moon (Rosé Pine variant) | `rose-pine/neovim` | `colorscheme rose-pine-moon` |
-| Rosé Pine Dawn | `rose-pine/neovim` | Light variant, `colorscheme rose-pine-dawn` |
-| Gruvbox Material | `sainnhe/gruvbox-material` | Softer gruvbox |
-| Nightfly | `bluz71/vim-nightfly-colors` | Dark blue, more saturated than Nightfox |
-| Mellow | `kvrohit/mellow.nvim` | Low contrast, warm earthy |
-| Decay | `decaycs/decay.nvim` | Dark green, popular in ricing community |
-| Cyberdream | `scottmckendry/cyberdream.nvim` | High contrast neon cyberpunk |
-
-**If you add a theme**, follow the steps in [Adding a new theme](#adding-a-new-theme) below.
-
----
-
-### Terminals
-
-Currently only **Ghostty** is supported. The following terminals are widely used and a PR adding support for any of them would be very welcome:
-
-**Alacritty** — writes a TOML colour config at `~/.config/alacritty/colors.toml`. Template-based, straightforward. The theme file format uses `[colors.primary]`, `[colors.normal]`, and `[colors.bright]` sections.
-
-**Kitty** — writes a colour theme file at `~/.config/kitty/current-theme.conf` and sends `kitty @ set-colors` for live reload. Kitty's remote control requires `allow_remote_control yes` in the kitty config.
-
-**WezTerm** — writes a Lua colour override file. Live reload via `wezterm cli activate-pane` or a signal.
-
-**Foot** — writes an INI-format colour file, supports live reload via SIGHUP.
-
-To add a terminal:
-
-1. Add an `apply_<terminal>` function following the pattern in [Adding support for a new app](#adding-support-for-a-new-app)
-2. Add a `<terminal>.theme` template to `templates/` using `{color_key}` substitution
-3. Add the terminal's built-in theme name (if applicable) as a per-theme key in `manifest.toml` alongside `ghostty`
-4. Register it in `ALL_APPS` and `APP_REGISTRY`
-5. Add it to the `[apps]` section in `manifest.toml`
-
----
-
-### Multiplexers
-
-Currently only **tmux** is supported. The following are good candidates:
-
-**Zellij** — KDL-format theme files at `~/.config/zellij/themes/`. Template-based, very similar to tmux.
-
-**GNU Screen** — `.screenrc` colour overrides. Niche but still used.
-
-To add a multiplexer, follow the same four-step pattern as any other app.
-
----
-
-### App launchers and UI components
-
-Currently no app launchers, notification daemons, or status bars are supported. These are natural extensions and PRs are very welcome:
-
-**Rofi** — writes a colour theme to `~/.config/rofi/colors.rasi` and imports it from the main config. Template-based.
-
-**Walker** — writes a CSS colour override to `~/.config/walker/style.css` or equivalent. Template-based.
-
-**Fuzzel** — writes an INI colour config at `~/.config/fuzzel/fuzzel.ini`. Template-based.
-
-**Wofi** — writes a CSS file. Template-based.
-
-**Dunst** — writes colour overrides to `~/.config/dunst/dunstrc`. Supports live reload via `dunstctl reload`. Template-based.
-
-**Mako** — writes a colour config to `~/.config/mako/config`. Supports live reload via `makoctl reload`. Template-based.
-
-**Waybar** — writes a CSS colour override file. More structural than pure colour — a per-theme file approach may work better than a template.
-
-**Polybar** — writes colour variables to an include file. Template-based.
-
-To add any of these, follow the same four-step pattern in [Adding support for a new app](#adding-support-for-a-new-app).
-
----
-
-### Desktop environments
-
-Currently only **GNOME** is supported. The following DEs are well-suited for integration:
-
-**Hyprland** — sets colours via `hyprctl setprop` or by writing `~/.config/hypr/colors.conf` and sourcing it. Waybar, Mako, and Walker also need per-theme config files. A Hyprland PR should include `apply_hyprland`, `apply_waybar`, `apply_mako`, and `apply_walker` at minimum.
-
-**Niri** — similar to Hyprland. Writes to `~/.config/niri/colors.kdl` or equivalent.
-
-**KDE Plasma** — uses `plasma-apply-colorscheme` and `plasma-apply-wallpaperimage`. KDE colour schemes are `.colors` files under `~/.local/share/color-schemes/`. More complex than GNOME but well-documented.
-
-**XFCE** — `xfconf-query` for colour settings, similar in spirit to `gsettings`.
-
-DE integrations are more complex than app integrations — they typically involve multiple components (panel, notifications, app launcher, lock screen) that each need their own apply function or template. A good PR for a new DE includes at minimum the wallpaper and accent colour, with component configs as optional extras.
-
----
-
-## Adding a new theme
-
-### 1. Add a block to `manifest.toml`
-
-Follow the existing pattern:
+The required parts are `display_name`, `[palette]`, and `[colors]`.
 
 ```toml
-[mytheme]
 display_name = "My Theme"
-ghostty      = "My Theme"    # theme name exactly as Ghostty knows it
 
-[mytheme.gnome]
-gtk_theme    = "MyTheme-Dark"
-shell_theme  = "MyTheme-Dark"
+# Optional: free-form values templates can reference via {name}.
+# Currently the only convention is `ghostty`, which is the Ghostty
+# theme name the ghostty.theme template references.
+[vars]
+ghostty = "Some Ghostty Theme Name"
+
+# Optional: how Neovim should switch to this theme.
+[nvim]
+strategy    = "direct"     # default. Runs :colorscheme <name>
+colorscheme = "tokyonight" # defaults to the theme ID if omitted
+
+# Optional alternative: re-source colorschemes.lua. Use this for plugins
+# whose colorscheme needs require(...).setup() to be called — without
+# it a bare :colorscheme <name> fails.
+# [nvim]
+# strategy = "luafile"
+# luafile  = "~/.config/nvim/lua/plugins/colorschemes.lua"   # default
+
+# Required: GNOME desktop settings.
+[gnome]
+gtk_theme    = "Adwaita-dark"
+shell_theme  = "Adwaita-dark"
 icon_theme   = "Papirus-Dark"
-accent_color = "blue"        # named GNOME accent colour (see valid values below)
-color_scheme = "prefer-dark" # or "prefer-light" for light themes
+accent_color = "purple"
+color_scheme = "prefer-dark"
 
-[mytheme.palette]
-base     = "#1a1b26"
-mantle   = "#16161e"
-# … all 16 keys required (see README for full list)
+# Required: the 16-colour palette. All keys must be present even if you
+# don't use all of them — the validator enforces this so the
+# [colors] section can rely on every key resolving.
+[palette]
+base     = "#..."
+mantle   = "#..."
+surface  = "#..."
+overlay  = "#..."
+muted    = "#..."
+text     = "#..."
+subtext  = "#..."
+red      = "#..."
+orange   = "#..."
+yellow   = "#..."
+green    = "#..."
+teal     = "#..."
+sky      = "#..."
+sapphire = "#..."
+blue     = "#..."
+mauve    = "#..."
 
-[mytheme.colors]
-background = "base"
-foreground = "text"
-# … all color keys, referencing palette names or raw hex values
+# Required: semantic names used by templates. Each value is either:
+#   - a palette key      "blue"      → resolves to that hex
+#   - an empty string    ""          → kept as-is (btop gradient gaps)
+#   - a raw hex          "#ff5500"   → used verbatim (escape hatch)
+[colors]
+background  = "base"
+foreground  = "text"
+hi_fg       = "blue"
+selected_bg = "surface"
+# ... see any existing theme for the complete list of keys
+# the default templates need. `themeSwitcher --check` enforces
+# every key actually referenced by a template is defined.
 ```
 
-Valid GNOME accent colours: `blue`, `teal`, `green`, `yellow`, `orange`, `red`, `pink`, `purple`, `slate`, `bark`, `sage`, `olive`, `viridian`. Note that `bark`, `sage`, `olive`, and `viridian` require GNOME 47+.
+### Per-theme template overrides
 
-Also add the theme to the `[themes]` section:
+If your theme needs a custom Ghostty palette (because no built-in
+matches), drop a `ghostty.theme` file inside `themes/<your-theme>/`.
+themeSwitcher looks there first, then falls back to `_default/`.
 
-```toml
-[themes]
-# … existing themes …
-mytheme = true
-```
+This is the right move when the upstream tool's "named theme" approach
+doesn't fit — for example a custom palette you've authored. For 95% of
+themes, the `_default/ghostty.theme` template (which just writes a
+`theme = {ghostty}` line) is enough.
 
-### 2. Add a Ghostty theme file
+### Wallpapers
 
-If the theme isn't built into Ghostty, create `themeSwitcher/.local/share/themeSwitcher/ghostty_themes/My Theme`:
+Put images in `themes/<your-theme>/backgrounds/`. Any image format
+GNOME understands is fine. Filenames sort alphabetically, and that's
+the cycle order of `themeSwitcher --bg`. Prefix with numbers
+(`1-name.jpg`, `2-name.jpg`) to control order.
 
-```
-background           = #1a1b26
-foreground           = #c0caf5
-cursor-color         = #c0caf5
-cursor-text          = #1a1b26
-selection-background = #28344a
-selection-foreground = #c0caf5
-
-palette = 0=#15161e
-palette = 1=#f7768e
-palette = 2=#9ece6a
-palette = 3=#e0af68
-palette = 4=#7aa2f7
-palette = 5=#bb9af7
-palette = 6=#7dcfff
-palette = 7=#a9b1d6
-palette = 8=#414868
-palette = 9=#f7768e
-palette = 10=#9ece6a
-palette = 11=#e0af68
-palette = 12=#7aa2f7
-palette = 13=#bb9af7
-palette = 14=#7dcfff
-palette = 15=#c0caf5
-```
-
-The file needs to be symlinked into `~/.config/ghostty/themes/` via the `ghostty` Stow package.
-
-### 3. Configure Neovim
-
-Choose the appropriate strategy based on whether a matching Neovim plugin exists:
-
-**Dedicated plugin** (theme ID matches nvim colorscheme name) — add the plugin to `vim.pack.add` in `colorschemes.lua`. Nothing else needed.
-
-**Name mismatch** (theme ID differs from the plugin's colorscheme name) — add the plugin to `vim.pack.add` and add an entry to `nvim_overrides`:
-```lua
-["mytheme"] = "actual-colorscheme-name",
-```
-
-**Terminal-palette theme** (no matching plugin — nvim should inherit the terminal's colours) — add to `pixel_themes` in `colorschemes.lua`:
-```lua
-["mytheme"] = true,
-```
-`pixel.nvim` disables `termguicolors` and reads directly from the terminal's ANSI palette, so nvim matches the terminal automatically.
-
-**Aether-based theme** (no matching plugin but you want proper syntax highlighting with the theme's exact colours) — add a palette entry to `aether_palettes` in `colorschemes.lua`:
-```lua
-["mytheme"] = {
-    bg = "#...",  bg_dark = "#...",  bg_highlight = "#...",
-    fg = "#...",  fg_dark = "#...",  comment = "#...",
-    red = "#...", orange = "#...",   yellow = "#...",
-    green = "#...", cyan = "#...",   blue = "#...",
-    purple = "#...", magenta = "#...",
-},
-```
-
-### 4. Add wallpapers
-
-```
-themeSwitcher/.local/share/themeSwitcher/backgrounds/mytheme/1-mytheme.png
-```
-
-### 5. Validate
-
-```bash
-themeSwitcher --check
-```
-
-### Palette guidelines
-
-- Map palette key names to their closest **semantic** colour in the theme. `red` should be the theme's error/danger colour, `green` its success colour, `blue` its primary accent, and so on.
-- If a theme has no distinct `subtext`, set it equal to `text`.
-- Two palette keys mapping to the same hex value is fine — semantic clarity in `[colors]` is the goal.
-- For monochromatic themes (vantablack, white, lumon) map the palette keys to shades of the dominant colour family and accept that gradients will be subtle.
+If you ship third-party art, include a `CREDITS.md` in `backgrounds/`
+naming the source and license. Don't ship copyrighted material
+(production stills from TV shows, brand assets, etc.) — link to the
+source instead and let users download their own.
 
 ---
 
-## Adding support for a new app
+## Adding an app
 
-All app integrations follow the same four-step pattern.
+This is the part that's new in v3 and the part Omarchy got right:
+**adding an app should be configuration, not code.**
 
-### 1. Write an apply function
+### Recipe
 
-In `themeSwitcher`, add a function with this exact signature:
+1. Add an entry to `apps.toml`:
 
-```python
-def apply_myapp(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
-    ...
-```
+   ```toml
+   [alacritty]
+   template = "alacritty.toml"
+   dest     = "~/.config/alacritty/themes/current.toml"
+   ensure_include = { file = "~/.config/alacritty/alacritty.toml", line = 'import = ["~/.config/alacritty/themes/current.toml"]' }
+   ```
 
-- `theme_id` — the current theme ID string (e.g. `"catppuccin-macchiato"`)
-- `cfg` — the full theme config dict from the manifest (use for non-colour metadata like `ghostty`)
-- `resolved` — the fully resolved `{color_key: hex_value}` dict (use for colour substitution into templates)
+2. Write a default template at `themes/_default/alacritty.toml`. Use
+   `{{key}}` (double-brace) placeholders for any template variable.
+   Single `{` and `}` are passed through verbatim, which is essential
+   for CSS (Waybar, Wofi, SwayOSD) and other brace-using config syntax.
 
-**Template-based** (pure colour config — most common):
+   ```toml
+   [colors.primary]
+   background = "{{background}}"
+   foreground = "{{foreground}}"
+   # ...
+   ```
 
-```python
-def apply_myapp(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
-    """Apply theme to myapp."""
-    content: str = render_template("myapp.theme", resolved)
-    write_config(content, CONFIG_HOME / "myapp/colors.conf")
-    signal_process("myapp")   # if the app supports live reload via signal
-```
+3. Run `themeSwitcher --check`. If your template references an unknown
+   key it'll fail loudly with the theme and missing variable named.
 
-**Per-theme file** (structural config that varies per theme):
+4. PR. No Python touched.
 
-```python
-def apply_myapp(theme_id: str, cfg: ThemeConfig, resolved: ColorMap) -> None:
-    """Apply theme to myapp via per-theme config file."""
-    src: Path = THEME_DIR / theme_id / "myapp.conf"
-    if src.exists():
-        symlink(src, CONFIG_HOME / "myapp/myapp.conf")
-```
+### apps.toml reference
 
-### 2. Register it
+Each top-level table declares one app. Recognised keys:
 
-Add to `ALL_APPS` (controls application order) and `APP_REGISTRY` in `themeSwitcher`:
+| Key              | Type             | Purpose                                                                                                       |
+| ---------------- | ---------------- | ------------------------------------------------------------------------------------------------------------- |
+| `template`       | string           | Filename to find at `themes/<id>/<template>` or `themes/_default/<template>`. If neither, the app is skipped. |
+| `dest`           | string           | Where to write the rendered file. `~` and `$VARS` expand.                                                     |
+| `binary`         | string \| list   | Optional. Binary name(s) to look for on `$PATH`. If set and not found, the app is skipped entirely.           |
+| `ensure_include` | table            | Add a line to a separate config file once (idempotent).                                                       |
+| `reload`         | table            | How to make the running app pick up the new config. See below.                                                |
+| `order`          | integer          | Apply order. Lower runs first. Default 500; nvim is 900; gnome is 1000.                                       |
 
-```python
-ALL_APPS: tuple[str, ...] = (
-    "ghostty",
-    "tmux",
-    # ...
-    "myapp",
-)
+### Reload mechanisms
 
-APP_REGISTRY: dict[str, object] = {
-    "ghostty":  apply_ghostty,
-    "tmux":     apply_tmux,
-    # ...
-    "myapp":    apply_myapp,
-}
-```
-
-### 3. Add it to the manifest
+Three flavours, pick the one your app supports:
 
 ```toml
-[apps]
-ghostty  = true
-tmux     = true
-# ...
-myapp    = true
+# Signal-based reload (Ghostty, btop, foot, kitty, waybar)
+reload = { signal = "SIGUSR2", process = "ghostty" }
+
+# Free-form shell command (mako, sway, etc.)
+reload = { command = "makoctl reload" }
+
+# tmux source-file the dest into the running session
+reload = { tmux_source = true }
 ```
 
-If your app needs per-theme metadata (like `ghostty`), add a top-level key to each `[theme]` block in the manifest.
+If your app live-reloads on file change (Alacritty, WezTerm), omit
+`reload` entirely.
 
-If your app uses a template, create `themeSwitcher/.local/share/themeSwitcher/templates/myapp.theme` using `{color_key}` substitution. All keys in `[mytheme.colors]` are available — see any existing template for reference.
+### Template variables
 
-### 4. Update the README
+Templates receive every variable below. Wrap each in `{{ }}` to
+substitute (double-brace; single braces pass through, so CSS blocks
+are fine without escaping):
 
-Add your app to the "What it changes" table and the per-component dependencies list.
+- **Palette colours** — every key from `[palette]` is available as
+  `{{base}}`, `{{red}}`, `{{blue}}`, etc. (16 keys per theme.)
+- **Semantic colours** — every key from `[colors]`, resolved to a hex.
+  These override palette names on collision.
+- **`_strip` variants** — every colour value is also exposed without
+  its leading `#`. Use `{{accent_strip}}` inside any CSS-in-JSON or
+  `rgb(...)` style context where a literal `#` would be invalid.
+- **`{{accent}}` / `{{accent_strip}}`** — convenience: pulls from
+  `[colors].accent` if defined, else `[colors].hi_fg`.
+- **`{{mode}}`** — `"light"` or `"dark"`, derived from the theme's
+  `[gnome].color_scheme`. Useful for apps with light/dark variants.
+- **`{{theme_id}}`** — the theme directory name. Useful for things
+  like Starship's palette name.
+- **Theme vars** — everything in the theme's `[vars]` block.
+  Currently the only convention is `{{ghostty}}` for the Ghostty
+  theme name.
+
+To add a new convention (say, `{{kitty_theme}}` for Kitty's built-in
+theme picker), document it here and have themes set it in their
+`[vars]` block. Don't hardcode app-specific knowledge into the Python.
+
+### When to skip the declarative path
+
+Two apps in the current registry have `builtin = true`:
+
+- `nvim` — needs to do socket RPC into running Neovim instances
+- `gnome` — needs to call gsettings, not write a file
+
+If your app fits the "render file + reload" pattern (which most do),
+stay declarative. The built-in path exists for the genuinely
+runtime-dynamic cases, not as a general-purpose escape hatch.
 
 ---
 
-## General guidelines
+## Coding style
 
-- Type-annotate all functions. The existing code uses `str`, `Path`, `ColorMap`, `ThemeConfig`, and `Manifest` — follow the same pattern.
-- Add docstrings to new functions following the existing style.
-- Run `themeSwitcher --check` before submitting — it validates all palettes and colour references.
-- If you change `PALETTE_KEYS` (add or rename a key), update all theme palettes in `manifest.toml` accordingly.
-- `current_theme` and `current_bg` are runtime state — do not remove them from `.gitignore`.
-- The state file (`current_theme`) is written **before** the apply loop so that Neovim's `colorschemes.lua` re-source reads the correct theme ID.
+- Python 3.11+; we use `tomllib` from the stdlib.
+- Type hints everywhere. We don't run mypy in CI yet but the types
+  are accurate and PRs adding them are welcome.
+- No third-party dependencies. `fzf` is shelled out to; everything
+  else is stdlib.
+- Docstrings on every function. Match the existing style — a one-line
+  summary followed by a short paragraph if more context is needed.
+- Keep the file readable end-to-end. If the script grows past ~800
+  lines, that's the point to split into a package.
+
+## Bug reports
+
+If `themeSwitcher --check` passes but applying a theme breaks something,
+that's a real bug. Include:
+
+- The output of `themeSwitcher --version`
+- The theme ID that failed
+- The terminal/app whose theming is wrong
+- Whether `themeSwitcher --check` is clean
+
+If `--check` fails, the error message should tell you exactly which
+theme and key are at fault. Fix that first; if the fix isn't obvious,
+that's also a bug — open an issue.

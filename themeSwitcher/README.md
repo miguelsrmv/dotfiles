@@ -1,537 +1,252 @@
 # themeSwitcher
 
-A desktop theme switcher for Linux that applies a colour theme cohesively across your terminal, editor, prompt, system monitor, and desktop environment in one command.
+Coherent theming for GNOME and the terminal stack. One command swaps GTK,
+GNOME Shell, accent colour, wallpaper, terminal colours, prompt, system
+monitor, multiplexer, and editor at once.
 
-Themes are defined in a single TOML manifest with a 16-colour palette per theme. Components are toggled on or off per-user — no code changes needed to skip apps you don't use.
+```
+$ themeSwitcher catppuccin-macchiato
+  Catppuccin Macchiato
+$ themeSwitcher --list
+  Catppuccin Macchiato     (catppuccin-macchiato) <
+  Dracula                  (dracula)
+  Nord                     (nord)
+  ...
+$ themeSwitcher           # opens an fzf picker
+```
 
----
+## How it works
 
-## Themes included
+Themes live in `$XDG_DATA_HOME/themeSwitcher/themes/`, one directory per
+theme. Each contains a `theme.toml` (palette + metadata) and any per-app
+template files. An app gets themed if a template exists for it — either
+in the theme's own directory or in the shared `_default/` directory.
 
-### Dark themes
+```
+themes/
+├── _default/                ← shared templates used by every theme
+│   ├── btop.theme
+│   ├── ghostty.theme
+│   ├── starship.toml
+│   └── ...
+├── catppuccin-macchiato/
+│   ├── theme.toml           ← palette + display name + gnome config
+│   └── backgrounds/         ← optional wallpapers for this theme
+│       └── 1-totoro.png
+├── dracula/
+│   └── theme.toml
+└── ...
+```
 
-| ID | Name |
-|---|---|
-| `ayu-mirage` | Ayu Mirage |
-| `catppuccin-frappe` | Catppuccin Frappe |
-| `catppuccin-macchiato` | Catppuccin Macchiato |
-| `catppuccin-mocha` | Catppuccin Mocha |
-| `dracula` | Dracula |
-| `ethereal` | Ethereal |
-| `everforest` | Everforest |
-| `gruvbox` | Gruvbox |
-| `hackerman` | Hackerman |
-| `kanagawa` | Kanagawa |
-| `lumon` | Lumon |
-| `matte-black` | Matte Black |
-| `miasma` | Miasma |
-| `monokai` | Monokai Pro |
-| `monokai-pro-ristretto` | Monokai Pro Ristretto |
-| `nightfox` | Nightfox |
-| `nord` | Nord |
-| `onedark` | One Dark Pro |
-| `osaka-jade` | Osaka Jade |
-| `poimandres` | Poimandres |
-| `retro-82` | Retro 82 |
-| `rose-pine` | Rosé Pine |
-| `solarized-dark` | Solarized Dark |
-| `tokyonight-night` | Tokyo Night |
-| `vantablack` | Vantablack |
-| `vesper` | Vesper |
+Apps themselves are declared in `apps.toml`. Adding a new terminal or
+tool is a single config edit — no Python required. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for the recipe.
 
-### Light themes
+### Themes vs themes-extras
 
-| ID | Name |
-|---|---|
-| `catppuccin-latte` | Catppuccin Latte |
-| `flexoki-light` | Flexoki Light |
-| `white` | White |
+The shipped repo splits themes into two folders:
 
----
+- `.local/share/themeSwitcher/themes/` — the curated set, visible in
+  the picker and on `--list`. Currently 23 themes: well-known palettes
+  (Catppuccin variants, Dracula, Gruvbox, Nord, Tokyo Night, Rose Pine,
+  Everforest, Solarized Dark, Kanagawa, One Dark, Nightfox, Monokai
+  Pro) plus character themes only this project ships (Lumon, Hackerman,
+  Vantablack, Retro 82, Matte Black, Miasma, Osaka Jade, Ethereal).
+- `.local/share/themeSwitcher/themes-extras/` — additional themes that
+  didn't make the curated cut (mostly Tokyo Night-adjacent or duplicates
+  of existing palettes). Drop any directory from here into `themes/`
+  to enable it. themeSwitcher only reads `themes/`.
 
-## What it changes
+## Supported apps
 
-| Component | How |
-|---|---|
-| **Ghostty** | Writes `~/.config/ghostty/ghostty.theme`, signals Ghostty to reload |
-| **tmux** | Renders and writes `~/.config/tmux/themes/theme.colors`, reloads config |
-| **Starship** | Renders and writes `~/.config/starship/starship.toml` |
-| **btop** | Renders and writes `~/.config/btop/themes/current.theme`, signals btop to reload |
-| **Neovim** | Writes state file, re-sources colorschemes.lua or sends colorscheme command to running instances via socket |
-| **GNOME** | Sets GTK theme, shell theme, icon theme, accent colour, colour scheme, and wallpaper via `gsettings` |
+Out of the box, themeSwitcher knows how to theme:
 
-Each component can be individually disabled in `manifest.toml`. See [Enabling and disabling apps](#enabling-and-disabling-apps).
+- **Terminals**: Ghostty, Alacritty, Kitty, WezTerm, foot
+- **Shell**: Starship
+- **System monitor**: btop
+- **Multiplexer**: tmux
+- **Editor**: Neovim
+- **Desktop (GNOME)**: GTK theme, shell theme, icon theme, cursor,
+  accent colour, wallpaper
+- **Desktop (Niri)**: focus ring, border, shadow, tab indicator
+- **Bar / notifications / launchers**: Waybar, Mako, Wofi, SwayOSD
+- **Browser**: Chromium
 
----
+You don't need to install all of these. **themeSwitcher checks each
+app's binary on `$PATH` before applying** and silently skips any that
+aren't installed — running it on a GNOME-only box won't pollute
+`~/.config/waybar/` with files for apps you don't have. You can also
+explicitly opt out of any app per-user in
+`~/.config/themeSwitcher/config.toml`.
 
-## Dependencies
+`themeSwitcher --apps` shows the status of each app: `[on]` for
+detected and enabled, `[skip]` for enabled but binary not found,
+`[off]` for explicitly disabled in config.
 
-### Required
-- Python 3.11+
-- `fzf` — for the interactive picker (not required when passing a theme name directly)
+DankMaterialShell is deliberately not in this list. DMS ships its own
+theme switcher; running both against `~/.config/DankMaterialShell/`
+would race. Manage DMS theming via its native tool.
 
-### Per component
-Only install what you use. themeSwitcher skips any component that is disabled.
+## Install
 
-- **Ghostty** — `ghostty`
-- **tmux** — `tmux`
-- **Starship** — `starship`
-- **btop** — `btop`
-- **Neovim** — `nvim`
-- **GNOME** — `gsettings` (included with GNOME)
-
-### GNOME themes
-The GTK and shell themes referenced in `manifest.toml` must be installed separately. If a theme package is missing, `gsettings` will fail silently on that call and everything else will still apply. The shell theme requires the [User Themes](https://extensions.gnome.org/extension/19/user-themes/) GNOME extension — without it that call is silently skipped.
-
-| Theme | Source |
-|---|---|
-| Catppuccin GTK | [github.com/catppuccin/gtk](https://github.com/catppuccin/gtk) |
-| Dracula GTK | [github.com/dracula/gtk](https://github.com/dracula/gtk) |
-| Nordic (Nord / Nightfox) | [github.com/EliverLara/Nordic](https://github.com/EliverLara/Nordic) |
-| Gruvbox GTK | [github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme](https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme) |
-| Tokyo Night GTK | [github.com/Fausto-Korpsvart/Tokyo-Night-GTK-Theme](https://github.com/Fausto-Korpsvart/Tokyo-Night-GTK-Theme) |
-
-Most other themes fall back to `Adwaita-dark` or `Adwaita` (for light themes), which requires no installation.
-
----
-
-## Installation
-
-This repo is designed to be managed with [GNU Stow](https://www.gnu.org/software/stow/). The directory tree mirrors `$HOME`, so `stow` symlinks everything into the right place automatically.
-
-### 1. Clone into your dotfiles
+This is currently distributed as a [GNU Stow](https://www.gnu.org/software/stow/)
+package:
 
 ```bash
-cd ~/dotfiles
-git clone https://github.com/yourname/themeSwitcher
-```
-
-The repo sits alongside your other Stow packages:
-
-```
-~/dotfiles/
-├── themeSwitcher/          ← this repo
-│   ├── .gitignore
-│   ├── README.md
-│   ├── CONTRIBUTING.md
-│   └── themeSwitcher/      ← Stow package
-│       └── .local/
-│           ├── bin/themeSwitcher
-│           └── share/themeSwitcher/
-├── ghostty/                ← your ghostty Stow package
-│   └── .config/
-│       └── ghostty/
-│           ├── config
-│           └── themes/     ← symlinks into themeSwitcher/ghostty_themes/
-├── nvim/
-├── zsh/
-└── …
-```
-
-### 2. Stow it
-
-```bash
-cd ~/dotfiles
+git clone https://github.com/<you>/themeSwitcher.git ~/.dotfiles/themeSwitcher
+cd ~/.dotfiles
 stow themeSwitcher
 ```
 
-This creates two symlinks:
-- `~/.local/bin/themeSwitcher` → the executable
-- `~/.local/share/themeSwitcher` → the data directory
+That symlinks the script into `~/.local/bin/themeSwitcher` and the
+data into `~/.local/share/themeSwitcher/`.
 
-The Ghostty theme files live in `ghostty_themes/` inside the data directory and are managed by your existing ghostty Stow package — see [Ghostty themes](#ghostty-themes) below.
+A non-Stow install is on the roadmap.
 
-### 3. Link the Ghostty theme files
+### Requirements
 
-In your `ghostty` Stow package, add symlinks from `~/.config/ghostty/themes/` to `ghostty_themes/` in the themeSwitcher data directory:
-
-```bash
-mkdir -p ~/dotfiles/ghostty/.config/ghostty/themes
-cd ~/dotfiles/ghostty/.config/ghostty/themes
-for theme in Dracula Ethereal "Everforest Dark" "Flexoki light" Hackerman Lumon Miasma "Osaka Jade" "Retro 82" Vantablack White; do
-    ln -s ~/.local/share/themeSwitcher/ghostty_themes/"$theme" "$theme"
-done
-```
-
-Then restow your ghostty package:
-
-```bash
-cd ~/dotfiles
-stow --restow ghostty
-```
-
-### 4. Make sure `~/.local/bin` is in your PATH
-
-```bash
-# In ~/.zshenv, ~/.bashrc, etc. — if not already present
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-No environment variables to set — the script locates its data directory via `XDG_DATA_HOME` (defaulting to `~/.local/share`).
-
-### 5. Add your wallpapers
-
-Drop wallpaper images into `backgrounds/<theme_id>/` inside the data directory:
-
-```
-~/.local/share/themeSwitcher/backgrounds/catppuccin-macchiato/1-waves.png
-~/.local/share/themeSwitcher/backgrounds/catppuccin-macchiato/2-mountain.png
-~/.local/share/themeSwitcher/backgrounds/dracula/1-bats.png
-```
-
-They cycle in alphabetical order via `--bg`. The first wallpaper in a theme's directory is used automatically when switching to that theme for the first time.
-
-### 6. Configure Neovim
-
-themeSwitcher uses two strategies for Neovim depending on the theme:
-
-- **Dedicated plugin themes** — themes with a matching Neovim colorscheme plugin (catppuccin, dracula, nord, etc.) apply directly via `colorscheme <name>`
-- **Terminal-palette themes** — themes without a matching plugin (hackerman, lumon, miasma, osaka-jade, ethereal, retro-82, vantablack, white) use `pixel.nvim` to inherit the terminal's ANSI palette, or `aether.nvim` configured with the theme's exact hex values
-- **Name-mismatch themes** — themes where the ID doesn't match the nvim plugin name (matte-black → matteblack, monokai → monokai_pro_classic, solarized-dark → solarized, ayu-mirage → ayu-mirage) are handled via an override table
-
-Add the following to your `colorschemes.lua` (or equivalent):
-
-```lua
--- INFO: Colorschemes
-vim.pack.add({
-    "https://github.com/EdenEast/nightfox.nvim",
-    "https://github.com/folke/tokyonight.nvim",
-    "https://github.com/catppuccin/nvim",
-    "https://github.com/gbprod/nord.nvim",
-    "https://github.com/neanias/everforest-nvim",
-    "https://github.com/ellisonleao/gruvbox.nvim",
-    "https://github.com/rebelot/kanagawa.nvim",
-    "https://github.com/rose-pine/neovim",
-    "https://github.com/olimorris/onedarkpro.nvim",
-    "https://github.com/mofiqul/dracula.nvim",
-    "https://github.com/loctvl842/monokai-pro.nvim",
-    "https://github.com/kepano/flexoki-neovim",
-    "https://github.com/tahayvr/matteblack.nvim",
-    "https://github.com/olivercederborg/poimandres.nvim",
-    "https://github.com/Shatur/neovim-ayu",
-    "https://github.com/datsfilipe/vesper.nvim",
-    "https://github.com/shaunsingh/solarized.nvim",
-    "https://github.com/bjarneo/aether.nvim",
-    "https://github.com/bjarneo/pixel.nvim",
-})
-
--- Aether palette definitions for themes that use aether.nvim
-local aether_palettes = {
-    ["lumon"] = {
-        bg = "#16242d", bg_dark = "#0f1a21", bg_highlight = "#304860",
-        fg = "#d6e2ee", fg_dark = "#b4e4f6", comment = "#304860",
-        red = "#4d86b0", orange = "#6fb8e3", yellow = "#6fa4c9",
-        green = "#5e95bc", cyan = "#b4e4f6", blue = "#8bc9eb",
-        purple = "#73a6cb", magenta = "#d1eef8",
-    },
-    ["miasma"] = {
-        bg = "#222222", bg_dark = "#111111", bg_highlight = "#444444",
-        fg = "#c2c2b0", fg_dark = "#d7c483", comment = "#666666",
-        red = "#685742", orange = "#bb7744", yellow = "#b36d43",
-        green = "#5f875f", cyan = "#c9a554", blue = "#78824b",
-        purple = "#d7c483", magenta = "#bb7744",
-    },
-    ["osaka-jade"] = {
-        bg = "#111c18", bg_dark = "#0a1410", bg_highlight = "#23372B",
-        fg = "#C1C497", fg_dark = "#F6F5DD", comment = "#53685B",
-        red = "#FF5345", orange = "#db9f9c", yellow = "#E5C736",
-        green = "#549e6a", cyan = "#2DD5B7", blue = "#509475",
-        purple = "#ACD4CF", magenta = "#D2689C",
-    },
-}
-
--- Apply current theme
-local xdg_data = os.getenv("XDG_DATA_HOME") or (os.getenv("HOME") .. "/.local/share")
-local f = io.open(xdg_data .. "/themeSwitcher/current_theme", "r")
-if f then
-    local theme_id = f:read("*l"):gsub("%s+", "")
-    f:close()
-
-    local light_themes = {
-        ["catppuccin-latte"] = true,
-        ["flexoki-light"]    = true,
-        ["white"]            = true,
-    }
-
-    -- Themes that inherit the terminal ANSI palette via pixel.nvim
-    local pixel_themes = {
-        ["hackerman"]  = true,
-        ["ethereal"]   = true,
-        ["vantablack"] = true,
-        ["white"]      = true,
-        ["retro-82"]   = true,
-    }
-
-    -- Themes where the nvim colorscheme name differs from the theme ID
-    local nvim_overrides = {
-        ["monokai-pro-ristretto"] = "monokai-pro",
-        ["monokai"]               = "monokai_pro_classic",
-        ["onedark"]               = "onedark",
-        ["matte-black"]           = "matteblack",
-        ["solarized-dark"]        = "solarized",
-        ["ayu-mirage"]            = "ayu-mirage",
-    }
-
-    vim.o.background = light_themes[theme_id] and "light" or "dark"
-
-    if aether_palettes[theme_id] then
-        vim.o.termguicolors = true
-        local ok, aether = pcall(require, "aether")
-        if ok then
-            aether.setup({ transparent = false, colors = aether_palettes[theme_id] })
-            vim.cmd("colorscheme aether")
-        else
-            vim.notify("themeSwitcher: aether.nvim not found", vim.log.levels.WARN)
-        end
-    elseif pixel_themes[theme_id] then
-        vim.o.termguicolors = false
-        local ok = pcall(vim.cmd, "colorscheme pixel")
-        if not ok then
-            vim.notify("themeSwitcher: pixel.nvim not found", vim.log.levels.WARN)
-        end
-    else
-        vim.o.termguicolors = true
-        local colorscheme = nvim_overrides[theme_id] or theme_id
-        local ok = pcall(vim.cmd, "colorscheme " .. colorscheme)
-        if not ok then
-            vim.notify("themeSwitcher: colorscheme '" .. colorscheme .. "' not found", vim.log.levels.WARN)
-        end
-    end
-end
-```
-
-### 7. Configure btop
-
-In `~/.config/btop/btop.conf`:
-
-```
-color_theme = "~/.config/btop/themes/current.theme"
-```
-
----
+- Python 3.11+ (for `tomllib`)
+- `fzf` for the interactive picker (optional — `themeSwitcher <name>`
+  works without it)
+- `gsettings` for GNOME integration
 
 ## Usage
 
 ```
-themeSwitcher                        # interactive fzf picker
-themeSwitcher catppuccin-macchiato   # apply by theme ID
-themeSwitcher "Catppuccin Macchiato" # apply by display name
-themeSwitcher --list                 # list all themes, marks current with <
-themeSwitcher --apps                 # show which apps are enabled
-themeSwitcher --themes               # show which themes are enabled
-themeSwitcher --bg                   # cycle wallpaper for the current theme
-themeSwitcher --check                # validate manifest without applying anything
+themeSwitcher [theme-id]    Apply a theme (or open fzf picker if no ID)
+themeSwitcher [theme-id]    Apply a theme (or open the picker if no ID)
+themeSwitcher --list        List all enabled themes
+themeSwitcher --current     Print the currently active theme ID (scripting)
+themeSwitcher --themes      Show which themes are enabled / disabled
+themeSwitcher --apps        Show which apps are enabled / disabled
+themeSwitcher --bg          Open a picker to choose a wallpaper
+themeSwitcher --bg-next     Cycle to the next wallpaper (good for keybinds)
+themeSwitcher --check       Validate every theme without applying
 themeSwitcher --version
-themeSwitcher --help
 ```
 
----
+### The picker
 
-## Enabling and disabling apps
+When you run `themeSwitcher` with no arguments (or `--bg` for wallpapers),
+it opens an interactive picker with thumbnail previews.
 
-Edit the `[apps]` section at the top of `manifest.toml`:
+- **In a terminal**: `fzf` with image previews rendered by `chafa` in
+  a side pane. Image format auto-detects from `$TERM` / `$TERM_PROGRAM`:
+  Kitty and Ghostty use the Kitty graphics protocol (sharpest), WezTerm
+  and foot use Sixel, everything else falls back to truecolor unicode
+  block art. If `chafa` isn't installed you get plain `fzf` without
+  previews.
+- **From a keybind / app launcher** (not a TTY): a GUI launcher chosen
+  by compositor:
+  - niri → `fuzzel` (with `rofi` fallback)
+  - GNOME, KDE, sway, anything else → `rofi`
+
+  Both speak the dmenu-with-icons protocol, so themes and wallpapers
+  appear as rows with thumbnails. If neither launcher is installed,
+  falls back to fzf.
+
+#### Optional: grid layout for rofi
+
+themeSwitcher ships a custom rofi theme that lays the picker out as a
+4-column grid of thumbnails (similar to Omarchy's theme menu) instead
+of a vertical list. It works automatically — themeSwitcher passes
+`-theme` pointing at the bundled `themeSwitcher.rasi` whenever it
+invokes rofi. No setup needed.
+
+For **fuzzel** there's no grid option — fuzzel only supports vertical
+lists. Styling comes from your `~/.config/fuzzel/fuzzel.ini`.
+
+Install whichever combination matches your setup:
+
+```bash
+# Minimum (terminal picker only): fzf
+# Recommended (terminal picker with previews): fzf + chafa
+# GUI on GNOME: + rofi
+# GUI on niri: + fuzzel
+```
+
+### User config
+
+Opt-outs live at `~/.config/themeSwitcher/config.toml`. The file is
+entirely optional. Anything not listed is enabled by default.
 
 ```toml
 [apps]
-ghostty  = true
-tmux     = true
-starship = true
-btop     = false   # skip btop
-nvim     = true
-gnome    = true
+# Don't touch alacritty's config even if a template exists
+alacritty = false
+
+[themes]
+# Hide these from the picker
+white = false
+vantablack = false
 ```
 
-Omitting the `[apps]` section entirely enables all apps. Run `themeSwitcher --apps` to see the current state.
+## Migrating from v2
 
----
-
-## Directory structure
-
-```
-themeSwitcher/                              ← git repo root
-├── .gitignore
-├── README.md
-├── CONTRIBUTING.md
-└── themeSwitcher/                          ← Stow package
-    └── .local/
-        ├── bin/
-        │   └── themeSwitcher               ← executable (→ ~/.local/bin/)
-        └── share/
-            └── themeSwitcher/              ← data dir (→ ~/.local/share/themeSwitcher/)
-                ├── manifest.toml           ← app selector, palettes, theme metadata
-                ├── templates/              ← rendered at switch time into ~/.config/
-                │   ├── btop.theme
-                │   ├── ghostty.theme
-                │   ├── starship.toml
-                │   └── tmux.theme
-                ├── ghostty_themes/         ← custom Ghostty palette source files
-                │   ├── Dracula
-                │   ├── Ethereal
-                │   ├── Everforest Dark
-                │   ├── Flexoki light
-                │   ├── Hackerman
-                │   ├── Lumon
-                │   ├── Miasma
-                │   ├── Osaka Jade
-                │   ├── Retro 82
-                │   ├── Vantablack
-                │   └── White
-                ├── backgrounds/            ← wallpapers, organised by theme ID
-                │   ├── ayu-mirage/
-                │   ├── catppuccin-frappe/
-                │   ├── catppuccin-latte/
-                │   ├── catppuccin-macchiato/
-                │   ├── catppuccin-mocha/
-                │   ├── dracula/
-                │   ├── ethereal/
-                │   ├── everforest/
-                │   ├── flexoki-light/
-                │   ├── gruvbox/
-                │   ├── hackerman/
-                │   ├── kanagawa/
-                │   ├── lumon/
-                │   ├── matte-black/
-                │   ├── miasma/
-                │   ├── monokai/
-                │   ├── monokai-pro-ristretto/
-                │   ├── nightfox/
-                │   ├── nord/
-                │   ├── onedark/
-                │   ├── osaka-jade/
-                │   ├── poimandres/
-                │   ├── retro-82/
-                │   ├── rose-pine/
-                │   ├── solarized-dark/
-                │   ├── tokyonight-night/
-                │   ├── vantablack/
-                │   ├── vesper/
-                │   └── white/
-                ├── current_theme           ← runtime state (gitignored)
-                └── current_bg              ← symlink → current wallpaper (gitignored)
-```
-
-After `stow themeSwitcher`, Stow creates two symlinks:
-- `~/.local/bin/themeSwitcher` → the executable
-- `~/.local/share/themeSwitcher` → the data directory
-
-`current_theme` and `current_bg` are written at runtime and excluded from git.
-
----
-
-## Ghostty themes
-
-The custom Ghostty palette files live in `ghostty_themes/` inside the data directory. They are not managed by the themeSwitcher Stow package — instead, your `ghostty` Stow package should symlink them into `~/.config/ghostty/themes/`:
-
-```
-dotfiles/ghostty/.config/ghostty/themes/
-├── Dracula          -> ~/.local/share/themeSwitcher/ghostty_themes/Dracula
-├── Ethereal         -> ~/.local/share/themeSwitcher/ghostty_themes/Ethereal
-├── Everforest Dark  -> ~/.local/share/themeSwitcher/ghostty_themes/Everforest Dark
-├── Flexoki light    -> ~/.local/share/themeSwitcher/ghostty_themes/Flexoki light
-├── Hackerman        -> ~/.local/share/themeSwitcher/ghostty_themes/Hackerman
-├── Lumon            -> ~/.local/share/themeSwitcher/ghostty_themes/Lumon
-├── Miasma           -> ~/.local/share/themeSwitcher/ghostty_themes/Miasma
-├── Osaka Jade       -> ~/.local/share/themeSwitcher/ghostty_themes/Osaka Jade
-├── Retro 82         -> ~/.local/share/themeSwitcher/ghostty_themes/Retro 82
-├── Vantablack       -> ~/.local/share/themeSwitcher/ghostty_themes/Vantablack
-└── White            -> ~/.local/share/themeSwitcher/ghostty_themes/White
-```
-
-This keeps both Stow packages conflict-free: `ghostty` owns `~/.config/ghostty/themes/`, and `themeSwitcher` owns the data directory where the files actually live.
-
-Themes that are built into Ghostty (catppuccin, dracula, nord, etc.) need no file — the `ghostty` key in `manifest.toml` refers to them by their built-in name.
-
----
-
-## Adding a theme
-
-### 1. Add a block to `manifest.toml`
-
-```toml
-[mytheme]
-display_name = "My Theme"
-ghostty      = "My Theme"    # theme name as Ghostty knows it
-
-[mytheme.gnome]
-gtk_theme    = "MyTheme-Dark"
-shell_theme  = "MyTheme-Dark"
-icon_theme   = "Papirus-Dark"
-accent_color = "blue"        # named GNOME accent colour
-color_scheme = "prefer-dark" # or "prefer-light" for light themes
-
-[mytheme.palette]
-base     = "#1a1b26"
-mantle   = "#16161e"
-# … all 16 keys required (see Palette keys below)
-
-[mytheme.colors]
-background = "base"
-foreground = "text"
-# … all color keys, referencing palette names
-```
-
-### 2. Add a Ghostty theme file
-
-If the theme isn't built into Ghostty, add a palette file to `themeSwitcher/.config/ghostty/themes/mytheme.theme`:
-
-```
-background           = #1a1b26
-foreground           = #c0caf5
-cursor-color         = #c0caf5
-cursor-text          = #1a1b26
-selection-background = #28344a
-selection-foreground = #c0caf5
-
-palette = 0=#15161e
-palette = 1=#f7768e
-# … palette = 0 through 15
-```
-
-### 3. Configure Neovim
-
-Choose the appropriate strategy based on whether a matching Neovim plugin exists:
-
-**Dedicated plugin** (theme ID matches nvim colorscheme name) — nothing to do, it works automatically.
-
-**Name mismatch** — add to `nvim_overrides` in `colorschemes.lua`:
-```lua
-["mytheme"] = "actual-colorscheme-name",
-```
-
-**Terminal-palette theme** (no matching plugin, should inherit Ghostty colours) — add to `pixel_themes`:
-```lua
-["mytheme"] = true,
-```
-
-**Aether-based theme** (custom palette with proper syntax highlighting) — add to `aether_palettes` with the 14 colour slots mapped from the theme's palette.
-
-### 4. Add wallpapers
-
-```
-themeSwitcher/.local/share/themeSwitcher/backgrounds/mytheme/1-mytheme.png
-```
-
-### 5. Validate
+If you're coming from the single-`manifest.toml` v2 layout, run the
+included migration script once:
 
 ```bash
-themeSwitcher --check
+python3 migrate-v2-to-v3.py
 ```
 
-### Palette keys
+It produces a v3-shaped tree under `themes/`, carries over your
+opt-outs into the new user config, and tells you which old files
+to remove once you've verified everything works.
 
-Every theme must define all 16 of these in `[mytheme.palette]`:
+## Authoring a theme
 
+Create a directory under `themes/` with a `theme.toml`. The minimum:
+
+```toml
+display_name = "My Theme"
+
+[gnome]
+gtk_theme    = "Adwaita-dark"
+shell_theme  = "Adwaita-dark"
+icon_theme   = "Papirus-Dark"
+accent_color = "purple"
+color_scheme = "prefer-dark"   # or "prefer-light"
+
+[palette]
+base     = "#1e1e2e"
+mantle   = "#181825"
+surface  = "#313244"
+overlay  = "#6c7086"
+muted    = "#7f849c"
+text     = "#cdd6f4"
+subtext  = "#bac2de"
+red      = "#f38ba8"
+orange   = "#fab387"
+yellow   = "#f9e2af"
+green    = "#a6e3a1"
+teal     = "#94e2d5"
+sky      = "#89dceb"
+sapphire = "#74c7ec"
+blue     = "#89b4fa"
+mauve    = "#cba6f7"
+
+[colors]
+# Map semantic names used in templates to palette keys
+background  = "base"
+foreground  = "text"
+hi_fg       = "blue"
+# ... (see any existing theme for the full list)
 ```
-base      mantle    surface   overlay   muted
-text      subtext
-red       orange    yellow    green
-teal      sky       sapphire  blue      mauve
-```
 
-Map each key to the closest semantic colour in your theme — `red` for errors, `green` for success, `blue` for the primary accent, etc.
+The 16 `[palette]` keys are required. The `[colors]` keys are whatever
+your templates reference — `themeSwitcher --check` will tell you what's
+missing.
 
----
+For optional sections (`[nvim]`, `[vars]`) and how to handle plugin
+colorschemes that need `require(...).setup()`, see CONTRIBUTING.md.
 
-## Licence
+## Authoring an app
 
-MIT
+Add an entry to `apps.toml` and drop a default template in
+`themes/_default/`. That's it. See CONTRIBUTING.md for the full recipe
+including the available reload mechanisms and template variables.
+
+## License
+
+MIT.

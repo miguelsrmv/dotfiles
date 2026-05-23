@@ -1,0 +1,38 @@
+// Niri theme written by themeSwitcher.
+// Include this from your main niri config:
+//   include "themes/current.kdl"
+
+layout {
+    focus-ring {
+        width 2
+        active-color "{{accent}}"
+        inactive-color "{{overlay}}"
+        urgent-color "{{red}}"
+    }
+
+    border {
+        off
+        width 2
+        active-color "{{accent}}"
+        inactive-color "{{overlay}}"
+        urgent-color "{{red}}"
+    }
+
+    shadow {
+        on
+        softness 30
+        spread 5
+        offset x=0 y=5
+        color "{{background}}80"
+    }
+
+    tab-indicator {
+        active-color "{{accent}}"
+        inactive-color "{{overlay}}"
+        urgent-color "{{red}}"
+    }
+
+    insert-hint {
+        color "{{accent}}80"
+    }
+}

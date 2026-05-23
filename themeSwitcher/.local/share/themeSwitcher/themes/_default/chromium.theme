@@ -1,0 +1,27 @@
+/* Chromium user stylesheet written by themeSwitcher.
+ * Affects browser chrome only on builds that respect User StyleSheets.
+ * For full chromium theming, ship a Chromium extension; this file is
+ * a thin override for new-tab page and scrollbar colours. */
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: {{background}};
+}
+
+::-webkit-scrollbar-thumb {
+    background: {{overlay}};
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: {{accent}};
+}
+
+::selection {
+    background: {{accent}};
+    color: {{background}};
+}

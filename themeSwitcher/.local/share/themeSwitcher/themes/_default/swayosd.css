@@ -1,0 +1,30 @@
+/* SwayOSD theme written by themeSwitcher. */
+
+window#osd {
+    background: transparent;
+}
+
+window#osd #container {
+    background: {{background}};
+    color: {{foreground}};
+    border: 1px solid {{overlay}};
+    border-radius: 8px;
+    padding: 12px;
+}
+
+window#osd image,
+window#osd label {
+    color: {{foreground}};
+}
+
+window#osd progressbar {
+    background: {{surface}};
+    border-radius: 4px;
+    min-height: 6px;
+}
+
+window#osd progressbar progress,
+window#osd progressbar trough progress {
+    background: {{accent}};
+    border-radius: 4px;
+}

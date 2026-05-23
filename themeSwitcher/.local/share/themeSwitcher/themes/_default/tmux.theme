@@ -1,0 +1,4 @@
+set -g @background "{{background}}"
+set -g @normal_text "{{foreground}}"
+set -g @highlighted_text "{{highlight}}"
+set -g @secondary_highlight "{{secondary}}"

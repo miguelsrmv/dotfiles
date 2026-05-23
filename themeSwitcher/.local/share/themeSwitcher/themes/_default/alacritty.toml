@@ -1,0 +1,33 @@
+# Alacritty theme written by themeSwitcher.
+
+[colors.primary]
+background = "{{background}}"
+foreground = "{{foreground}}"
+
+[colors.cursor]
+text   = "{{background}}"
+cursor = "{{accent}}"
+
+[colors.selection]
+text       = "{{selected_fg}}"
+background = "{{selected_bg}}"
+
+[colors.normal]
+black   = "{{background}}"
+red     = "{{red}}"
+green   = "{{green}}"
+yellow  = "{{yellow}}"
+blue    = "{{blue}}"
+magenta = "{{mauve}}"
+cyan    = "{{teal}}"
+white   = "{{foreground}}"
+
+[colors.bright]
+black   = "{{muted}}"
+red     = "{{red}}"
+green   = "{{green}}"
+yellow  = "{{orange}}"
+blue    = "{{sapphire}}"
+magenta = "{{mauve}}"
+cyan    = "{{sky}}"
+white   = "{{foreground}}"

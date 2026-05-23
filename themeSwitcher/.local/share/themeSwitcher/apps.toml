@@ -1,0 +1,181 @@
+# ── App registry ──────────────────────────────────────────────────────────────
+#
+# Each table here declares one app themeSwitcher knows how to theme.
+# Adding a new app is two steps:
+#   1. Add a [app-name] table to this file.
+#   2. Drop a default template at themes/_default/<template>.
+#
+# No code changes needed. Per-theme overrides go in themes/<id>/<template>.
+#
+# Recognised keys per entry:
+#
+#   template         filename to look up. themeSwitcher checks
+#                    themes/<theme>/<template> first, then
+#                    themes/_default/<template>. If neither exists,
+#                    the app is skipped silently for that theme.
+#
+#   dest             where to write the rendered file. Supports ~ and
+#                    $VARS.
+#
+#   binary           optional. Name of the app's binary on $PATH. If
+#                    set and not found, the app is skipped entirely
+#                    (no file written, no reload). May be a list of
+#                    strings — installed if ANY of them is found.
+#                    Omit to apply unconditionally.
+#
+#   reload           optional. One of:
+#                      { signal = "SIGUSR2", process = "ghostty" }
+#                      { command = "swaymsg reload" }
+#                      { tmux_source = true }   # source the dest file
+#                                               # into the running tmux
+#
+#   ensure_include   optional. Some apps need a line added to their
+#                    main config to include the rendered file. e.g.
+#                      { file = "~/.config/ghostty/config",
+#                        line  = 'config-file = ?"…"' }
+#                    The line is appended once if not already present.
+#
+#   order            optional integer. Lower = applied earlier. Default
+#                    500. nvim and gnome default to 900 and 1000 so the
+#                    visible desktop changes happen after the terminal
+#                    configs are written. Use this if your app needs to
+#                    come before or after others.
+#
+# Built-in apps (nvim, gnome) are not declared here — they're handled
+# in Python because they require runtime calls (gsettings, nvim socket
+# RPC). They can still be opted out of via ~/.config/themeSwitcher/
+# config.toml's [apps] section.
+#
+# Template variables every template can use:
+#   {{<color>}}        any key from [colors] (e.g. {{background}})
+#                      and any key from [palette] (e.g. {{red}})
+#   {{<color>_strip}}  same value with '#' removed (for rgb(...) / CSS)
+#   {{accent}}         shorthand for [colors].accent or [colors].hi_fg
+#   {{accent_strip}}   shorthand for accent without '#'
+#   {{theme_id}}       the theme's directory name
+#   {{<var>}}          anything in the theme's [vars] block
+
+
+# ── Terminals ─────────────────────────────────────────────────────────────────
+
+[ghostty]
+template = "ghostty.theme"
+dest     = "~/.config/ghostty/ghostty.theme"
+binary   = "ghostty"
+reload   = { signal = "SIGUSR2", process = "ghostty" }
+ensure_include = { file = "~/.config/ghostty/config", line = 'config-file = ?"~/.config/ghostty/ghostty.theme"' }
+
+[alacritty]
+# Alacritty live-reloads its config on save; no reload action needed.
+template = "alacritty.toml"
+dest     = "~/.config/alacritty/themes/current.toml"
+binary   = "alacritty"
+ensure_include = { file = "~/.config/alacritty/alacritty.toml", line = 'import = ["~/.config/alacritty/themes/current.toml"]' }
+
+[kitty]
+template = "kitty.conf"
+dest     = "~/.config/kitty/themes/current.conf"
+binary   = "kitty"
+reload   = { signal = "SIGUSR1", process = "kitty" }
+ensure_include = { file = "~/.config/kitty/kitty.conf", line = "include themes/current.conf" }
+
+[wezterm]
+template = "wezterm.lua"
+dest     = "~/.config/wezterm/colors/current.lua"
+binary   = "wezterm"
+# WezTerm watches its config dir and reloads on change automatically.
+
+[foot]
+template = "foot.ini"
+dest     = "~/.config/foot/themes/current.ini"
+binary   = "foot"
+reload   = { signal = "SIGUSR1", process = "foot" }
+ensure_include = { file = "~/.config/foot/foot.ini", line = "include=~/.config/foot/themes/current.ini" }
+
+
+# ── Shell / prompt ────────────────────────────────────────────────────────────
+
+[starship]
+template = "starship.toml"
+dest     = "~/.config/starship/starship.toml"
+binary   = "starship"
+# Starship re-reads its config on every prompt — new shells will pick
+# it up. Existing shells need to start a new prompt line.
+
+
+# ── System monitors / TUIs ────────────────────────────────────────────────────
+
+[btop]
+template = "btop.theme"
+dest     = "~/.config/btop/themes/current.theme"
+binary   = "btop"
+reload   = { signal = "SIGUSR2", process = "btop" }
+
+
+# ── Multiplexers ──────────────────────────────────────────────────────────────
+
+[tmux]
+template = "tmux.theme"
+dest     = "~/.config/tmux/themes/theme.colors"
+binary   = "tmux"
+reload   = { tmux_source = true }
+
+
+# ── Wayland window manager ────────────────────────────────────────────────────
+
+[niri]
+# Niri auto-reloads its config on file change, so no reload command is
+# needed. Source this file from your main niri config:
+#   include "themes/current.kdl"
+template = "niri.kdl"
+dest     = "~/.config/niri/themes/current.kdl"
+binary   = "niri"
+ensure_include = { file = "~/.config/niri/config.kdl", line = 'include "themes/current.kdl"' }
+
+
+# DankMaterialShell is deliberately not in this registry. DMS ships its
+# own theme switcher; having both write to ~/.config/DankMaterialShell/
+# would race and one would silently overwrite the other. Manage DMS
+# theming via its own tool.
+
+
+# ── Bar / notifications / OSD / launchers ─────────────────────────────────────
+
+[waybar]
+template = "waybar.css"
+dest     = "~/.config/waybar/themes/current.css"
+binary   = "waybar"
+reload   = { signal = "SIGUSR2", process = "waybar" }
+ensure_include = { file = "~/.config/waybar/style.css", line = '@import "themes/current.css";' }
+
+[mako]
+template = "mako.ini"
+dest     = "~/.config/mako/config"
+binary   = "mako"
+reload   = { command = "makoctl reload" }
+
+[wofi]
+# Wofi reads style.css each time it launches — no reload needed.
+template = "wofi.css"
+dest     = "~/.config/wofi/style.css"
+binary   = "wofi"
+
+[swayosd]
+# SwayOSD reads its CSS on start. Restart via the systemd user service
+# so newly-rendered colours take effect. Binary name varies by distro:
+# arch ships swayosd-server, some ship swayosd-client only.
+template = "swayosd.css"
+dest     = "~/.config/swayosd/style.css"
+binary   = ["swayosd-server", "swayosd-client"]
+reload   = { command = "systemctl --user restart swayosd-server.service" }
+
+
+# ── Browser ───────────────────────────────────────────────────────────────────
+
+[chromium]
+# Writes Chromium's user stylesheet. Requires Chromium restart to take
+# effect; we don't kill the browser automatically because that would
+# lose unsaved tabs. The file is read on next launch.
+template = "chromium.theme"
+dest     = "~/.config/chromium/Default/User StyleSheets/Custom.css"
+binary   = ["chromium", "chromium-browser"]
