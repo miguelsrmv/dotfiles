@@ -70,7 +70,16 @@ vim.pack.add({ "https://github.com/jpalardy/vim-slime" })
 vim.g.slime_target = "tmux"
 vim.g.slime_default_config = {
 	socket_name = "default",
-	target_pane = "{last}", -- send to the last-active pane
+	target_pane = "{last}", -- (swap to ":.1" once your layout settles)
 }
 vim.g.slime_dont_ask_default = 1
 vim.g.slime_python_ipython = 1 -- <- the important one for IPython
+vim.g.slime_cell_delimiter = "# %%" -- <- what marks a cell boundary
+
+vim.g.slime_no_mappings = 1 -- <- disable default C-c C-c; we map our own
+
+vim.keymap.set("x", "<leader>Ss", "<Plug>SlimeRegionSend", { remap = true }) -- send visual selection
+vim.keymap.set("n", "<leader>Ss", "<Plug>SlimeParagraphSend", { remap = true }) -- send paragraph (normal mode)
+vim.keymap.set("n", "<leader>Sl", "<Plug>SlimeLineSend", { remap = true }) -- send the line
+vim.keymap.set("n", "<leader>Sc", "<Plug>SlimeSendCell", { remap = true }) -- send the whole cell
+vim.keymap.set("n", "<leader>Sv", "<Plug>SlimeConfig", { remap = true }) -- re-point the target pane
