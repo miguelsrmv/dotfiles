@@ -64,22 +64,55 @@ for _, map in ipairs(dap_maps) do
 	vim.keymap.set("n", map[1], map[2], { desc = map[3] })
 end
 
--- INFO: Vim-slime
-vim.pack.add({ "https://github.com/jpalardy/vim-slime" })
+-- INFO: iron.nvim (REPL)
+vim.pack.add({ "https://github.com/Vigemus/iron.nvim" })
 
-vim.g.slime_target = "tmux"
-vim.g.slime_default_config = {
-	socket_name = "default",
-	target_pane = "{last}", -- (swap to ":.1" once your layout settles)
+local iron = require("iron.core")
+local common = require("iron.fts.common")
+
+iron.setup({
+	config = {
+		scratch_repl = true, -- don't keep dead REPL buffers around
+		close_window_on_exit = true, -- close the split when the process exits
+		-- dap_integration = true,   -- optional: route sends to the DAP REPL during a debug session
+		repl_definition = {
+			python = {
+				command = { "ipython", "--no-autoindent" },
+				format = common.bracketed_paste_python, -- IPython paste fix (was slime_python_ipython)
+				block_dividers = { "# %%", "#%%" }, -- cell markers for send_code_block
+			},
+			sh = { command = { "zsh" } }, -- or { "bash" }
+			javascript = { command = { "node" } },
+			typescript = { command = { "node" } },
+		},
+		repl_open_cmd = "vertical botright 80 split", -- REPL in a right-hand split
+		highlight = { italic = true }, -- flash the region you send
+		ignore_blank_lines = true,
+	},
+	-- no `keymaps = {}` block — keybinds are below so they have descriptions
+})
+
+-- stylua: ignore start
+local iron_maps = {
+	-- sends
+	{ "<leader>rs", function() iron.run_motion("send_motion") end,  "Send (motion)",      "n" },
+	{ "<leader>rs", function() iron.visual_send() end,              "Send selection",     "x" },
+	{ "<leader>rl", function() iron.send_line() end,                "Send line",          "n" },
+	{ "<leader>rp", function() iron.send_paragraph() end,           "Send paragraph",     "n" },
+	{ "<leader>rc", function() iron.send_code_block(false) end,     "Send cell",          "n" },
+	{ "<leader>rn", function() iron.send_code_block(true) end,      "Send cell + next",   "n" },
+	{ "<leader>rf", function() iron.send_file() end,                "Send file",          "n" },
+	-- signals
+	{ "<leader>ri", function() iron.send(nil, string.char(3)) end,  "Interrupt (Ctrl-C)", "n" },
+	{ "<leader>rk", function() iron.send(nil, string.char(12)) end, "Clear screen",       "n" },
+	{ "<leader>rq", function() iron.close_repl() end,               "Close REPL",         "n" },
+	-- control
+	{ "<leader>rt", "<cmd>IronRepl<cr>",                            "Toggle REPL",        "n" },
+	{ "<leader>rR", "<cmd>IronRestart<cr>",                         "Restart REPL",       "n" },
+	{ "<leader>rF", "<cmd>IronFocus<cr>",                           "Focus REPL",         "n" },
 }
-vim.g.slime_dont_ask_default = 1
-vim.g.slime_python_ipython = 1 -- <- the important one for IPython
-vim.g.slime_cell_delimiter = "# %%" -- <- what marks a cell boundary
-
-vim.g.slime_no_mappings = 1 -- <- disable default C-c C-c; we map our own
-
-vim.keymap.set("x", "<leader>Ss", "<Plug>SlimeRegionSend", { remap = true }) -- send visual selection
-vim.keymap.set("n", "<leader>Ss", "<Plug>SlimeParagraphSend", { remap = true }) -- send paragraph (normal mode)
-vim.keymap.set("n", "<leader>Sl", "<Plug>SlimeLineSend", { remap = true }) -- send the line
-vim.keymap.set("n", "<leader>Sc", "<Plug>SlimeSendCell", { remap = true }) -- send the whole cell
-vim.keymap.set("n", "<leader>Sv", "<Plug>SlimeConfig", { remap = true }) -- re-point the target pane
+-- stylua: ignore end
+--
+for _, m in ipairs(iron_maps) do
+	vim.keymap.set(m[4] or "n", m[1], m[2], { desc = m[3], silent = true })
+end

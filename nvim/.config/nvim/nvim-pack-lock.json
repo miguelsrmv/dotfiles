@@ -52,6 +52,10 @@
       "rev": "8134000fa4de5036d1af519774c3e373887226e3",
       "src": "https://github.com/bjarneo/hackerman.nvim"
     },
+    "iron.nvim": {
+      "rev": "88cd340407b959f1168af2a6ae5a3d180e6df32c",
+      "src": "https://github.com/Vigemus/iron.nvim"
+    },
     "kanagawa.nvim": {
       "rev": "8ad3b4cdcc804b332c32db8f9743667e1bb82b99",
       "src": "https://github.com/rebelot/kanagawa.nvim"
