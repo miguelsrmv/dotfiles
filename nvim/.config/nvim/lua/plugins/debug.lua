@@ -63,3 +63,14 @@ local dap_maps = {
 for _, map in ipairs(dap_maps) do
 	vim.keymap.set("n", map[1], map[2], { desc = map[3] })
 end
+
+-- INFO: Vim-slime
+vim.pack.add({ "https://github.com/jpalardy/vim-slime" })
+
+vim.g.slime_target = "tmux"
+vim.g.slime_default_config = {
+	socket_name = "default",
+	target_pane = "{last}", -- send to the last-active pane
+}
+vim.g.slime_dont_ask_default = 1
+vim.g.slime_python_ipython = 1 -- <- the important one for IPython
