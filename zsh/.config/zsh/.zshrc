@@ -86,3 +86,6 @@ devup() {
   # Focus nvim
   tmux select-pane -t "$editor_pane"
 }
+
+# Setup direnv
+eval "$(direnv hook zsh)"
