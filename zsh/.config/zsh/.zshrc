@@ -93,5 +93,3 @@ devup() {
 
 # Setup direnv
 eval "$(direnv hook zsh)"
-
-. "$HOME/.local/share/../bin/env"
