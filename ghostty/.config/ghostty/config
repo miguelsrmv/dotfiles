@@ -49,5 +49,4 @@ keybind = shift+enter=text:\n
 # Rando stuff
 gtk-single-instance = true
 
-# Themeswitcher theme
 config-file = ?"~/.config/ghostty/ghostty.theme"
