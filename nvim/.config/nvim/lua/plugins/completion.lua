@@ -1,5 +1,10 @@
 -- INFO: Blink
-vim.pack.add({ "https://github.com/saghen/blink.cmp" }, { confirm = false }) -- Completion engine
+vim.pack.add({
+	"https://github.com/saghen/blink.lib",
+	"https://github.com/saghen/blink.cmp",
+}, { confirm = false }) -- Completion engine
+
+require("blink.cmp").build():pwait()
 
 require("blink.cmp").setup({
 	completion = {
@@ -21,10 +26,6 @@ require("blink.cmp").setup({
 		["<C-b>"] = { "scroll_documentation_up", "fallback" },
 		["<C-f>"] = { "scroll_documentation_down", "fallback" },
 		["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
-	},
-
-	fuzzy = {
-		implementation = "lua",
 	},
 
 	sources = {

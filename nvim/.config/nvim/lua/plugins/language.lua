@@ -47,7 +47,7 @@ local lsp_servers = {
 				},
 				workspace = {
 					library = vim.api.nvim_get_runtime_file("lua", true), -- exposes Neovim runtime Lua files to the LSP
-					checkThirdParty = false, -- disables prompts/config suggestions from external libraries
+					checkThirdParty = false,                         -- disables prompts/config suggestions from external libraries
 				},
 				telemetry = {
 					enable = false, -- disables data collection from lua_ls
@@ -58,7 +58,7 @@ local lsp_servers = {
 	clangd = {
 		filetypes = { "c", "cpp", "h", "hpp", "objc", "objcpp", "cuda", "proto" }, -- extend defaults to include headers, CUDA, and proto
 	},
-	bashls = { filetypes = { "bash", "sh", "zsh" } }, -- extend defaults to include zsh
+	bashls = { filetypes = { "bash", "sh", "zsh" } },                          -- extend defaults to include zsh
 	pyright = {},
 	markdown_oxide = {},
 	yamlls = {},
@@ -68,9 +68,9 @@ local lsp_servers = {
 }
 
 vim.pack.add({
-	"https://github.com/neovim/nvim-lspconfig", -- default configs for 100+ LSP servers
-	"https://github.com/mason-org/mason.nvim", -- package manager for LSP servers, linters, and formatters
-	"https://github.com/mason-org/mason-lspconfig.nvim", -- bridge between Mason and lspconfig
+	"https://github.com/neovim/nvim-lspconfig",                    -- default configs for 100+ LSP servers
+	"https://github.com/mason-org/mason.nvim",                     -- package manager for LSP servers, linters, and formatters
+	"https://github.com/mason-org/mason-lspconfig.nvim",           -- bridge between Mason and lspconfig
 	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim", -- auto-installs all servers in lsp_servers on startup
 }, { confirm = false })
 
@@ -87,7 +87,7 @@ vim.lsp.enable(vim.tbl_keys(lsp_servers)) -- activate all configured servers
 
 -- INFO: Linting
 vim.pack.add({
-	"https://github.com/mfussenegger/nvim-lint", -- runs linters and reports results via vim.diagnostic
+	"https://github.com/mfussenegger/nvim-lint",  -- runs linters and reports results via vim.diagnostic
 	"https://github.com/rshkarin/mason-nvim-lint", -- bridge between Mason and nvim-lint (auto-installs linters)
 })
 
@@ -101,12 +101,12 @@ lint.linters_by_ft = {
 	typescript = { "eslint_d" },
 	javascriptreact = { "eslint_d" },
 	typescriptreact = { "eslint_d" },
-	python = { "pylint" },
+	python = { "ruff" },
 	bash = { "shellcheck" },
 	lua = { "selene" },
 }
 
-local lint_enabled = false -- linting state flag
+local lint_enabled = false                                 -- linting state flag
 local lint_ns = vim.api.nvim_create_namespace("nvim-lint") -- gets namespace for linting diagnostics
 local group = vim.api.nvim_create_augroup("nvim-lint", { clear = true })
 

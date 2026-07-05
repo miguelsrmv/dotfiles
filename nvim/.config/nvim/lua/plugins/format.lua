@@ -25,7 +25,7 @@ require("conform").setup({
 		css = { "prettier" },
 		scss = { "prettier" },
 		yaml = { "prettier" },
-		python = { "black" },
+		python = { "ruff_format" },
 	},
 	formatters = {
 		["clang-format"] = {

@@ -1,0 +1,7 @@
+[user]
+	name = "Miguel Sá"
+	email = miguel.srmv@gmail.com
+[init]
+	defaultBranch = main
+[core]
+	editor = nvim
