@@ -1,8 +1,8 @@
 -- INFO: DAP (Debugger)
 vim.pack.add({
-	"https://github.com/mfussenegger/nvim-dap", -- core debugger engine, implements the Debug Adapter Protocol
-	"https://github.com/rcarriga/nvim-dap-ui", -- UI panels for variables, stack, breakpoints, console
-	"https://github.com/nvim-neotest/nvim-nio", -- required dependency for nvim-dap-ui (async IO library)
+	"https://github.com/mfussenegger/nvim-dap",       -- core debugger engine, implements the Debug Adapter Protocol
+	"https://github.com/rcarriga/nvim-dap-ui",        -- UI panels for variables, stack, breakpoints, console
+	"https://github.com/nvim-neotest/nvim-nio",       -- required dependency for nvim-dap-ui (async IO library)
 	"https://github.com/jay-babu/mason-nvim-dap.nvim", -- bridge between Mason and nvim-dap (auto-installs debug adapters)
 	"https://github.com/mfussenegger/nvim-dap-python", -- Python debug adapter config
 })
@@ -50,13 +50,13 @@ require("dap-python").setup("python3")
 -- Keymaps
 -- stylua: ignore start
 local dap_maps = {
-	{ "<F5>",        function() dap.continue() end,                                             "Debug: Start/Continue" },
-	{ "<F1>",        function() dap.step_into() end,                                            "Debug: Step Into" },
-	{ "<F2>",        function() dap.step_over() end,                                            "Debug: Step Over" },
-	{ "<F3>",        function() dap.step_out() end,                                             "Debug: Step Out" },
-	{ "<leader>db",  function() dap.toggle_breakpoint() end,                                    "Debug: Toggle Breakpoint" },
-	{ "<leader>dB",  function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, "Debug: Set Conditional Breakpoint" },
-	{ "<F7>",        function() dapui.toggle() end,                                             "Debug: Toggle UI" },
+	{ "<F5>",       function() dap.continue() end,                                             "Debug: Start/Continue" },
+	{ "<F1>",       function() dap.step_into() end,                                            "Debug: Step Into" },
+	{ "<F2>",       function() dap.step_over() end,                                            "Debug: Step Over" },
+	{ "<F3>",       function() dap.step_out() end,                                             "Debug: Step Out" },
+	{ "<leader>db", function() dap.toggle_breakpoint() end,                                    "Debug: Toggle Breakpoint" },
+	{ "<leader>dB", function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, "Debug: Set Conditional Breakpoint" },
+	{ "<F7>",       function() dapui.toggle() end,                                             "Debug: Toggle UI" },
 }
 -- stylua: ignore end
 
@@ -64,55 +64,22 @@ for _, map in ipairs(dap_maps) do
 	vim.keymap.set("n", map[1], map[2], { desc = map[3] })
 end
 
--- INFO: iron.nvim (REPL)
-vim.pack.add({ "https://github.com/Vigemus/iron.nvim" })
+-- INFO: Vim-slime
+vim.g.slime_no_mappings = 1 -- keep this above vim.pack.add so defaults never load
 
-local iron = require("iron.core")
-local common = require("iron.fts.common")
+vim.pack.add({ "https://github.com/jpalardy/vim-slime" })
 
-iron.setup({
-	config = {
-		scratch_repl = true, -- don't keep dead REPL buffers around
-		close_window_on_exit = true, -- close the split when the process exits
-		-- dap_integration = true,   -- optional: route sends to the DAP REPL during a debug session
-		repl_definition = {
-			python = {
-				command = { "ipython", "--no-autoindent" },
-				format = common.bracketed_paste_python, -- IPython paste fix (was slime_python_ipython)
-				block_dividers = { "# %%", "#%%" }, -- cell markers for send_code_block
-			},
-			sh = { command = { "zsh" } }, -- or { "bash" }
-			javascript = { command = { "node" } },
-			typescript = { command = { "node" } },
-		},
-		repl_open_cmd = "vertical botright 80 split", -- REPL in a right-hand split
-		highlight = { italic = true }, -- flash the region you send
-		ignore_blank_lines = true,
-	},
-	-- no `keymaps = {}` block — keybinds are below so they have descriptions
-})
-
--- stylua: ignore start
-local iron_maps = {
-	-- sends
-	{ "<leader>rs", function() iron.run_motion("send_motion") end,  "Send (motion)",      "n" },
-	{ "<leader>rs", function() iron.visual_send() end,              "Send selection",     "x" },
-	{ "<leader>rl", function() iron.send_line() end,                "Send line",          "n" },
-	{ "<leader>rp", function() iron.send_paragraph() end,           "Send paragraph",     "n" },
-	{ "<leader>rc", function() iron.send_code_block(false) end,     "Send cell",          "n" },
-	{ "<leader>rn", function() iron.send_code_block(true) end,      "Send cell + next",   "n" },
-	{ "<leader>rf", function() iron.send_file() end,                "Send file",          "n" },
-	-- signals
-	{ "<leader>ri", function() iron.send(nil, string.char(3)) end,  "Interrupt (Ctrl-C)", "n" },
-	{ "<leader>rk", function() iron.send(nil, string.char(12)) end, "Clear screen",       "n" },
-	{ "<leader>rq", function() iron.close_repl() end,               "Close REPL",         "n" },
-	-- control
-	{ "<leader>rt", "<cmd>IronRepl<cr>",                            "Toggle REPL",        "n" },
-	{ "<leader>rR", "<cmd>IronRestart<cr>",                         "Restart REPL",       "n" },
-	{ "<leader>rF", "<cmd>IronFocus<cr>",                           "Focus REPL",         "n" },
+vim.g.slime_target = "tmux"
+vim.g.slime_default_config = {
+	socket_name = vim.env.TMUX and vim.split(vim.env.TMUX, ",")[1] or "default",
+	target_pane = "{last}",
 }
--- stylua: ignore end
---
-for _, m in ipairs(iron_maps) do
-	vim.keymap.set(m[4] or "n", m[1], m[2], { desc = m[3], silent = true })
-end
+vim.g.slime_dont_ask_default = 1
+vim.g.slime_bracketed_paste = 1
+vim.g.slime_cell_delimiter = "# %%"
+
+vim.keymap.set("n", "<leader>S", "<Plug>SlimeMotionSend", { remap = true, desc = "Send motion" })
+vim.keymap.set("n", "<leader>Ss", "<Plug>SlimeLineSend", { remap = true, desc = "Send line" })
+vim.keymap.set("x", "<leader>S", "<Plug>SlimeRegionSend", { remap = true, desc = "Send selection" })
+vim.keymap.set("n", "<leader>Sc", "<Plug>SlimeSendCell", { remap = true, desc = "Send cell" })
+vim.keymap.set("n", "<leader>SC", "<Plug>SlimeConfig", { remap = true, desc = "Re-aim target" })
